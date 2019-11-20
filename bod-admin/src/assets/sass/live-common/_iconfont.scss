@@ -1,0 +1,126 @@
+@font-face {
+  font-family: 'iconfont-conn';  /* project id 306870 */
+  src: url('//at.alicdn.com/t/font_306870_7id2g56pu4p74x6r.eot');
+  src: url('//at.alicdn.com/t/font_306870_7id2g56pu4p74x6r.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_306870_7id2g56pu4p74x6r.woff') format('woff'),
+  url('//at.alicdn.com/t/font_306870_7id2g56pu4p74x6r.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_306870_7id2g56pu4p74x6r.svg#iconfont-conn') format('svg');
+}
+
+$themeColor: #3e8feb;
+.iconfont-conn {
+  font-family: 'iconfont-conn' !important;
+  // color: #333333 !important;
+  &.delete {
+    &:before {
+      content: '\e652';
+      font-size: 21px;
+    }
+  }
+  &.add {
+    &:before {
+      content: '\e609';
+    }
+  }
+  &.submit-error {
+    color: rgb(244, 120, 122);
+    & + span {
+      color: rgb(244, 120, 122);
+    }
+    &:before {
+      content: '\e669';
+    }
+  }
+  &.starting {
+    color: rgb(57, 141, 240);
+    & + span {
+      color: rgb(57, 141, 240);
+    }
+    &:before {
+      content: '\e668';
+    }
+  }
+  &.stopped {
+    color: rgb(39, 41, 54);
+    & + span {
+      color: rgb(39, 41, 54);
+    }
+    &:before {
+      content: '\e667';
+    }
+  }
+  &.stopping {
+    color: rgb(111, 111, 111);
+    & + span {
+      color: rgb(111, 111, 111);
+    }
+    &:before {
+      content: '\e666';
+    }
+  }
+  &.deleting {
+    color: rgb(215, 38, 60);
+    & + span {
+      color: rgb(215, 38, 60);
+    }
+    &:before {
+      content: '\e665';
+    }
+  }
+  &.run-error {
+    color: rgb(254, 127, 0);
+    & + span {
+      color: rgb(254, 127, 0);
+    }
+    &:before {
+      color: rgb(254, 127, 0);
+      content: '\e664';
+    }
+  }
+  &.success {
+    color: rgb(88, 203, 148);
+    & + span {
+      color: rgb(88, 203, 148);
+    }
+    &:before {
+      color: rgb(88, 203, 148);
+      content: '\e674';
+    }
+  }
+
+  &.info {
+    color: rgb(191, 191, 191);
+    & + span {
+      color: rgb(191, 191, 191);
+    }
+    &:before {
+      color: rgb(191, 191, 191);
+      content: '\e627';
+    }
+  }
+
+  &.running {
+    color: rgb(91, 204, 150);
+    & + span {
+      color: rgb(91, 204, 150);
+    }
+    &:before {
+      content: '\e663';
+    }
+  }
+
+  &.filter-btn {
+    // color: $themeColor !important;
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    line-height: 36px;
+    border: 1px solid $themeColor;
+    border-radius: 3px;
+    cursor: pointer;
+    &:before {
+      content: '\e673';
+    }
+  }
+}

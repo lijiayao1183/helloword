@@ -1,0 +1,73 @@
+import 重庆 from './map-json/重庆.json'
+import 北京 from './map-json/北京.json'
+import 河北 from './map-json/河北.json'
+import 天津 from './map-json/天津.json'
+import 河南 from './map-json/河南.json'
+import 云南 from './map-json/云南.json'
+import 上海 from './map-json/上海.json'
+import 辽宁 from './map-json/辽宁.json'
+import 黑龙江 from './map-json/黑龙江.json'
+import 湖南 from './map-json/湖南.json'
+import 安徽 from './map-json/安徽.json'
+import 山东 from './map-json/山东.json'
+import 新疆 from './map-json/新疆.json'
+import 江苏 from './map-json/江苏.json'
+import 浙江 from './map-json/浙江.json'
+import 江西 from './map-json/江西.json'
+import 湖北 from './map-json/湖北.json'
+import 广西 from './map-json/广西.json'
+import 甘肃 from './map-json/甘肃.json'
+import 山西 from './map-json/山西.json'
+import 内蒙古 from './map-json/内蒙古.json'
+import 陕西 from './map-json/陕西.json'
+import 吉林 from './map-json/吉林.json'
+import 福建 from './map-json/福建.json'
+import 贵州 from './map-json/贵州.json'
+import 广东 from './map-json/广东.json'
+import 青海 from './map-json/青海.json'
+import 西藏 from './map-json/西藏.json'
+import 四川 from './map-json/四川.json'
+import 宁夏 from './map-json/宁夏.json'
+import 海南 from './map-json/海南.json'
+import 台湾 from './map-json/台湾.json'
+import 香港 from './map-json/香港.json'
+import 澳门 from './map-json/澳门.json'
+
+export function getMapJson () {
+  return [
+    {name: '重庆', json: 重庆},
+    {name: '北京', json: 北京},
+    {name: '河北', json: 河北},
+    {name: '天津', json: 天津},
+    {name: '河南', json: 河南},
+    {name: '云南', json: 云南},
+    {name: '上海', json: 上海},
+    {name: '辽宁', json: 辽宁},
+    {name: '黑龙江', json: 黑龙江},
+    {name: '湖南', json: 湖南},
+    {name: '安徽', json: 安徽},
+    {name: '山东', json: 山东},
+    {name: '新疆', json: 新疆},
+    {name: '江苏', json: 江苏},
+    {name: '浙江', json: 浙江},
+    {name: '江西', json: 江西},
+    {name: '湖北', json: 湖北},
+    {name: '广西', json: 广西},
+    {name: '甘肃', json: 甘肃},
+    {name: '山西', json: 山西},
+    {name: '内蒙古', json: 内蒙古},
+    {name: '陕西', json: 陕西},
+    {name: '吉林', json: 吉林},
+    {name: '福建', json: 福建},
+    {name: '贵州', json: 贵州},
+    {name: '广东', json: 广东},
+    {name: '青海', json: 青海},
+    {name: '西藏', json: 西藏},
+    {name: '四川', json: 四川},
+    {name: '宁夏', json: 宁夏},
+    {name: '海南', json: 海南},
+    {name: '台湾', json: 台湾},
+    {name: '香港', json: 香港},
+    {name: '澳门', json: 澳门}
+  ]
+}

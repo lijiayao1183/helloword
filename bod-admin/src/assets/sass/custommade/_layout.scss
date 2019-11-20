@@ -1,0 +1,22 @@
+$margin: 16px;
+.no-padding-left {
+    padding-left: 0;
+}
+.inline-block {
+    display: inline-block;
+}
+.tempalte-title {
+    margin-top: 2rem
+}
+.margin-top {
+    margin-top: $margin;
+}
+.margin-bottom {
+    margin-bottom: $margin;
+}
+.margin-left {
+    margin-left: $margin;
+}
+.margin-right {
+    margin-right: $margin;
+}

@@ -1,0 +1,96 @@
+@font-face {
+    font-family: "conn-iconfont";
+    src: url('iconfont.eot'); /* IE9*/
+    src: url('iconfont.eot#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('iconfont.woff') format('woff'), /* chrome, firefox */
+    url('iconfont.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+    url('iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.conn-iconfont {
+    font-family:"conn-iconfont" !important;
+    font-size: 26px;
+    speak:none;
+    font-style:normal;
+    font-weight:normal;
+    font-variant:normal;
+    text-transform:none;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-conn-delete:before { content: "\e652"; font-size: 21px;}
+.icon-conn-add:before { content: "\e609"; font-size: 21px;}
+
+.icon-conn-submit-error {color: rgb(244, 120, 122);}
+.icon-conn-submit-error + span {color: rgb(244, 120, 122);}
+.icon-conn-submit-error:before {content: '\e669';}
+
+.icon-conn-starting {color: rgb(57, 141, 240);}
+.icon-conn-starting + span {color: rgb(57, 141, 240);}
+.icon-conn-starting:before {content: '\e668';}
+
+.icon-conn-stopped {color: rgb(39, 41, 54);}
+.icon-conn-stopped + span {color: rgb(39, 41, 54);}
+.icon-conn-stopped:before {content: '\e667';}
+
+.icon-conn-stopping {color: rgb(111, 111, 111);}
+.icon-conn-stopping + span {color: rgb(111, 111, 111);}
+.icon-conn-stopping:before {content: '\e666';}
+
+.icon-conn-deleting {color: rgb(215, 38, 60);}
+.icon-conn-deleting + span {color: rgb(215, 38, 60);}
+.icon-conn-deleting:before {content: '\e665';}
+
+.icon-conn-run-error {color: rgb(254, 127, 0);}
+.icon-conn-run-error + span {color: rgb(254, 127, 0);}
+.icon-conn-run-error:before {content: '\e664';}
+
+.icon-conn-success {color: rgb(88, 203, 148);}
+.icon-conn-success + span {color: rgb(88, 203, 148);}
+.icon-conn-success:before {color: rgb(88, 203, 148); content: '\e664';}
+
+.icon-conn-info {color: rgb(191, 191, 191);}
+.icon-conn-info + span {color: rgb(191, 191, 191);}
+.icon-conn-info:before {color: rgb(191, 191, 191); content: '\e627';}
+
+.icon-conn-running {color: rgb(91, 204, 150);}
+.icon-conn-running + span {color: rgb(91, 204, 150);}
+.icon-conn-running:before {color: rgb(91, 204, 150); content: '\e663';}
+
+.icon-conn-view {
+	font-size: 20px;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    line-height: 36px;
+    border: 1px solid #3e8feb;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.icon-conn-view:before {content: '\e621';}
+
+.icon-conn-log {
+	font-size: 20px;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    line-height: 36px;
+    border: 1px solid #3e8feb;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.icon-conn-log:before {content: '\e622';}
+
+.icon-conn-filter-btn {
+	font-size: 20px;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    line-height: 36px;
+    border: 1px solid #3e8feb;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.icon-conn-filter-btn:before {content: '\e673';}

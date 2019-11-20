@@ -1,0 +1,82 @@
+$margin: 16px;
+@media (min-width: 1200px) {
+  .container {
+    width: 1720px;
+    padding: 0;
+    max-width: 100%;
+  }
+}
+
+.header {
+  width: 100%;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.btn-default {
+  font-size: 14px;
+}
+
+.margin-left {
+  margin-left: $margin;
+}
+
+.margin-top {
+  margin-top: $margin;
+}
+
+.margin-right {
+  margin-right: $margin;
+}
+
+.margin-bottom {
+  margin-bottom: $margin;
+}
+
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0;
+}
+
+.no-padding-top {
+  padding-top: 0;
+}
+
+.no-padding-bottom {
+  padding-bottom: 0;
+}
+
+.el-input--small.search-input .el-input__inner {
+  height: 38px;
+}
+
+.task-list-header.el-table {
+  .cell {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+  .el-table-column--selection .cell {
+    padding-left: 32px;
+  }
+  th {
+    text-align: left;
+  }
+}
+
+.container {
+  min-width: 1000px;
+}
+
+
+.point {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: #209FFF;
+  margin-top: 6px;
+  margin-right: 5px;
+}

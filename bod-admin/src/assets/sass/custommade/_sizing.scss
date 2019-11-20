@@ -1,0 +1,11 @@
+.template-container {
+    width: 100%;
+    padding: 16px;
+    &.no-gutters {
+        padding: 0;
+    }
+}
+
+html, body {
+    height: 100%;
+}

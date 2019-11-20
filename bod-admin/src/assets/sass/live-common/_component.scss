@@ -1,0 +1,257 @@
+$btnBorderColor: #dedede;
+$btnColor: #777777;
+$radioColor: #888888;
+$tableGrayTheadBgColor: #f8f9fc;
+$themeColor: #3e8feb;
+label {
+  margin-bottom: 0;
+}
+
+.btn-gray {
+  background: rgb(233, 233, 233);
+  color: rgb(179, 179, 179);
+  border: 0;
+}
+
+.el-button {
+  border-color: $btnBorderColor;
+  color: $btnColor;
+}
+
+.el-button--text {
+  color: #209FFF;
+}
+
+.el-button--primary {
+  color: #fff;
+}
+
+.header-white .el-table__header-wrapper thead div {
+  background-color: #fff;
+}
+
+.el-table.header-white th {
+  background-color: #fff;
+}
+
+html, body {
+  height: 100%;
+}
+
+.el-form-item {
+  margin-bottom: 18px;
+}
+
+.el-form--inline .el-form-item {
+  margin-left: 60px;
+}
+
+.el-form-item__label {
+  color: $btnColor;
+}
+
+.el-radio__label, .el-checkbox__label {
+  color: $radioColor;
+}
+
+.express-table .el-table__header-wrapper thead div {
+  background-color: $tableGrayTheadBgColor;
+}
+
+.el-table.express-table th {
+  background-color: $tableGrayTheadBgColor;
+}
+
+.el-table.express-table .el-table__fixed-header-wrapper thead div {
+  background-color: $tableGrayTheadBgColor;
+}
+
+.el-dialog__body {
+  padding-top: 10px;
+  padding-bottom: 15px;
+}
+
+.el-dialog__footer {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.thead-default th {
+  font-size: 14px;
+  color: #636668;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background-color: #f8f9fc;
+}
+
+.el-dialog--large {
+  max-width: 800px;
+}
+
+.el-dialog__header {
+  text-align: center;
+  background: rgb(244, 244, 244);
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-image: none;
+  border-radius: 4px;
+  border: 1px solid #bfcbd9;
+  box-sizing: border-box;
+  color: #1f2d3d;
+  font-size: inherit;
+  height: 36px;
+  line-height: 1;
+  outline: 0;
+  padding: 3px 10px;
+  transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+  width: 100%;
+  display: inline-block;
+  font-family: sans-serif;
+  margin: 0;
+  user-select: text;
+  cursor: auto;
+  &:hover {
+    border-color: #8391a5;
+  }
+  &:focus {
+    outline: 0;
+    border-color: #20a0ff;
+  }
+}
+
+.el-select {
+  .el-input {
+    //height: 100%;
+    //input {
+    //  height: 100%;
+    //}
+    &.is-disabled {
+      i {
+        display: none;
+      }
+      input:disabled {
+        background: #fff;
+        border: 0;
+      }
+    }
+  }
+}
+
+.full-input {
+  .el-input {
+    height: 100%;
+    input {
+      height: 100%;
+    }
+  }
+}
+
+.el-date-editor--datetimerange.custom-group.el-input {
+  width: 305px;
+}
+
+// 适配vee-validate效果
+.help {
+  font-size: 11px;
+  // margin-top: 5px;
+  &.is-danger {
+    color: #ff3860;
+  }
+}
+
+.input.is-danger, .textarea.is-danger {
+  border-color: #ff3860;
+  input, textarea {
+    border-color: #ff3860;
+  }
+  .el-icon-caret-top:before {
+    color: #ff3860;
+  }
+}
+
+.select-error {
+  // margin-left: 15px;
+}
+
+.el-button--text {
+  color: $themeColor;
+}
+
+.el-button--text:hover, .el-button--text:focus {
+  color: $themeColor;
+}
+
+.base-task-info.read-only-row {
+  .el-form-item.duty-users-form-item {
+    .el-form-item__content {
+      width: calc(100% - 105px);
+    }
+  }
+}
+
+.btn-default {
+  &:hover, &:focus {
+    color: #fff;
+    background-color: $themeColor;
+  }
+}
+
+.el-form-item.checkbox-row {
+  .el-form-item__content {
+    margin-left: 10px;
+  }
+}
+
+.el-dialog__header {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.el-dialog .el-dialog__header .el-dialog__headerbtn {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  padding-right: 20px !important;
+  & > i.el-dialog__close {
+    color: #fff;
+  }
+}
+
+.el-dialog .dialog-footer {
+  height: auto !important;
+  display: block !important;
+  justify-content: center;
+}
+
+.el-form-item.checkbox-row {
+  .el-form-item__content {
+    width: calc(100% - 98px);
+  }
+}
+
+.ivu-date-picker {
+  position: relative;
+  bottom: 2px;
+  .ivu-date-picker-rel {
+    height: 100%;
+    .ivu-input-wrapper {
+      height: 100%;
+      input {
+        height: 100%;
+      }
+    }
+  }
+}
+
+.ivu-input {
+  border-color: #bfcbd9;
+  &:hover {
+    border-color: #8391a5;
+  }
+}
