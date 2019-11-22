@@ -121,7 +121,7 @@ import UserApi from '@system/api/systemconfig/usermanage.api'
 import UserManageMock from '@system/mock/usersmanage.mock'
 
 export default {
-  data () {
+  data() {
     return {
       backPath: '/user_manage',
       formularExpress: [],
@@ -156,31 +156,31 @@ export default {
     }
   },
   methods: {
-    disabledDate (date) {
+    disabledDate(date) {
       return date <= +new Date() - 86400000
     },
-    validatorDate (rule, value, callback) {
+    validatorDate(rule, value, callback) {
       if (value && (+new Date(value) < +new Date() - 86400000)) {
         callback(new Error('有效期已失效'))
       } else {
         callback()
       }
     },
-    quit () {
+    quit() {
       this.$router.push(this.backPath)
     },
     // 保存验证操作
-    submitForm (formName) {
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.user.effectiveDate) {
+          if(this.user.effectiveDate) {
             this.user.effectiveDate = +new Date(this.user.effectiveDate)
           }
           this.doneSaveOrUpdate()
         }
       })
     },
-    doneSaveOrUpdate () {
+    doneSaveOrUpdate() {
       let payload = Object.assign({}, this.user)
       if (this.user.userId) {
         UserApi.updateUser(payload).then(
@@ -209,11 +209,11 @@ export default {
         )
       }
     },
-    changeOrgan (rule) {
+    changeOrgan(rule) {
       this.user.roleId = null
       this.getRoles()
     },
-    getRoles () {
+    getRoles() {
       let url = '/api/organ/' + this.user.organId + '/roles?pageSize=0'
       UserApi.getRolesByOrganId(url).then(
         (data) => {
@@ -224,14 +224,14 @@ export default {
         }
       )
     },
-    afterSuccessSave () {
+    afterSuccessSave() {
       this.$message('用户保存成功')
       if (this.getParam() == 'add') {
         this.$message('用户默认密码为：111111')
       }
       this.$router.push(this.backPath)
     },
-    getParam () {
+    getParam() {
       let url = window.location.href
       if (url.indexOf('?') != -1) {
         let obj = url.substr(url.indexOf('?') + 1)
@@ -241,11 +241,11 @@ export default {
         return 0
       }
     },
-    afterFailSave (err) {
+    afterFailSave(err) {
       console.log(err)
       this.$message('用户保存失败')
     },
-    checkAccout (rule, value, callback) {
+    checkAccout(rule, value, callback) {
       UserApi.checkIfExistAccout(value, this.user.userId = this.$route.params.id !== 'add' ? this.$route.params.id : '').then(
         (res) => {
           if (res && value !== this.userInitAccount) {
@@ -281,7 +281,7 @@ export default {
       //          }, 500)
     }
   },
-  created () {
+  created() {
     if (this.$route.params.id !== 'add') {
       this.currentPath = 'editUser'
     }
@@ -292,7 +292,7 @@ export default {
     this.userRules.account.push(this.existRuleItem)
     UserApi.getOrganForRole().then(
       (data) => {
-        if (!this.user.organId) { // 默认选中第一个组织
+        if (!this.user.organId) {// 默认选中第一个组织
           let defaultCheckOrgan = _.first(data)
           if (defaultCheckOrgan) {
             this.user.organId = defaultCheckOrgan.organId
@@ -393,3 +393,4 @@ $btn-container-bottom: 8px;
   }
 }
 </style>
+

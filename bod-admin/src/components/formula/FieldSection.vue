@@ -148,219 +148,221 @@
   </div>
 </template>
 <script>
-import fieldMixin from '../../mixins/field-mixin'
-import * as _ from 'lodash'
+  import fieldMixin from '../../mixins/field-mixin'
+  import * as _ from 'lodash'
 
-export default {
-  // field: 完整的字段信息
-  data: () => ({
-    emnuValue: [],
-    dateRangeTable: [],
-    computedForm: {
-      fieldSwitch: false,
-      table: [],
-      outRangeValue: ''
-    },
-    dateTable: []
-  }),
-  props: {
-    sectionModalVsible: {
-      type: Boolean,
-      default: false
-    },
-    isReadOnly: {
-      type: Boolean,
-      default: false
-    },
-    segments: {
-      type: Array,
-      required: true
-    },
-    fieldSwitch: {
-      type: Boolean,
-      default: false
-    },
-    outRangeValue: {
-      type: String,
-      default: ''
-    },
-    field: {
-      type: Object,
-      required: true
-    }
-  },
-  mixins: [fieldMixin],
-  computed: {
-    fieldType () {
-      if (this.field.fieldEn) {
-        return parseInt(this.field.valueType)
+  export default {
+    // field: 完整的字段信息
+    data: () => ({
+      emnuValue:[],
+      dateRangeTable:[],
+      computedForm: {
+        fieldSwitch:false,
+        table: [],
+        outRangeValue:''
+      },
+      dateTable:[]
+    }),
+    props: {
+      sectionModalVsible: {
+        type: Boolean,
+        default: false
+      },
+      isReadOnly: {
+        type: Boolean,
+        default: false
+      },
+      segments: {
+        type: Array,
+        required: true
+      },
+      fieldSwitch:{
+        type:Boolean,
+        default:false
+      },
+      outRangeValue:{
+        type:String,
+        default:''
+      },
+      field: {
+        type: Object,
+        required: true
       }
-      return null
     },
-    /**
+    mixins: [fieldMixin],
+    computed: {
+      fieldType () {
+        if (this.field.fieldEn) {
+          return parseInt(this.field.valueType)
+        }
+        return null
+      },
+      /**
        * 枚举型的数据源
        */
-    enumOriginData () {
-      if (this.fieldType && this.fieldType === 3) {
-        let items = this.field.valueScope.split(/[,，]/g)
-        return items.map(
-          item => {
-            let itemObjArr = item.split(/[:：]/g)
-            return {
-              label: itemObjArr[0],
-              prop: itemObjArr[1]
+      enumOriginData () {
+        if (this.fieldType && this.fieldType === 3) {
+          let items = this.field.valueScope.split(/[,，]/g)
+          return items.map(
+            item => {
+              let itemObjArr = item.split(/[:：]/g)
+              return {
+                label: itemObjArr[0],
+                prop: itemObjArr[1]
+              }
             }
-          }
-        )
-      }
-      return []
-    },
-    sectionRules () {
-      if (this.fieldType && this.fieldType === 1) {
-        return [
-          {required: true, message: '区间不能为空', trigger: 'blur'},
-          {
-            pattern: /^\(,\)$|^(\-|\+)?\d+(\.\d+)?$|^([\[\(](\-|\+)?\d+(\.\d+)?,[\]\)])$|^([\[\(],(\-|\+)?\d+(\.\d+)?[\]\)])$|^([\[\(](\-|\+)?\d+(\.\d+)?,(\-|\+)?\d+(\.\d+)?[\]\)])$/,
-            message: '区间格式错误',
-            trigger: 'blur'
-          },
-          {validator: this.validateSection, trigger: 'blur'}
-        ]
-      } else {
-        return [
-          {required: true, message: '区间不能为空', trigger: 'blur'}
-        ]
-      }
-    },
-    valueRules () {
-      if (this.fieldType && this.fieldType === 3) {
-        return [
-          {required: true, message: '值不能为空', trigger: 'blur'},
-          {pattern: /^(\-|\+)?\d+(\.\d+)?$/, message: '值必须为数字', trigger: 'blur'}
-        ]
-      }
-      return [
-        {required: true, message: '值不能为空', trigger: 'blur'}
-      ]
-    }
-  },
-  methods: {
-    changeDateRange (val, index) { // TODO
-      if (val.indexOf('-') != -1) {
-        this.computedForm.table[index].segment = val
-      }
-    },
-    emnuSelected (value) {
-      let disable = false
-      let enmuValues = []
-      _.forEach(this.computedForm.table, (item) => {
-        enmuValues = item.segment.concat(enmuValues)
-      })
-      _.forEach(enmuValues, (data) => {
-        if (data === value) {
-          disable = true
+          )
         }
-      })
-      return disable
-    },
-    switchChange () {
-      this.$emit('switchChange', this.switchValue)
-    },
-    add () {
-      if (this.fieldType !== 3) {
-        this.computedForm.table.push({segment: null, value: null})
-      } else {
-        this.computedForm.table.push({segment: [], value: null})
-      }
-    },
-    deleteRow (index, row) {
-      this.computedForm.table.splice(index, 1)
-    },
-    hasSelected (val) {
-      console.log('------val-----')
-      console.log(val)
-      return !!_.find(this.computedForm.table, {segment: val})
-    },
-    isDisabledAddBtn () {
-      if (this.fieldType && this.fieldType === 3) {
-        return this.enumOriginData.length === this.computedForm.table.length
-      } else {
-        return false
-      }
-    },
-    validateSection (rule, value, callback) {
-      let temp = value
-      temp = temp.replace(/[\[\]\(\)]/g, '')
-      let tempArr = temp.split(',')
-      if (tempArr.length === 2) {
-        if (tempArr[0] !== '' && tempArr[1] !== '') {
-          let result = tempArr[1] - tempArr[0]
-          if (result > 0) {
-            callback()
-          } else {
-            callback(new Error('区间右侧数值必须大于左侧数值'))
-          }
-          return
+        return []
+      },
+      sectionRules () {
+        if (this.fieldType && this.fieldType === 1) {
+          return [
+            {required: true, message: '区间不能为空', trigger: 'blur'},
+            {
+              pattern: /^\(,\)$|^(\-|\+)?\d+(\.\d+)?$|^([\[\(](\-|\+)?\d+(\.\d+)?,[\]\)])$|^([\[\(],(\-|\+)?\d+(\.\d+)?[\]\)])$|^([\[\(](\-|\+)?\d+(\.\d+)?,(\-|\+)?\d+(\.\d+)?[\]\)])$/,
+              message: '区间格式错误',
+              trigger: 'blur'
+            },
+            {validator: this.validateSection, trigger: 'blur'}
+          ]
+        }else{
+          return [
+            {required: true, message: '区间不能为空', trigger: 'blur'}
+          ]
         }
-        callback()
+      },
+      valueRules () {
+        if (this.fieldType && this.fieldType === 3) {
+          return [
+            {required: true, message: '值不能为空', trigger: 'blur'},
+            {pattern: /^(\-|\+)?\d+(\.\d+)?$/, message: '值必须为数字', trigger: 'blur'}
+          ]
+        }
+        return [
+          {required: true, message: '值不能为空', trigger: 'blur'}
+        ]
       }
-      callback()
     },
-    submit () {
-      if (this.computedForm.fieldSwitch) {
-        this.$validator.validateAll().then((valid) => {
-          if (valid) {
-            this.dipatchData()
+    methods: {
+      changeDateRange(val,index){//TODO
+        if(val.indexOf('-')!=-1){
+          this.computedForm.table[index].segment = val
+        }
+      },
+      emnuSelected(value){
+        let disable = false
+        let enmuValues = []
+          _.forEach(this.computedForm.table,(item)=>{
+            enmuValues = item.segment.concat(enmuValues)
+          })
+        _.forEach(enmuValues,(data)=>{
+          if(data === value){
+            disable = true
           }
         })
-      } else {
-        this.dipatchData()
+        return disable
+      },
+      switchChange () {
+        this.$emit('switchChange', this.switchValue)
+      },
+      add () {
+        if(this.fieldType !== 3){
+          this.computedForm.table.push({segment: null, value: null})
+        }else{
+          this.computedForm.table.push({segment: [], value: null})
+        }
+
+      },
+      deleteRow (index, row) {
+        this.computedForm.table.splice(index, 1)
+      },
+      hasSelected (val) {
+        console.log('------val-----')
+        console.log(val)
+        return !!_.find(this.computedForm.table, {segment: val})
+      },
+      isDisabledAddBtn () {
+        if (this.fieldType && this.fieldType === 3) {
+          return this.enumOriginData.length === this.computedForm.table.length
+        } else {
+          return false
+        }
+      },
+      validateSection (rule, value, callback) {
+        let temp = value
+        temp = temp.replace(/[\[\]\(\)]/g, '')
+        let tempArr = temp.split(',')
+        if (tempArr.length === 2) {
+          if (tempArr[0] !== '' && tempArr[1] !== '') {
+            let result = tempArr[1] - tempArr[0]
+            if (result > 0) {
+              callback()
+            } else {
+              callback(new Error('区间右侧数值必须大于左侧数值'))
+            }
+            return
+          }
+          callback()
+        }
+        callback()
+      },
+      submit () {
+        if(this.computedForm.fieldSwitch){
+          this.$validator.validateAll().then((valid) => {
+            if (valid) {
+              this.dipatchData()
+            }
+          })
+        }else{
+          this.dipatchData()
+        }
+
+      },
+      dipatchData () {//TODO
+        this.$emit('getSectionData', this.computedForm)
+      },
+      quit () {
+        this.$emit('shutmodal')
+      },
+      formatScopeData(scopeData,index,type){
+        let tmpArray=[];
+        _.each(scopeData, (item,seq) => {
+          if (type === 4 && scopeData[seq].segment) {
+            tmpArray.push(Date.parse(scopeData[seq].segment[0]).toString()+Date.parse(scopeData[seq].segment[1]).toString())
+          } else {
+            const value = item.segment ? item.segment.replace(",", "+") : item.segment
+            tmpArray.push(value)
+          }
+        })
+        tmpArray.push(index)
+        return tmpArray;
+      },
+    },
+    watch:{
+      // fieldSwitch(){
+      //   this.computedForm.fieldSwitch = this.fieldSwitch
+      // },
+      outRangeValue(){
+        this.computedForm.outRangeValue = this.outRangeValue
+      },
+      segments(){
+        this.computedForm.table = Object.assign([], this.segments)
       }
     },
-    dipatchData () { // TODO
-      this.$emit('getSectionData', this.computedForm)
-    },
-    quit () {
-      this.$emit('shutmodal')
-    },
-    formatScopeData (scopeData, index, type) {
-      let tmpArray = []
-      _.each(scopeData, (item, seq) => {
-        if (type === 4 && scopeData[seq].segment) {
-          tmpArray.push(Date.parse(scopeData[seq].segment[0]).toString() + Date.parse(scopeData[seq].segment[1]).toString())
-        } else {
-          const value = item.segment ? item.segment.replace(',', '+') : item.segment
-          tmpArray.push(value)
-        }
-      })
-      tmpArray.push(index)
-      return tmpArray
-    }
-  },
-  watch: {
-    // fieldSwitch(){
-    //   this.computedForm.fieldSwitch = this.fieldSwitch
-    // },
-    outRangeValue () {
-      this.computedForm.outRangeValue = this.outRangeValue
-    },
-    segments () {
+    created () {
       this.computedForm.table = Object.assign([], this.segments)
+      if(this.fieldType === 3 || this.fieldType === 4){
+        _.forEach(this.computedForm.table,(item)=>{
+          if(typeof(item.segment)==='string'){
+            item.segment = JSON.parse(item.segment)
+          }
+        })
+      }
+      this.computedForm.fieldSwitch = this.fieldSwitch
+      this.computedForm.outRangeValue = this.outRangeValue
     }
-  },
-  created () {
-    this.computedForm.table = Object.assign([], this.segments)
-    if (this.fieldType === 3 || this.fieldType === 4) {
-      _.forEach(this.computedForm.table, (item) => {
-        if (typeof (item.segment) === 'string') {
-          item.segment = JSON.parse(item.segment)
-        }
-      })
-    }
-    this.computedForm.fieldSwitch = this.fieldSwitch
-    this.computedForm.outRangeValue = this.outRangeValue
   }
-}
 </script>
 <style lang="scss">
   #field-region-include {
@@ -412,4 +414,6 @@ export default {
 
   }
 
+
 </style>
+

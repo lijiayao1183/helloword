@@ -67,197 +67,199 @@
 
 </template>
 <script>
-import bus from '../field-manage/scripts/bus'
-import importStatusDialog from './importStatusDialog.vue'
-import apiProgress from '../engine-manage/decision-flow/scripts/api.js'
+  import bus from '../field-manage/scripts/bus'
+  import importStatusDialog from './importStatusDialog.vue'
+  import apiProgress from '../engine-manage/decision-flow/scripts/api.js'
 
-export default ({
-  props: {
-    typeProp: {
-      type: Object,
-      default: {
-        value: 'id',
-        label: 'label',
-        children: 'children'
+  export default ({
+    props: {
+      typeProp: {
+        type: Object,
+        default: {
+          value: 'id',
+          label: 'label',
+          children: 'children'
+        }
+      },
+      importDialogVisible:{
+        type:Boolean,
+        default:false
+      },
+      downloadUrl: {
+        type: String,
+        default: ''
+      },
+      importTitle: {
+        type: String,
+        default: ''
+      },
+      importUrl: {
+        type: String,
+        default: ''
+      },
+      options: {
+        type: Array,
+        default: []
+      },
+      selectedPath: {
+        type: Array,
+        default: []
+      },
+      taskId: {
+        type: String,
+        default: ''
       }
     },
-    importDialogVisible: {
-      type: Boolean,
-      default: false
-    },
-    downloadUrl: {
-      type: String,
-      default: ''
-    },
-    importTitle: {
-      type: String,
-      default: ''
-    },
-    importUrl: {
-      type: String,
-      default: ''
-    },
-    options: {
-      type: Array,
-      default: []
-    },
-    selectedPath: {
-      type: Array,
-      default: []
-    },
-    taskId: {
-      type: String,
-      default: ''
-    }
-  },
-  data () {
-    return {
-      fileList: [],
-      preFileList: [],
-      selectPath: [],
-      downloadAddress: '',
-      isSuccess: true,
-      failedContent: '',
-      successContent: '',
-      downloadContent: '下载失败字段',
-      importStatusDialogVisible: false,
-      progressVisible: false,
-      progressPercentage: 0,
-      progressStatus: '',
-      intervalProgress: null,
-      buttonDisabled: false,
-      isShow: true,
-      isCheckFileOk: true
-    }
-  },
-  created () {
-    console.log(this.selectedPath)
-  },
-  methods: {
-    importCancel () {
-      this.fileList = []
-      this.$emit('importCancel')
-    },
-    onChange (file, fileList) {
-      if (fileList.length >= 2) {
-        fileList.splice(0, 1)
+    data () {
+      return {
+        fileList: [],
+        preFileList:[],
+        selectPath:[],
+        downloadAddress:'',
+        isSuccess:true,
+        failedContent:'',
+        successContent:'',
+        downloadContent:'下载失败字段',
+        importStatusDialogVisible:false,
+        progressVisible: false,
+        progressPercentage: 0,
+        progressStatus: '',
+        intervalProgress: null,
+        buttonDisabled: false,
+        isShow: true,
+        isCheckFileOk: true
       }
-      this.preFileList = fileList
     },
-    handleClose () {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.fileList = []
-          this.isShow = false
-          this.$emit('importCancel')
-        })
-        .catch(_ => {})
+    created(){
+      console.log(this.selectedPath);
     },
-    submitUpload () {
-      this.$refs.upload.submit()
-      this.progressVisible = true
-      this.buttonDisabled = !!this.isCheckFileOk
-      this.refreshProgressPercentage()
-    },
-    handleChange (value) { // Trigger when type path change
-      this.selectPath = value
-      this.$emit('valueChange', value)
-    },
-    beforeAvatarUpload (file) {
-      let fileArr = file.name.split('.')
-      const isExcel = fileArr[1] === 'xls' || fileArr[1] === 'xlsx'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isExcel) {
-        this.$message.error('请上传excel文件')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传限制为 2MB')
-      }
+    methods: {
+      importCancel () {
+        this.fileList = []
+        this.$emit('importCancel')
+      },
+      onChange(file,fileList){
+        if(fileList.length>=2){
+          fileList.splice(0,1)
+        }
+        this.preFileList=fileList;
+      },
+      handleClose () {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.fileList = []
+            this.isShow = false
+            this.$emit('importCancel')
+          })
+          .catch(_ => {})
+      },
+      submitUpload () {
+        this.$refs.upload.submit()
+        this.progressVisible = true
+        this.buttonDisabled = this.isCheckFileOk?true: false
+        this.refreshProgressPercentage()
+      },
+      handleChange (value) {//Trigger when type path change
+        this.selectPath=value;
+        this.$emit('valueChange', value)
+      },
+      beforeAvatarUpload (file) {
+        let fileArr = file.name.split('.')
+        const isExcel = fileArr[1] === 'xls' || fileArr[1] ==='xlsx';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isExcel) {
+          this.$message.error('请上传excel文件');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传限制为 2MB')
+        }
 
-      if (isExcel && isLt2M) {
-        this.fileList.push(file)
-      }
-      return this.isCheckFileOk = isExcel && isLt2M
-    },
-    onError (err, file, fileList) {
-      this.progressStatus = 'exception'
-      this.progressPercentage = 100
-      clearInterval(this.intervalProgress)
-      this.buttonDisabled = false
-      this.importCancel()
-      this.$message.warning('文件错误，取消导入')
-    },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview (file) {
-      console.log(file)
-    },
-    refreshProgressPercentage () {
-      apiProgress.task(this.taskId).then(res => {
-        if (res === 100) {
-          clearInterval(this.intervalProgress)
-        } else if (!this.response || (this.response.code !== '-1' || this.response.code == '-1' && (this.response.data != null || this.response.data != undefined))) {
-          this.progressPercentage = res
+        if (isExcel && isLt2M) {
+          this.fileList.push(file)
+        }
+        return this.isCheckFileOk = isExcel && isLt2M
+      },
+      onError (err, file, fileList) {
+        this.progressStatus = 'exception'
+        this.progressPercentage = 100
+        clearInterval(this.intervalProgress)
+        this.buttonDisabled = false
+        this.importCancel()
+        this.$message.warning('文件错误，取消导入')
+      },
+      handleRemove (file, fileList) {
+        console.log(file, fileList)
+      },
+      handlePreview (file) {
+        console.log(file)
+      },
+      refreshProgressPercentage () {
+        apiProgress.task(this.taskId).then(res => {
+          if (res === 100) {
+            clearInterval(this.intervalProgress)
+          } else if (!this.response || ( this.response.code!=='-1'|| this.response.code == '-1' && (this.response.data!=null||this.response.data!=undefined))){
+            this.progressPercentage = res
+            // this.intervalProgress = setTimeout(()=>{
+            //   this.refreshProgressPercentage()
+            // }, 10)
+          }
+        }).catch(err => {
           // this.intervalProgress = setTimeout(()=>{
           //   this.refreshProgressPercentage()
           // }, 10)
-        }
-      }).catch(err => {
-        // this.intervalProgress = setTimeout(()=>{
-        //   this.refreshProgressPercentage()
-        // }, 10)
-      })
-    },
-    onSuccess (response, file, fileList) {
-      this.file = file
-      this.response = response
-      // 不需要执行失败-有弹出框提醒
-      // if (response.code == '-1') {
-      //   this.$message.warning(response.msg)
-      // }
-      this.progressPercentage = 100
-      setTimeout(() => {
-        clearInterval(this.intervalProgress)
-        this.importStatusShow(response)
-      }, 1000)
-    },
-    importStatusShow (response) {
-      if (this.isShow) {
-        if (response.code == 1 && (response.data != null || response.data != undefined)) {
-          this.isSuccess = true
-          this.progressPercentage = 100
-          this.successContent = '字段导入完成，共成功导入' + JSON.parse(response.data).success + '个字段，失败' + JSON.parse(response.data).failed + '个字段！'
-          this.importStatusDialogVisible = true
-        } else if (response.code == -1 && (response.data != null || response.data != undefined)) {
-          this.buttonDisabled = false
-          this.isSuccess = false
-          this.progressStatus = 'exception'
-          this.progressPercentage = 100
-          this.failedContent = '字段导入完成，共成功导入' + JSON.parse(response.data).success + '个字段，失败' + JSON.parse(response.data).failed + '个字段！'
-          this.downloadAddress = `/api/field/template?filename=${JSON.parse(response.data).filename}`
-          this.fileList = []
-          this.importStatusDialogVisible = true
-        } else {
-          this.buttonDisabled = false
-        }
-      }
+        })
+      },
+      onSuccess (response, file, fileList) {
+        this.file = file;
+        this.response = response;
+        // 不需要执行失败-有弹出框提醒
+        // if (response.code == '-1') {
+        //   this.$message.warning(response.msg)
+        // }
+        this.progressPercentage = 100
+        setTimeout(()=>{
+          clearInterval(this.intervalProgress)
+          this.importStatusShow(response);
+        },1000)
 
-      this.$emit('importFields')
-      console.log(response)
+
+      },
+      importStatusShow (response) {
+        if (this.isShow) {
+          if (response.code==1&&(response.data!=null||response.data!=undefined)) {
+            this.isSuccess=true;
+            this.progressPercentage = 100
+            this.successContent='字段导入完成，共成功导入'+JSON.parse(response.data).success+'个字段，失败'+JSON.parse(response.data).failed+'个字段！'
+            this.importStatusDialogVisible=true;
+          } else if(response.code==-1&&(response.data!=null||response.data!=undefined)) {
+            this.buttonDisabled = false
+            this.isSuccess=false;
+            this.progressStatus = 'exception'
+            this.progressPercentage = 100
+            this.failedContent='字段导入完成，共成功导入'+JSON.parse(response.data).success+'个字段，失败'+JSON.parse(response.data).failed+'个字段！'
+            this.downloadAddress=`/api/field/template?filename=${JSON.parse(response.data).filename}`
+            this.fileList = []
+            this.importStatusDialogVisible=true;
+          } else {
+            this.buttonDisabled = false
+          }
+        }
+
+        this.$emit('importFields');
+        console.log(response);
+      },
+      dialogSure(){
+        this.importStatusDialogVisible=false;
+        this.$emit('importCancel');
+      }
     },
-    dialogSure () {
-      this.importStatusDialogVisible = false
-      this.$emit('importCancel')
-    }
-  },
-  components: {
-    'import-status-dialog': importStatusDialog
-  },
-  beforeDestroy () {
-    clearInterval(this.intervalProgress)
-  }
-})
+    components:{
+      'import-status-dialog':importStatusDialog
+    },
+    beforeDestroy () {
+      clearInterval(this.intervalProgress)
+    },
+  })
 </script>
 <style lang="scss">
   #import-fields {

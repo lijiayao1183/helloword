@@ -17,7 +17,7 @@
     <div class="alarm-list-content"
          v-loading="loading"
          element-loading-text="拼命加载中">
-
+ 
         <el-table ref="table"
                   :data="data"
                   highlight-current-row
@@ -33,7 +33,7 @@
           <el-table-column prop="port" align="left" label="设备端口" width="280px" >
           </el-table-column>
           <el-table-column prop="alertData" align="left" label="报警图片">
-            <template slot-scope="scope">
+            <template slot-scope="scope"> 
             <div>
               <img style="height: 40px;vertical-align: middle;" preview="1" :preview-text="getPicText(scope.row)" :src="getPic(scope.row)">
             </div>
@@ -45,103 +45,103 @@
   </div>
 </template>
 <script>
-import api from '../scripts/api'
-import DateUtils from '../../../scripts/date-utils'
-import * as _ from 'lodash'
-import {alarmSendStateTypes} from '../mock/mock.data'
-import DateRangePicker from '../../../components/DateRangePicker.vue'
-import Pagination from '../../../components/Pagination.vue'
-import ResponseUtils from '../../../scripts/response-utils'
-import { mapGetters, mapActions } from 'vuex'
-import { ALARM_LIST } from '../../../scripts/page-name'
-
-const isDebug = false
-export default {
-  props: {
-  },
-  data () {
-    return {
-      currentRecord: [],
-      data: [],
-      isShowAlarmSuspendDialog: false,
-      currentSelectRows: [],
-      dateRangeType: 'day',
-      dateRange: [],
-      searchKey: ''
-    }
-  },
-  components: {
-    'pagination': Pagination,
-    'date-range-picker': DateRangePicker
-  },
-  computed: {
-    ...mapGetters({
-      loading: 'loading',
-      search: 'alarmManageList',
-      pagination: 'pagination'
-    }),
-    queryParams () {
-      	return {
+  import api from '../scripts/api'
+  import DateUtils from '../../../scripts/date-utils'
+  import * as _ from 'lodash'
+  import {alarmSendStateTypes} from '../mock/mock.data'
+  import DateRangePicker from '../../../components/DateRangePicker.vue'
+  import Pagination from '../../../components/Pagination.vue' 
+  import ResponseUtils from '../../../scripts/response-utils'
+  import { mapGetters, mapActions } from 'vuex'
+  import { ALARM_LIST } from '../../../scripts/page-name'
+  
+  const isDebug = false
+  export default {
+    props: { 
+    },
+    data () {
+      return {   
+        currentRecord: [], 
+        data: [],
+        isShowAlarmSuspendDialog: false,
+        currentSelectRows: [],
+        dateRangeType: 'day',
+        dateRange: [] ,
+        searchKey: ''
+      }
+    },
+    components: {
+      'pagination': Pagination,
+      'date-range-picker': DateRangePicker
+    },
+    computed: {
+      ...mapGetters({
+        loading: 'loading',
+        search: 'alarmManageList',
+        pagination: 'pagination'
+      }), 
+      queryParams (){
+      	return { 
       	  channelId: '',
       	  keyword: this.searchKey,
       	  startTime: new Date(DateUtils.formate(new Date(this.dateRange[0]), 'yyyy-MM-dd 00:00:00')).getTime(),
-        endTime: new Date(DateUtils.formate(new Date(this.dateRange[1]), 'yyyy-MM-dd 23:59:59')).getTime()
-      	}
-    }
-  },
-  watch: {
-  },
-  mounted () {
-    this.$previewRefresh() // 图片更新后使用图片查看器
-  },
-  created () {
-    this.updateCurrentPageName(ALARM_LIST)
-    this.resetDateRange()
-    this.loadData()
-  },
-  methods: {
-    ...mapActions({
-      updatePageTotal: `updatePageTotal`,
-      updateCurrentPageName: 'updateCurrentPageName'
-    }),
-    getPicText (data) {
-      return data.channelName + '( ' + data.ip + ':' + data.port + ' ) : ' + this.formatDate(data, {property: 'createTime'}) + '	' + data.alertData
-    },
-    getPic (data) {
-      return '/api/alert/pic/' + data.ip + '/' + data.port + '?fileName=' + data.alertData
-    },
-    formatDate (row, column) {
-      let value = row[column.property]
-      if (value) {
-        return DateUtils.formate(value, 'yyyy-MM-dd  hh:mm:ss')
-      } else {
-        return ''
+          endTime: new Date(DateUtils.formate(new Date(this.dateRange[1]), 'yyyy-MM-dd 23:59:59')).getTime()
+      	} 
       }
     },
-    loadData () {
-	    if (this && !this._isDestroyed) { // _isDestroyed 组件是否被销毁
-	        api.recordList(this.queryParams, this.pagination.pageSize, this.pagination.pageIndex).then(data => {
+    watch: { 
+    },
+    mounted () {
+      this.$previewRefresh() ; // 图片更新后使用图片查看器
+    },
+    created () {
+      this.updateCurrentPageName(ALARM_LIST)
+      this.resetDateRange()
+      this.loadData() 
+    },
+    methods: {
+      ...mapActions({
+        updatePageTotal: `updatePageTotal`, 
+        updateCurrentPageName: 'updateCurrentPageName'
+      }),
+      getPicText(data) {
+        return data.channelName+"( "+data.ip+":" +data.port+" ) : "+this.formatDate(data,{property:"createTime"}) + "	"+ data.alertData
+      },
+      getPic(data) {
+        return '/api/alert/pic/'+data.ip+'/'+data.port+'?fileName='+data.alertData
+      },
+      formatDate (row, column) {
+        let value = row[column.property]
+        if (value) {
+          return DateUtils.formate(value, 'yyyy-MM-dd  hh:mm:ss')
+        } else {
+          return ''
+        }
+      },
+      loadData () { 
+	    if(this && !this._isDestroyed){ //_isDestroyed 组件是否被销毁
+	        api.recordList(this.queryParams, this.pagination.pageSize, this.pagination.pageIndex ).then(data => {
 	            this.data = data.data.list
 	            this.updatePageTotal(data.data.total)
 	        }).catch(error => {
 
 	        })
+        }
+      },
+      back(){
+        this.$router.back(-1)
+      },
+      resetDateRange () {
+        let now = new Date()
+        this.dateRange = [new Date(now.getTime() -  6* 24 * 60 * 60 * 1000), now]//最近两周
+      },  
+      dateRangeChange(range) { 
+        console.dir(range)
+        this.dateRange = range
+        this.loadData()
       }
-    },
-    back () {
-      this.$router.back(-1)
-    },
-    resetDateRange () {
-      let now = new Date()
-      this.dateRange = [new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000), now]// 最近两周
-    },
-    dateRangeChange (range) {
-      console.dir(range)
-      this.dateRange = range
-      this.loadData()
     }
   }
-}
 </script>
 <style lang="scss" scoped>
   $alarm-top-height: 34px;
@@ -157,7 +157,7 @@ export default {
       & > * {
         margin-left: 10px;
       }
-
+      
       .search-btn{
         width: 244px;
       }
@@ -178,5 +178,5 @@ export default {
         float: right;
       }
     }
-  }
+  } 
 </style>

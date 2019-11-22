@@ -29,23 +29,23 @@
   </div>
 </template>
 <script>
-import selectOptionMixin from '../mixins/select-option.mixin'
-import fieldMixin from '../mixins/field-mixin'
+  import selectOptionMixin from '../mixins/select-option.mixin';
+  import fieldMixin from '../mixins/field-mixin';
 
-export default {
-  props: ['field', 'value'],
-  data () {
-    return {
-      fieldValue: this.value
-    }
-  },
-  mixins: [selectOptionMixin, fieldMixin],
-  watch: {
-    fieldValue (val) {
-      this.$emit('update:value', val)
+  export default {
+    props: ['field', 'value'],
+    data() {
+      return {
+        fieldValue: this.value
+      }
+    },
+    mixins: [selectOptionMixin, fieldMixin],
+    watch: {
+      fieldValue(val) {
+        this.$emit('update:value', val);
+      }
     }
   }
-}
 </script>
 <style lang="scss">
   #field-value {

@@ -61,89 +61,89 @@
             :total="pagination.total")
 </template>
 <script>
-import UtilsMock from '@system/mock/utils.mock'
-import DateUtils from '../../../../scripts/date-utils'
+  import UtilsMock from '@system/mock/utils.mock'
+  import DateUtils from '../../../../scripts/date-utils'
 
-export default {
-  props: ['panel', 'tableData', 'columns', 'tableOperate', 'pagination', 'arrowColumns', 'moduleName'],
-  data () {
-    return {
-      user: localStorage['admin_name'],
-      isUserOwn: false,
-      multipleSelection: [],
-      pickDate: '',
-      keyWord: '',
-      pickInput: false
-    }
-  },
-  methods: {
-    addFun () {
-      this.$emit('addEvent')
-    },
-    deleteFunc () {
-      this.$emit('deleteEvent', this.multipleSelection)
-    },
-    enableFunc () {
-      this.$emit('enableEvent', this.multipleSelection)
-    },
-    disableFunc () {
-      this.$emit('disableEvent', this.multipleSelection)
-    },
-    searchRole () {
-      this.$emit('searchEvent', this.keyWord)
-    },
-    roleDelete (index, row) {
-      this.$emit('deleteRow', row)
-    },
-    roleEdit (index, row) {
-      this.$emit('editRow', row)
-    },
-    rolePermission (index, row) {
-      this.$emit('permissionRow', row)
-    },
-    handleSelectionChange (val) {
-      console.log(val)
-      let that = this
-      if (val.length == 0) {
-        that.isUserOwn = false
-      } else {
-        this.isUserOwn = val.some(function (item) {
-          return item.account == that.user
-        })
+  export default {
+    props: ['panel', 'tableData', 'columns', 'tableOperate', 'pagination', 'arrowColumns', 'moduleName'],
+    data () {
+      return {
+        user:localStorage['admin_name'],
+        isUserOwn:false,
+        multipleSelection: [],
+        pickDate: '',
+        keyWord: '',
+        pickInput: false
       }
-      this.$emit('selectionChange', val)
     },
-    checkDetail (index, row) {
-      this.$emit('checkDetail', row)
+    methods: {
+      addFun () {
+        this.$emit('addEvent')
+      },
+      deleteFunc () {
+        this.$emit('deleteEvent', this.multipleSelection)
+      },
+      enableFunc () {
+        this.$emit('enableEvent', this.multipleSelection)
+      },
+      disableFunc () {
+        this.$emit('disableEvent', this.multipleSelection)
+      },
+      searchRole () {
+        this.$emit('searchEvent', this.keyWord)
+      },
+      roleDelete (index, row) {
+        this.$emit('deleteRow', row)
+      },
+      roleEdit (index, row) {
+        this.$emit('editRow', row)
+      },
+      rolePermission (index, row) {
+        this.$emit('permissionRow', row)
+      },
+      handleSelectionChange (val) {
+        console.log(val)
+        let that=this
+        if(val.length==0){
+          that.isUserOwn=false
+        }else{
+          this.isUserOwn=val.some(function(item){
+            return item.account==that.user
+        })
+        }
+        this.$emit('selectionChange', val)
+      },
+      checkDetail (index, row) {
+        this.$emit('checkDetail', row)
+      },
+      updatePagination (index) {
+        this.$emit('pageChange', index)
+      },
+      handleSizeChange (val) {
+        this.$emit('pageSizeChange', val)
+        console.log(`每页 ${val} 条`)
+      },
+      keywordChange (value) {
+        console.log(value)
+        this.$emit('update:keyword', value)
+      },
+      pick (date) {
+        let dateArr = date
+        this.$emit('pick', {startTime:dateArr[0], endTime:dateArr[1]})
+      },
+      resetRole (index, row) {
+        this.$emit('hanlerReset', row)
+      }
     },
-    updatePagination (index) {
-      this.$emit('pageChange', index)
-    },
-    handleSizeChange (val) {
-      this.$emit('pageSizeChange', val)
-      console.log(`每页 ${val} 条`)
-    },
-    keywordChange (value) {
-      console.log(value)
-      this.$emit('update:keyword', value)
-    },
-    pick (date) {
-      let dateArr = date
-      this.$emit('pick', {startTime: dateArr[0], endTime: dateArr[1]})
-    },
-    resetRole (index, row) {
-      this.$emit('hanlerReset', row)
-    }
-  },
-  computed: {},
-  created () {
-    let today = UtilsMock.getToday()
-    this.pickDate = [today, today]
-    if (this.panel.datepicker) {
-      this.$emit('pick', {startTime: today, endTime: today})
+    computed: {},
+    created () {
+      let today = UtilsMock.getToday()
+      this.pickDate = [today, today]
+      if (this.panel.datepicker) {
+        this.$emit('pick', {startTime: today, endTime: today})
+      }
     }
   }
-}
 </script>
 <style lang="scss">
   .action-btn-container {

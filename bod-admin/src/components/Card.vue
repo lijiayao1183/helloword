@@ -9,18 +9,18 @@
   </div>
 </template>
 <script>
-export default {
-  props: {
-    isShowTitle: {
-      type: Boolean,
-      default: true
-    },
-    title: {
-      type: String,
-      default: '未命名'
+  export default {
+    props: {
+      isShowTitle: {
+        type: Boolean,
+        default: true
+      },
+      title: {
+        type: String,
+        default: '未命名'
+      }
     }
   }
-}
 </script>
 <style lang="scss" scoped>
   .card {

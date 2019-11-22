@@ -27,7 +27,7 @@ const state = {
     dbConfig: {
 	  prop: 'requestTime',
 	  order: 'descending'
-    },
+	},
     queryConfig: {
   	  prop: 'requestTime',
   	  order: 'descending'
@@ -35,7 +35,7 @@ const state = {
   	intoQueryConfig: {
 	  prop: 'requestTime',
 	  order: 'descending'
-    },
+	},
   	queryDetail: {
       prop: 'createTime',
       order: 'descending'
@@ -126,7 +126,7 @@ const actions = {
   },
   updateSnapshotListSort ({commit, state}, sort) {
     commit(types.SNAPSHOT_LIST_SORT, sort)
-  }
+  },
 }
 
 const mutations = {
@@ -169,7 +169,7 @@ const mutations = {
   [types.FLOW_VERSION_RESULT_SORT] (state, sort) {
     state.flowManage.versionResult = sort
   },
-  [types.SNAPSHOT_LIST_SORT] (state, sort) {
+  [types.SNAPSHOT_LIST_SORT] (state, sort){
     state.snapshotList.list = sort
   }
 }
@@ -180,3 +180,4 @@ export default {
   actions,
   mutations
 }
+

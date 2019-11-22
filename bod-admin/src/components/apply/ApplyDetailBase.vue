@@ -68,18 +68,19 @@ export default {
       })
     }
   },
-  data () {
+  data() {
     return {
       typeOption: applyOptions.type
     }
   },
   methods: {
-    formatDate (date) {
+    formatDate(date) {
       return DateUtil.formate(date)
     },
-    showMessage () {
+    showMessage(){
       this.$message.warning('权限不足，无法跳转')
     }
   }
 }
 </script>
+

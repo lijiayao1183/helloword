@@ -33,7 +33,7 @@ const isStartMoreThanEndValue = (value, args) => {
 const customFunc = (value, args) => {
   return args[0](value)
 }
-const valueRules = (value, args) => { // 仅适用于创建字段枚举型取值校验
+const valueRules = (value, args) => {//仅适用于创建字段枚举型取值校验
   if (args && args.length > 1) {
     let isValid = true
     for (var i = 0; i < args.length - 1; i++) {
@@ -70,7 +70,7 @@ const customArray = (value, args) => {
   }
   return true
 }
-const specialCharacterRule = (value, args) => { // 字段编辑枚举型展示值校验
+const specialCharacterRule = (value, args) => {//字段编辑枚举型展示值校验
   // let regEn = /[`~!@#$%^&*()+<>?:"{},.\/;'[\]]/im
   let regEn = /[:,;|]/im
   // let regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im
@@ -89,7 +89,7 @@ const numberInRange = (value, args) => {
   let start = args[0]
   let end = args[1]
   let startEquals = (start[0] === '[')
-  if (start && start.substr(1).length > 0) {
+  if (start&&start.substr(1).length > 0) {
     start = parseFloat(start.substr(1))
     if (startEquals) {
       if (value < start) {
@@ -102,7 +102,7 @@ const numberInRange = (value, args) => {
     }
   }
 
-  if (end && end.length >= 1) {
+  if (end&&end.length >= 1) {
     let endEquals = (end[end.length - 1] === ']')
     if (end.length >= 2) {
       end = parseFloat(end.substr(0, end.length - 1))
@@ -138,7 +138,7 @@ const nameValidator = {
   }
 }
 
-const codeValidate = {
+const codeValidate  = {
   initial (value, args) {
     return value.indexOf('_') !== 0
   },
@@ -181,15 +181,17 @@ Validator.extend('isStartTimeMoreThanEndTime', customFunc)
 Validator.extend('repeatValues', repeatValues)
 Validator.extend('isInteger', isInteger)
 
+
 Validator.extend('sumValidate', sumValidate)
-// name validator
+//name validator
 Validator.extend('nameTooLong', nameValidator.tooLong)
 Validator.extend('veryLong', nameValidator.veryLong)
 Validator.extend('nameCharacter', nameValidator.character)
 Validator.extend('nameInitial', nameValidator.initial)
 Validator.extend('nameExist', nameValidator.exist)
 
-// code validator
+
+//code validator
 Validator.extend('codeInitial', codeValidate.initial)
 Validator.extend('codeCharacter', codeValidate.character)
 Validator.extend('keywordConflict', codeValidate.keywordConflict)

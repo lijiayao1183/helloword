@@ -159,7 +159,7 @@ export default {
       default: () => ([])
     }
   },
-  data () {
+  data() {
     return {
       nodeStatus: applyOption.nodeStatus,
       statusList: [
@@ -184,7 +184,7 @@ export default {
     }
   },
   computed: {
-    nodeList () {
+    nodeList() {
       let arr = []
       let index = this.nodes.findIndex(node => node.isWait)
       if (index > -1) {
@@ -199,25 +199,25 @@ export default {
       })
       return arr
     },
-    label () {
+    label() {
       return this.statusList.find(status => status.label === this.formData.status).text
     },
-    executeLabel () {
+    executeLabel() {
       return this.executeStatusList.find(status => status.label === this.formData.status).text
     }
   },
   methods: {
-    formatDate (date) {
+    formatDate(date) {
       return DateUtil.formate(date)
     },
-    getDesText (status) {
-      if (status === 4) {
+    getDesText(status) {
+      if(status===4) {
         return '终止'
-      } else {
+      }else{
         return this.statusList.find(s => s.label === status).text
       }
     },
-    stepDblClick (node) {
+    stepDblClick(node) {
       if (!this.isReadOnly && node.isWait && node.canAudit) {
         // 审批
         this.isExecute = false
@@ -238,28 +238,28 @@ export default {
         this.saving = false
       }
     },
-    stepClick (node) {
+    stepClick(node) {
       if (!this.isReadOnly || node.showExecute) {
         this.selectNodeIndex = node.nodeLevel
       }
     },
-    handleClose (done) {
+    handleClose(done) {
       this.$confirm('确认关闭？')
         .then(() => {
           done()
           this.cancel()
         })
     },
-    changeStatus (status) {
+    changeStatus(status) {
       this.$refs.form.validateField('reason')
       if (status === 1 && !this.users) {
         this.loadUsers(this.currentNodeId)
       }
     },
-    changeExecuteStatus () {
+    changeExecuteStatus() {
       this.$refs.form.validateField('reason')
     },
-    loadUsers () {
+    loadUsers() {
       comApi.apply.authorization(this.currentNodeId).then(res => {
         this.users = res.userInfos
         // if (!this.users.length) {
@@ -270,7 +270,7 @@ export default {
         this.$message.error('接受转授权人员获取失败')
       })
     },
-    save () {
+    save() {
       this.$refs.form.validate(valide => {
         if (valide) {
           let text = ''

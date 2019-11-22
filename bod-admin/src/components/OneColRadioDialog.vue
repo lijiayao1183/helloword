@@ -28,55 +28,55 @@
   </el-dialog>
 </template>
 <script type="text/babel">
-export default {
-  props: {
-    checkedId: [Number],
-    data: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    title: {
-      type: String,
-      default () {
-        return ''
-      }
-    },
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    col: {
-      type: Object,
-      default () {
-        return {
-          prop: 'name',
-          title: '名称'
+  export default {
+    props: {
+      checkedId: [Number],
+      data: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      title: {
+        type: String,
+        default () {
+          return ''
+        }
+      },
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      col: {
+        type: Object,
+        default () {
+          return {
+            prop: 'name',
+            title: '名称'
+          }
         }
       }
-    }
-  },
-  data () {
-    return {
-      currentCheckedId: this.checkedId
-    }
-  },
-  watch: {
-    checkedId () {
-      this.currentCheckedId = this.checkedId
-    }
-  },
-  computed: {},
-  methods: {
-    cancel () {
-      this.$emit('cancel')
     },
-    ok () {
-      this.$emit('ok', this.currentCheckedId)
+    data () {
+      return {
+        currentCheckedId: this.checkedId
+      }
+    },
+    watch: {
+      checkedId () {
+        this.currentCheckedId = this.checkedId
+      }
+    },
+    computed: {},
+    methods: {
+      cancel () {
+        this.$emit('cancel')
+      },
+      ok () {
+        this.$emit('ok', this.currentCheckedId)
+      }
     }
   }
-}
 </script>
 <style type="scss" scoped>
 

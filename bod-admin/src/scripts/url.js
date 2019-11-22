@@ -12,7 +12,7 @@ module.exports = {
     return projectName === projectNames.shuzun_ta
   },
   login: {
-    defaultLink: `${rootPath}/html/${projectName === projectNames.shuzun_ta
+    defaultLink: `${rootPath}/html/${ projectName === projectNames.shuzun_ta
       ? 'engine-manage.html'
       : 'data-process.html'}`,
     path: `${rootPath}/html/login.html`// ${window ? link = window.location.pathname : ''}

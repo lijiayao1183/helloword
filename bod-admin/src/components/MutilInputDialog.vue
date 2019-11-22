@@ -34,70 +34,70 @@
   </el-dialog>
 </template>
 <script type="text/babel">
-import validateRules from '../scripts/validate-rules'
-import * as _ from 'lodash'
+  import validateRules from '../scripts/validate-rules'
+  import * as _ from 'lodash'
 
-export default {
-  props: {
-    title: {
-      type: String,
-      default: '标题'
-    },
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    data: {
-      type: Object,
-      default: () => {
-        return {}
-      }
-    },
-    fields: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    formRules: {
-      type: Object,
-      default: () => {
-        return {}
-      }
-    },
-    isDisabledSubmit: {
-      type: Boolean,
-      default: () => {
-        return false
-      }
-    },
-    tooltip: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    innerFormRules () {
-      let rules = _.cloneDeep(this.formRules)
-      _.forEach(this.fields, field => {
-        rules[field.name] = _.compact(_.concat(this.formRules[field.name], validateRules[field.name]))
-      })
-      return rules
-    }
-  },
-  methods: {
-    cancel () {
-      this.$emit('cancel')
-    },
-    ok () {
-      this.$refs['createItemForm'].validate((valid) => {
-        if (valid) {
-          this.$emit('ok', this.data)
+  export default {
+    props: {
+      title: {
+        type: String,
+        default: '标题'
+      },
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      data: {
+        type: Object,
+        default: () => {
+          return {}
         }
-      })
+      },
+      fields: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      formRules: {
+        type: Object,
+        default: () => {
+          return {}
+        }
+      },
+      isDisabledSubmit: {
+        type: Boolean,
+        default: () => {
+          return false
+        }
+      },
+      tooltip: {
+        type: String,
+        default: ''
+      }
+    },
+    computed: {
+      innerFormRules () {
+        let rules = _.cloneDeep(this.formRules)
+        _.forEach(this.fields, field => {
+          rules[field.name] = _.compact(_.concat(this.formRules[field.name], validateRules[field.name]))
+        })
+        return rules
+      }
+    },
+    methods: {
+      cancel () {
+        this.$emit('cancel')
+      },
+      ok () {
+        this.$refs['createItemForm'].validate((valid) => {
+          if (valid) {
+            this.$emit('ok', this.data)
+          }
+        })
+      }
     }
   }
-}
 </script>
 <style lang="scss">
 </style>

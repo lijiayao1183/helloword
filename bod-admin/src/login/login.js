@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Element from 'element-ui'
-import store from '../store/index'
-import 'element-ui/lib/theme-chalk/index.css'
-import Login from './Login.vue'
+import Vue from 'vue';
+import Element from 'element-ui';
+import store from '../store/index';
+import 'element-ui/lib/theme-chalk/index.css';
+import Login from './Login.vue';
 
-Vue.use(Element)
+Vue.use(Element);
 
 new Vue({
   el: '#app',
@@ -13,9 +13,9 @@ new Vue({
   components: {Login}
 });
 
-(() => { // forbidden back
-  history.pushState(null, null, document.URL)
+(() => {//forbidden back
+  history.pushState(null, null, document.URL);
   window.addEventListener('popstate', function () {
-    history.pushState(null, null, document.URL)
-  })
-})()
+    history.pushState(null, null, document.URL);
+  });
+})();

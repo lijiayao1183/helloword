@@ -4,11 +4,11 @@
       <time-line-item v-if="showTitle">
         <span class="column" style="padding-right: 78px;">创建时间</span>
         <span class="column" style="padding-right: 14px;">触发动作</span>
-        <span class="column" style="padding-right: 80px;">开始时间    </span>
-        <span class="column" style="padding-right: 80px;">结束时间    </span>
+        <span class="column" style="padding-right: 80px;">开始时间    </span> 
+        <span class="column" style="padding-right: 80px;">结束时间    </span> 
         <span class="column">状态 </span>
       </time-line-item>
-
+      
       <time-line-item v-for="item in displayData">
         <template v-for="column in columns">
           <span class="column">{{item[column]}}</span>
@@ -24,60 +24,60 @@
   </el-dialog>
 </template>
 <script>
-import { Timeline, TimelineItem } from 'iview'
-import 'iview/dist/styles/iview.css'
+  import { Timeline, TimelineItem } from 'iview'
+  import 'iview/dist/styles/iview.css'
 
-const lineCount = 5
-export default {
-  props: {
-    data: {
-      type: Array,
-      default () {
-        return []
+  const lineCount = 5
+  export default {
+    props: {
+      data: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      columns: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      showTitle: {
+        type: Boolean,
+        default: false
+      },
+      title: {
+        type: String,
+        default: '日志'
       }
     },
-    columns: {
-      type: Array,
-      default () {
-        return []
+    data () {
+      return {
+        isShowAll: false
       }
     },
-    showTitle: {
-      type: Boolean,
-      default: false
-    },
-    title: {
-      type: String,
-      default: '日志'
-    }
-  },
-  data () {
-    return {
-      isShowAll: false
-    }
-  },
-  computed: {
-    hasMore () {
-      return this.data.length > lineCount
-    },
-    displayData () {
-      if (this.hasMore && !this.isShowAll) {
-        return _.slice(this.data, 0, lineCount)
-      } else {
-        return this.data
+    computed: {
+      hasMore () {
+        return this.data.length > lineCount
+      },
+      displayData () {
+        if (this.hasMore && !this.isShowAll) {
+          return _.slice(this.data, 0, lineCount)
+        } else {
+          return this.data
+        }
       }
-    }
-  },
-  components: {
-    'time-line': Timeline,
-    'time-line-item': TimelineItem
-  },
-  methods: {
-    close () {
-      this.$emit('close')
+    },
+    components: {
+      'time-line': Timeline,
+      'time-line-item': TimelineItem
+    },
+    methods: {
+      close () {
+        this.$emit('close')
+      }
     }
   }
-}
 </script>
 <style lang="scss">
   #log-dialog {

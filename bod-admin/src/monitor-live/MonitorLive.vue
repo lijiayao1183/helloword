@@ -6,17 +6,17 @@
       router-view
 </template>
 <script>
-import * as _ from 'lodash'
-import TopNavBar from '../components/TopNavBar.vue'
+  import * as _ from 'lodash'
+  import TopNavBar from '../components/TopNavBar.vue'
 
-export default {
-  name: 'app',
-  components: {
-    'top-nav-bar': TopNavBar
+  export default {
+    name: 'app',
+    components: {
+      'top-nav-bar': TopNavBar
+    }
   }
-}
 </script>
-<style lang="scss">
+<style lang="scss"> 
   @import '../assets/sass/common/common.scss';
   .el-pagination__jump input{
     height: 28px
@@ -42,7 +42,7 @@ export default {
       overflow-y: auto;
       overflow-x: hidden;
     }
-
+    
     .is-stop{
 	  color: #97a8be;
 	}
@@ -70,7 +70,7 @@ textarea:-ms-input-placeholder{
     border: 1px solid #c2e1f5;
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
+}  
 .arrow_box:before,
 .arrow_box:after {
     position: absolute;
@@ -88,7 +88,7 @@ textarea:-ms-input-placeholder{
     top: 38%;
     left: 100%;
 }
-
+	
 .arrow_box.rright:after {
     border-left-color: #c5c5c5;
     border-width: 10px;

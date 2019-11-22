@@ -29,9 +29,9 @@ export default new Router({
     //   redirect: '/user_manage'
     // },
     {
-      path: '/user_info',
+		path: '/user_info',
 	    component: UserInfo,
-      name: 'displayInfo'
+      name:'displayInfo'
     },
     {
       path: '/user_manage',
@@ -102,6 +102,6 @@ export default new Router({
 	  {
 	    path: '/editInterface/:id',
 	    component: EditInterfaceInfo
-	  }
+	  },
   ]
 })

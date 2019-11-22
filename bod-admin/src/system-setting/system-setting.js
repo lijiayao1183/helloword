@@ -10,16 +10,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.config.productionTip = false
 
 axios.interceptors.request.use(function (config) {
-  if (!store.getters.loading) {
-    store.dispatch('loading')
-  }
-  store.dispatch('addLoadingCount')
-  // if (config.method === 'get') {
-  //   config.url += '?' + moment().unix()
-  // }
-  return config
+    if (!store.getters.loading) {
+      store.dispatch('loading')
+    }
+    store.dispatch('addLoadingCount')
+    // if (config.method === 'get') {
+    //   config.url += '?' + moment().unix()
+    // }
+    return config
 }, function (err) {
-  return Promise.reject(err)
+    return Promise.reject(err)
 })
 axios.interceptors.response.use(
   (res) => {
@@ -48,7 +48,7 @@ new Vue({
   store,
   template: '<App/>',
   components: { App },
-  data: {
+  data:{
     isHaiguan: true
   }
 })

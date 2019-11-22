@@ -53,149 +53,149 @@
   </el-dialog>
 </template>
 <script type="text/babel">
-import api from '../scripts/api'
-import generalApi from '../field-manage/general-field/scripts/api'
-import engineApi from '../engine-manage/field/scripts/api'
-import cascader from './Cascader.vue'
-import selectOption from '../mixins/select-option.mixin'
+  import api from '../scripts/api'
+  import generalApi from '../field-manage/general-field/scripts/api'
+  import engineApi from '../engine-manage/field/scripts/api'
+  import cascader from './Cascader.vue'
+  import selectOption from '../mixins/select-option.mixin'
 
-export default {
-  props: {
-    checkedFiledEn: [String],
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    isOutputFiled: {
-      type: Boolean,
-      default: true
-    },
-    data: {
-      type: Array,
-      default () {
-        return null
-      }
-    },
-    hasCheckedFieldEns: {
-      type: Array,
-      default () {
-        return []
-      }
-    }
-  },
-  data () {
-    return {
-      engineId: this.$route.params.engineId,
-      isReadOnly: this.$root.$data.isReadOnly,
-      key: '',
-      fieldData: [],
-      currentCheckedFieldEn: this.checkedFiledEn
-    }
-  },
-  mixins: [selectOption],
-  watch: {
-    checkedFiledEn () {
-      this.currentCheckedFieldEn = this.checkedFiledEn
-    },
-    visible () {
-      if (this.visible) {
-        if (_.isNull(this.data)) {
-          this.loadData()
-        } else {
-          this.fieldData = _.cloneDeep(this.data)
+  export default {
+    props: {
+      checkedFiledEn: [String],
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      isOutputFiled: {
+        type: Boolean,
+        default: true
+      },
+      data: {
+        type: Array,
+        default () {
+          return null
+        }
+      },
+      hasCheckedFieldEns: {
+        type: Array,
+        default () {
+          return []
         }
       }
-    }
-  },
-  computed: {
-    filteredFiledData () {
-      let key = _.trim(this.key)
-      let data = this.fieldData
-      if (!_.isEmpty(key)) {
-        data = _.filter(data, (o) => {
-          return this.searchFieldByKey(o, key)
-        })
-      }
-
-      return data
-    }
-  },
-  created () {
-    if (!this.data) {
-      this.loadData()
-    }
-  },
-  methods: {
-    loadData () {
-      api.field.getUnPage('', this.engineId, this.isOutputFiled ? 1 : 0).then((data) => {
-        this.fieldData = _.filter(data, {status: 1})
-      }).catch(() => {
-
-      })
     },
-    formatType (row, column) {
-      let value = row[column.property]
-      if (value) {
-        return _.find(this.fieldValueTypeOption, {value: value}).label
-      } else {
-        return ''
+    data () {
+      return {
+        engineId: this.$route.params.engineId,
+        isReadOnly:this.$root.$data.isReadOnly,
+        key: '',
+        fieldData: [],
+        currentCheckedFieldEn: this.checkedFiledEn
       }
     },
-    valueChange (value) {
-      if (_.first(value) === 1) {
-        if (value.length > 1) {
-          generalApi.field.get('', _.last(value), '', {}, this.isOutput, '').then((data) => {
-            this.fieldData = _.filter(data.list, {isOutput: this.isOutputFiled ? 1 : 0, status: 1})
-          })
-        } else {
-          generalApi.field.get('', 0, '', {}, this.isOutput, '').then((data) => {
-            this.fieldData = _.filter(data.list, {isOutput: this.isOutputFiled ? 1 : 0, status: 1})
+    mixins:[selectOption],
+    watch: {
+      checkedFiledEn () {
+        this.currentCheckedFieldEn = this.checkedFiledEn
+      },
+      visible () {
+        if (this.visible) {
+          if (_.isNull(this.data)) {
+            this.loadData()
+          } else {
+            this.fieldData = _.cloneDeep(this.data)
+          }
+        }
+      }
+    },
+    computed: {
+      filteredFiledData () {
+        let key = _.trim(this.key)
+        let data = this.fieldData
+        if (!_.isEmpty(key)) {
+          data = _.filter(data, (o) => {
+            return this.searchFieldByKey(o, key)
           })
         }
-      } else if (_.first(value) === 2) {
-        if (value.length > 1) {
-          engineApi.field.get(this.engineId, _.last(value), '', {pageSize: 0, pageNo: 0}, '', '').then(data => {
-            this.fieldData = _.filter(data.list, {isOutput: this.isOutputFiled ? 1 : 0, status: 1})
-          })
-        } else {
-          engineApi.field.get(this.engineId, '0', '', {pageSize: 0, pageNo: 0}, '', '').then(data => {
-            this.fieldData = _.filter(data.list, {isOutput: this.isOutputFiled ? 1 : 0, status: 1})
-          })
-        }
-      } else {
-        api.field.getUnPage('', this.engineId).then((data) => {
-          this.fieldData = _.filter(data, {isOutput: this.isOutputFiled ? 1 : 0, status: 1})
+
+        return data
+      }
+    },
+    created(){
+      if(!this.data) {
+        this.loadData()
+      }
+    },
+    methods: {
+      loadData () {
+        api.field.getUnPage('', this.engineId, this.isOutputFiled ? 1 : 0).then((data) => {
+          this.fieldData = _.filter(data, {status: 1})
         }).catch(() => {
 
         })
-      }
-    },
-    hasCheckedRow (fieldEn) {
-      return _.includes(this.hasCheckedFieldEns, fieldEn)
-    },
-    tableRowStyle (row) {
-      if (this.hasCheckedRow(row.fieldEn)) {
-        return {color: '#AAAAAA'}
-      } else {
-        return ''
-      }
-    },
-    searchFieldByKey (field, key) {
-      return field.fieldCn && field.fieldCn.indexOf(key) > -1 ||
+      },
+      formatType (row, column) {
+        let value = row[column.property]
+        if (value) {
+          return _.find(this.fieldValueTypeOption, {value: value}).label
+        } else {
+          return ''
+        }
+      },
+      valueChange(value){
+        if(_.first(value)=== 1){
+          if(value.length>1){
+            generalApi.field.get('',_.last(value),'',{},this.isOutput,'').then((data)=>{
+              this.fieldData=_.filter(data.list, {isOutput: this.isOutputFiled ? 1 : 0, status: 1});
+            })
+          }else{
+            generalApi.field.get('',0,'',{},this.isOutput,'').then((data)=>{
+              this.fieldData=_.filter(data.list, {isOutput: this.isOutputFiled ? 1 : 0, status: 1});
+            })
+          }
+        }else if(_.first(value)=== 2){
+          if(value.length>1){
+            engineApi.field.get(this.engineId,_.last(value),'',{pageSize:0,pageNo:0},'','').then(data=>{
+              this.fieldData=_.filter(data.list, {isOutput: this.isOutputFiled ? 1 : 0, status: 1});
+            })
+          }else{
+            engineApi.field.get(this.engineId,'0','',{pageSize:0,pageNo:0},'','').then(data=>{
+              this.fieldData=_.filter(data.list, {isOutput: this.isOutputFiled ? 1 : 0, status: 1})
+            })
+          }
+        }else{
+          api.field.getUnPage('', this.engineId).then((data) => {
+            this.fieldData = _.filter(data, {isOutput: this.isOutputFiled ? 1 : 0, status: 1})
+          }).catch(() => {
+
+          })
+        }
+      },
+      hasCheckedRow (fieldEn) {
+        return _.includes(this.hasCheckedFieldEns, fieldEn)
+      },
+      tableRowStyle (row) {
+        if (this.hasCheckedRow(row.fieldEn)) {
+          return {color: '#AAAAAA'}
+        } else {
+          return ''
+        }
+      },
+      searchFieldByKey (field, key) {
+        return field.fieldCn && field.fieldCn.indexOf(key) > -1 ||
           field.fieldEn && field.fieldEn.indexOf(key) > -1
+      },
+      cancel () {
+        this.$emit('cancel')
+      },
+      ok () {
+        let checkedField = _.find(this.fieldData, {fieldEn: this.currentCheckedFieldEn})
+        this.$emit('ok', checkedField)
+      }
     },
-    cancel () {
-      this.$emit('cancel')
-    },
-    ok () {
-      let checkedField = _.find(this.fieldData, {fieldEn: this.currentCheckedFieldEn})
-      this.$emit('ok', checkedField)
+    components:{
+      'cascader':cascader
     }
-  },
-  components: {
-    'cascader': cascader
   }
-}
 </script>
 <style lang="scss">
     #select-inputs{

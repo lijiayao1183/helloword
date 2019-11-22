@@ -143,7 +143,7 @@ export default {
           {label: '或者', value: '||'},
           {label: '并且(', value: '&&('},
           {label: '或者(', value: '||('}
-        ]
+        ],
     }
   },
   methods: {
@@ -162,16 +162,16 @@ export default {
       }
       return option
     },
-    getValueScopeString (scopeOption) {
-      let scopeString = ''
-      _.forEach(scopeOption, (obj, index) => {
-        if (scopeString.length > 0) {
-          scopeString = scopeString + ',' + obj.label + ':' + obj.value
-        } else {
-          scopeString = scopeString + obj.label + ':' + obj.value
+    getValueScopeString(scopeOption){
+      let scopeString='';
+      _.forEach(scopeOption,(obj,index)=>{
+        if(scopeString.length>0){
+          scopeString=scopeString+','+obj.label+':'+obj.value;
+        }else{
+          scopeString=scopeString+obj.label+':'+obj.value;
         }
       })
-      return scopeString
+      return scopeString;
     }
   }
 }

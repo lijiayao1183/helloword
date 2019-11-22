@@ -12,67 +12,67 @@
   </div>
 </template>
 <script>
-export default {
-  props: {
-    data: {
-      type: Array,
-      default () {
-        return []
+  export default {
+    props: {
+      data: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      defaultCheckedStatus: {
+        type: Array,
+        default () {
+          return []
+        }
       }
-    },
-    defaultCheckedStatus: {
-      type: Array,
-      default () {
-        return []
-      }
-    }
-  },
-  data () {
-    return {
-      visible: false,
-      checkedStatus: [],
-      allStatus: [],
-      isCheckedAll: false
-    }
-  },
-  watch: {
-    checkedStatus (newVal) {
-      this.isCheckedAll = newVal.length === this.allStatus.length
-      this.$emit('checkedStatusChange', this.checkedStatus)
     },
     data () {
+      return {
+        visible: false,
+        checkedStatus: [],
+        allStatus: [],
+        isCheckedAll: false
+      }
+    },
+    watch: {
+      checkedStatus (newVal) {
+        this.isCheckedAll = newVal.length === this.allStatus.length
+        this.$emit('checkedStatusChange', this.checkedStatus)
+      },
+      data () {
+        this.init()
+      }
+    },
+    created () {
       this.init()
-    }
-  },
-  created () {
-    this.init()
-  },
-  methods: {
-    init () {
-      this.allStatus = _.map(this.data, 'value')
-      if (this.defaultCheckedStatus.length === 0) {
-        this.checkedStatus = _.cloneDeep(this.allStatus)
-      } else {
-        this.checkedStatus = _.cloneDeep(this.defaultCheckedStatus)
+    },
+    methods: {
+      init () {
+        this.allStatus = _.map(this.data, 'value')
+        if (this.defaultCheckedStatus.length === 0) {
+          this.checkedStatus = _.cloneDeep(this.allStatus)
+        } else {
+          this.checkedStatus = _.cloneDeep(this.defaultCheckedStatus)
+        }
+      },
+      checkedAllChange (val) {
+        if (val) {
+          this.checkedStatus = _.cloneDeep(this.allStatus)
+        } else {
+          this.checkedStatus = []
+        }
+      },
+      toggleFilter () {
+        this.visible = !this.visible
       }
     },
-    checkedAllChange (val) {
-      if (val) {
-        this.checkedStatus = _.cloneDeep(this.allStatus)
-      } else {
-        this.checkedStatus = []
-      }
-    },
-    toggleFilter () {
-      this.visible = !this.visible
+    mounted () {
+      document.addEventListener('click', () => {
+        this.visible = false
+      })
     }
-  },
-  mounted () {
-    document.addEventListener('click', () => {
-      this.visible = false
-    })
   }
-}
 </script>
 <style lang="scss" scoped>
   $themeColor: #3e8feb;

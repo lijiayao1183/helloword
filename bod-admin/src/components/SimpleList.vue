@@ -12,59 +12,59 @@
   </div>
 </template>
 <script>
-import * as $ from 'jquery'
-import * as _ from 'lodash'
+  import * as $ from 'jquery'
+  import * as _ from 'lodash'
 
-const uuid = require('node-uuid')
+  const uuid = require('node-uuid')
 
-export default {
-  props: {
-    data: {
-      type: [Array, Object],
-      default () {
-        return []
+  export default {
+    props: {
+      data: {
+        type: [Array, Object],
+        default () {
+          return []
+        }
+      },
+      name: {
+        type: String,
+        default: 'name'
       }
     },
-    name: {
-      type: String,
-      default: 'name'
-    }
-  },
-  computed: {
-    innerData () {
-      if (_.isArray(this.data)) {
-        return this.data
-      } else {
-        return [this.data]
+    computed: {
+      innerData () {
+        if (_.isArray(this.data)) {
+          return this.data
+        } else {
+          return [this.data]
+        }
       }
-    }
-  },
-  data () {
-    return {
-      disabledValues: {},
-      uniqId: uuid.v1()
-    }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.updateDisabledValues()
-    })
-  },
-  methods: {
-    updateDisabledValues () {
-      _.forEach(this.innerData, (item, index) => {
-        let li = $(`#${this.uniqId}_${index}`)[0]
-        let disabled = li.offsetWidth >= li.scrollWidth
-        this.$set(this.disabledValues, index, disabled)
+    },
+    data () {
+      return {
+        disabledValues: {},
+        uniqId: uuid.v1()
+      }
+    },
+    mounted () {
+      this.$nextTick(() => {
+        this.updateDisabledValues()
+      })
+    },
+    methods: {
+      updateDisabledValues () {
+        _.forEach(this.innerData, (item, index) => {
+          let li = $(`#${this.uniqId}_${index}`)[0]
+          let disabled = li.offsetWidth >= li.scrollWidth
+          this.$set(this.disabledValues, index, disabled)
+        })
+      }
+    },
+    updated () {
+      this.$nextTick(() => {
+        this.updateDisabledValues()
       })
     }
-  },
-  updated () {
-    this.$nextTick(() => {
-      this.updateDisabledValues()
-    })
   }
-}
 </script>
 <style lang="scss">
   $border: 1px solid #dedede;

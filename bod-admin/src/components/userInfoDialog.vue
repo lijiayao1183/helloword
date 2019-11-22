@@ -42,109 +42,112 @@
   }
 </style>
 <script>
-import api from '../scripts/api'
-import UserApi from '../system-setting/api/systemconfig/usermanage.api'
-import bus from '../scripts/bus'
-export default {
-  props: {
-    userFormVisible: {
-      type: Boolean,
-      default: false
-    },
-    user: {
-      type: Object,
-      default: {
+  import api from '../scripts/api';
+  import UserApi from '../system-setting/api/systemconfig/usermanage.api';
+  import bus from '../scripts/bus'
+  export default {
+    props:{
+      userFormVisible:{
+        type:Boolean,
+        default:false
+      },
+      user:{
+        type:Object,
+        default:{
 
+        }
+      },
+      pswForm:{
+        type:Object,
+        default:{}
       }
     },
-    pswForm: {
-      type: Object,
-      default: {}
-    }
-  },
-  data () {
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请确认新密码'))
-      } else if (value !== this.pswForm.password) {
-        callback(new Error('两次输入密码不一致!'))
-      } else {
-        callback()
+    data() {
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请确认新密码'));
+        } else if (value !== this.pswForm.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
       }
-    }
-    var validateNewPass = (rule, value, callback) => {
-      if (value == this.pswForm.oldPassword) {
-        callback(new Error('不能与原密码重复'))
-      } else {
-        callback()
+      var validateNewPass = (rule,value,callback) =>{
+        if(value == this.pswForm.oldPassword){
+          callback(new Error('不能与原密码重复'))
+        }else{
+          callback();
+        }
       }
-    }
-    var checkOldPass = (rule, value, callback) => {
-      if (value == '111111') {
-        callback(new Error('不能修改为初始密码'))
-      } else {
-        callback()
+      var checkOldPass = (rule,value,callback) =>{
+        if(value == '111111'){
+          callback(new Error('不能修改为初始密码'))
+        }else{
+          callback();
+        }
       }
-    }
-    return {
-      validatePass: false,
-      updatePsw: false,
-      userRules: {
-        employeeId: [
-          {required: true, message: '请输入员工编号', trigger: 'blur' }
-        ],
-        nickName: [{required: true, message: '请输入名称', trigger: 'blur' }],
-        cellphone: [{required: true, message: '请输入电话号码', trigger: 'blur' }],
-        email: [{required: true, message: '请输入邮箱', trigger: 'blur' }]
+      return {
+        validatePass:false,
+        updatePsw:false,
+        userRules:{
+          employeeId:[
+            {required: true, message: '请输入员工编号', trigger: 'blur' }
+          ],
+          nickName:[{required: true, message: '请输入名称', trigger: 'blur' }],
+          cellphone:[{required: true, message: '请输入电话号码', trigger: 'blur' }],
+          email:[{required: true, message: '请输入邮箱', trigger: 'blur' }]
+
+        },
+        pswRule:{
+          oldPassword:[
+            {validator:checkOldPass,trigger:'blur'},
+            {required: true, message: '请输入原密码', trigger: 'blur' }
+            ],
+          password:[{required: true, message: '请输入新密码', trigger: 'blur' },{validator:validateNewPass,trigger:'blur'}],
+          confirmPassword:[
+            {validator:validatePass, trigger: 'blur'}
+          ]
+        }
+      };
+    },
+    methods:{
+      updateInfo(formName1,formName2){
+        this.$refs[formName1].validate((valid) => {
+          if(this.updatePsw){
+            this.$refs[formName2].validate((valid1)=>{
+              if (valid && valid1) {
+                bus.$emit('updateUserWithPsw');
+              } else {
+                return false;
+              }
+            })
+          }else{
+            if(valid){
+              bus.$emit('updateUserSuccess');
+            }else{
+              return false;
+            }
+          }
+
+
+        });
 
       },
-      pswRule: {
-        oldPassword: [
-          {validator: checkOldPass, trigger: 'blur'},
-          {required: true, message: '请输入原密码', trigger: 'blur' }
-        ],
-        password: [{required: true, message: '请输入新密码', trigger: 'blur' }, {validator: validateNewPass, trigger: 'blur'}],
-        confirmPassword: [
-          {validator: validatePass, trigger: 'blur'}
-        ]
-      }
-    }
-  },
-  methods: {
-    updateInfo (formName1, formName2) {
-      this.$refs[formName1].validate((valid) => {
-        if (this.updatePsw) {
-          this.$refs[formName2].validate((valid1) => {
-            if (valid && valid1) {
-              bus.$emit('updateUserWithPsw')
-            } else {
-              return false
-            }
-          })
-        } else {
-          if (valid) {
-            bus.$emit('updateUserSuccess')
-          } else {
-            return false
-          }
+      updatePsws(){
+        this.updatePsw=true;
+      },
+      checkPass(){
+        if(this.user.confirmPassword!=this.user.password){
+          this.$message.error("密码不一致");
+        }else if(this.user.confirmPassword.length<=0){
+          this.$message("请确认密码");
+        }else{
+          this.validatePass=true;
         }
-      })
-    },
-    updatePsws () {
-      this.updatePsw = true
-    },
-    checkPass () {
-      if (this.user.confirmPassword != this.user.password) {
-        this.$message.error('密码不一致')
-      } else if (this.user.confirmPassword.length <= 0) {
-        this.$message('请确认密码')
-      } else {
-        this.validatePass = true
+      },
+      userFormVisibleCancel(){
+        bus.$emit('userFormVisibleCancel');
       }
-    },
-    userFormVisibleCancel () {
-      bus.$emit('userFormVisibleCancel')
     }
-  }
-}
+  };
 </script>

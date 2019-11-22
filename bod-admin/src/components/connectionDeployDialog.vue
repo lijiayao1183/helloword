@@ -16,36 +16,36 @@
   </el-dialog>
 </template>
 <script type="text/babel">
-import connectionDeploy from '../common-setting/components/connectionDeploy.vue'
-export default {
-  props: {
-    connectDialogVisible: {
-      type: Boolean,
-      default: false
+  import connectionDeploy from '../common-setting/components/connectionDeploy.vue'
+  export default {
+    props:{
+      connectDialogVisible:{
+        type:Boolean,
+        default:false
+      },
+      connectDatas:{
+        type:Array,
+        default:[]
+      }
     },
-    connectDatas: {
-      type: Array,
-      default: []
-    }
-  },
-  data () {
-    return {
-      titleName: '关联配置'
-    }
-  },
-  watch () {
+    data(){
+      return {
+        titleName:'关联配置'
+      }
+    },
+    watch(){
 
-  },
-  methods: {
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        }).catch(_ => {})
+    },
+    methods:{
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          }).catch(_ => {});
+      }
+    },
+    components:{
+      'conn-deploy':connectionDeploy
     }
-  },
-  components: {
-    'conn-deploy': connectionDeploy
   }
-}
 </script>

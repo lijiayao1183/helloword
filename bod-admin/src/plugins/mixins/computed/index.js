@@ -1,10 +1,10 @@
-import Loading from './src/loading'
+import Loading from './src/loading';
 
 /* istanbul ignore next */
 Loading.install = function (Vue) {
-  Vue.mixin(Loading)
-}
+  Vue.mixin(Loading);
+};
 
 export {
   Loading
-}
+};

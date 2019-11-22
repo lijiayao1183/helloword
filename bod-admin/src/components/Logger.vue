@@ -1,7 +1,7 @@
 <template lang="pug">
 
 div.container-items
-  div(v-if="data.length>0")
+  div(v-if="data.length>0")   
     div.row.item(v-for="(item, index) in computedData" :class="{'last-item' :  (!hasMore || isShowMore) && (index === computedData.length - 1)}")
       div.symbol
         div.circle
@@ -12,39 +12,39 @@ div.container-items
         div.circle
       el-button.checkmore(type="text" @click="checkmore") 查看更多
   <no-data-page v-else></no-data-page>
-
+    
 </template>
 <script>
-import NoDataPage from './NoDataPage.vue'
-
-export default {
-  props: ['data', 'columns'],
-  data () {
-    return {
-      isShowMore: false
-    }
-  },
-  components: {
-    'no-data-page': NoDataPage
-  },
-  computed: {
-    hasMore () {
-      return this.data.length > 3
-    },
-    computedData () {
-      let data = Object.assign([], this.data)
-      if (!this.isShowMore) {
-        return data.splice(0, 3)
+  import NoDataPage from './NoDataPage.vue'
+  
+  export default {
+    props: ['data', 'columns'],
+    data() {
+      return {
+        isShowMore: false
       }
-      return data
-    }
-  },
-  methods: {
-    checkmore () {
-      this.isShowMore = true
+    },
+    components: { 
+      'no-data-page': NoDataPage
+    },
+    computed: {
+      hasMore() {
+        return this.data.length > 3;
+      },
+      computedData() {
+        let data = Object.assign([], this.data)
+        if (!this.isShowMore) {
+          return data.splice(0, 3)
+        }
+        return data
+      }
+    },
+    methods: {
+      checkmore() {
+        this.isShowMore = true
+      }
     }
   }
-}
 </script>
 <style lang="scss" scoped>
   $circle-color: #4ec872;

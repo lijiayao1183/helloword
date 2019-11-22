@@ -21,61 +21,61 @@
   </el-dialog>
 </template>
 <script type="text/babel">
-import validateRules from '../scripts/validate-rules'
+  import validateRules from '../scripts/validate-rules';
 
-export default {
-  props: {
-    title: {
-      type: String,
-      default: '标题'
+  export default {
+    props: {
+      title: {
+        type: String,
+        default: '标题'
+      },
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      label: {
+        type: String,
+        default: '名称'
+      },
+      data: {
+        type: Object,
+        default: () => {
+          return {
+            name: ''
+          }
+        }
+      },
+      fieldName: {
+        type: String,
+        default: 'name'
+      },
+      formRules: {
+        type: Array,
+        default: () => {
+          return [];
+        }
+      }
     },
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    label: {
-      type: String,
-      default: '名称'
-    },
-    data: {
-      type: Object,
-      default: () => {
+    computed: {
+      innerFormRules() {
         return {
-          name: ''
+          [this.fieldName]: _.concat(this.formRules, validateRules.name)
         }
       }
     },
-    fieldName: {
-      type: String,
-      default: 'name'
-    },
-    formRules: {
-      type: Array,
-      default: () => {
-        return []
+    methods: {
+      cancel() {
+        this.$emit('cancel');
+      },
+      ok() {
+        this.$refs['oneInputForm'].validate((valid) => {
+          if (valid) {
+            this.$emit('ok', this.data);
+          }
+        });
       }
-    }
-  },
-  computed: {
-    innerFormRules () {
-      return {
-        [this.fieldName]: _.concat(this.formRules, validateRules.name)
-      }
-    }
-  },
-  methods: {
-    cancel () {
-      this.$emit('cancel')
-    },
-    ok () {
-      this.$refs['oneInputForm'].validate((valid) => {
-        if (valid) {
-          this.$emit('ok', this.data)
-        }
-      })
     }
   }
-}
 </script>
 <style lang="scss">
 </style>

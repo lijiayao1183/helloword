@@ -67,67 +67,67 @@
   </el-dialog>
 </template>
 <script>
-import selectOptionMixin from '../mixins/select-option.mixin'
-import * as _ from 'lodash'
+  import selectOptionMixin from '../mixins/select-option.mixin'
+  import * as _ from 'lodash'
 
-export default {
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    checkedCode: [String],
-    data: {
-      type: Array,
-      default () {
-        return []
+  export default {
+    props: {
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      checkedCode: [String],
+      data: {
+        type: Array,
+        default () {
+          return []
+        }
       }
-    }
-  },
-  mixins: [selectOptionMixin],
-  data () {
-    return {
-      keyType: 0,
-      key: '',
-      currentCheckedCode: this.checkedCode
-    }
-  },
-  watch: {
-    checkedCode () {
-      this.currentCheckedCode = this.checkedCode
-    }
-  },
-  computed: {
-    filteredData () {
-      let data = this.data
-      let key = _.trim(this.key)
-      if (this.keyType !== 0) {
-        data = _.filter(data, {fieldSource: this.keyType})
+    },
+    mixins: [selectOptionMixin],
+    data () {
+      return {
+        keyType: 0,
+        key: '',
+        currentCheckedCode: this.checkedCode
       }
-      if (key) {
-        data = _.filter(data, (item) => {
-          return item.fieldCn.indexOf(key) > -1
-        })
+    },
+    watch: {
+      checkedCode () {
+        this.currentCheckedCode = this.checkedCode
       }
-      return data
-    }
-  },
-  methods: {
-    ok () {
-      this.$emit('ok', this.currentCheckedCode)
     },
-    cancel () {
-      this.$emit('cancel')
+    computed: {
+      filteredData () {
+        let data = this.data
+        let key = _.trim(this.key)
+        if (this.keyType !== 0) {
+          data = _.filter(data, {fieldSource: this.keyType})
+        }
+        if (key) {
+          data = _.filter(data, (item) => {
+            return item.fieldCn.indexOf(key) > -1
+          })
+        }
+        return data
+      }
     },
-    getFieldSourceLabel (value) {
-      return _.find(this.fieldSourceOption, {value: value}).label
-    },
-    formatFieldSource (row, column) {
-      let value = row[column.property]
-      return this.getFieldSourceLabel(value)
+    methods: {
+      ok () {
+        this.$emit('ok', this.currentCheckedCode)
+      },
+      cancel () {
+        this.$emit('cancel')
+      },
+      getFieldSourceLabel (value) {
+        return _.find(this.fieldSourceOption, {value: value}).label
+      },
+      formatFieldSource (row, column) {
+        let value = row[column.property]
+        return this.getFieldSourceLabel(value)
+      }
     }
   }
-}
 </script>
 <style lang="scss">
 

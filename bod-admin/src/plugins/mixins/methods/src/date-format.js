@@ -1,12 +1,12 @@
-import DateUtils from '../../../../scripts/date-utils'
+import DateUtils from '../../../../scripts/date-utils';
 
 export default {
   methods: {
-    formatDate (value, formatter = 'yyyy-MM-dd') {
+    formatDate(value, formatter = 'yyyy-MM-dd') {
       if (!value) {
-        return ''
+        return '';
       } else {
-        return DateUtils.formate(value, 'yyyy-MM-dd')
+        return DateUtils.formate(value, 'yyyy-MM-dd');
       }
     }
   }

@@ -11,11 +11,11 @@ export default new Router({
     {
       path: '/',
       component: MonitorListView,
-      name: 'monitor-list-view'
+      name: 'monitor-list-view',
     }, {
 	  path: '/log-list',
 	  component: LogListView,
 	  name: 'log-list'
-    }
+	}
   ]
 })

@@ -32,7 +32,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="通道描述：">
-              <el-input v-if="isEdit" type="textarea" v-model="data.channelDesc"
+              <el-input v-if="isEdit" type="textarea" v-model="data.channelDesc" 
               placeholder="非必填" name="channelDesc"></el-input>
               <span v-else>{{data.channelDesc}}</span>
             </el-form-item>
@@ -72,7 +72,7 @@
           <el-col :span="8">
             <el-form-item label="设备用户名：">
 	            <template v-if="isEdit" >
-	              <el-input v-model="puserName"
+	              <el-input v-model="puserName" 
 	               :class="{'input': true, 'is-danger': puserNameError }"
 	               data-vv-as="设备用户名"
 	               @change="validatePuserNameError" @blur="validatePuserNameError"
@@ -87,7 +87,7 @@
         <el-row v-if="isEdit">
           <el-col :span="8">
             <el-form-item label="设备密码：">
-	            <el-input v-model="ppassword"
+	            <el-input v-model="ppassword"  
 		           :class="{'input': true, 'is-danger': ppasswordError }"
 		            data-vv-as="设备密码" type="password" auto-complete="new-password"
 		            @change="validatePpasswordError" @blur="validatePpasswordError"
@@ -96,7 +96,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row> 
             <el-form-item label="传输协议：">
 	            <template v-if="isEdit" >
 	              <el-select v-model="data.channelType" placeholder="请选择"  name="channelType"
@@ -136,165 +136,165 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import api from '../scripts/api'
-import {
-  channelTypeOptions,
-  detailData,
-  createData
-} from '../mock/mock.data'
+  import { mapGetters } from 'vuex'
+  import api from '../scripts/api'
+  import {
+    channelTypeOptions,
+    detailData,
+    createData
+  } from '../mock/mock.data'
+  
+  import myLocalStorage from '../../../scripts/my-local-storage'
+  import moduleName from '../../../scripts/module-name'
 
-import myLocalStorage from '../../../scripts/my-local-storage'
-import moduleName from '../../../scripts/module-name'
-
-let isDebug = false
-export default {
-  $validates: true,
-  data () {
-    return {
-      channelTypeOptions: channelTypeOptions,
-      channelId: parseInt(this.$route.params.id),
-      catalogId: parseInt(this.$route.params.catalogId),
-      initName: '',
-      data: _.cloneDeep(detailData),
-      isEdit: false,
-      nameExpression: {
-        rules: {
-          required: true,
-          nameExist: null
-        }
-      },
-      puserNameError: false,
-      ppasswordError: false,
-      puserName: '',
-      ppassword: '',
-      portExpression: {
-        rules: {
-          required: true,
-          lessThanNumberEquals: 1,
-          moreThanNumberEquals: 65535,
-          isInteger: true
-        }
-      }
-    }
-  },
-  components: {
-  },
-  created () {
-    this.init()
-  },
-  watch: {
-  },
-  computed: {
-    ...mapGetters({
-      loading: 'loading',
-      saving: 'saving'
-    }),
-    isDisabledEditBtn () {
-      return false
-    },
-    title () {
-      return this.channelId === -1 ? '新建通道' : (this.isEdit ? '编辑通道' : '通道详情')
-    }
-  },
-  methods: {
-    validatePuserNameError () {
-      this.puserNameError = !this.puserName || _.trim(this.puserName).length == 0
-    },
-    validatePpasswordError () {
-      this.ppasswordError = !this.ppassword || _.trim(this.ppassword).length == 0
-    },
-    init () {
-      this.nameExpression.rules.nameExist = this.validateChannelName
-
-      if (this.channelId === -1) {
-        this.isEdit = true
-        this.data = _.cloneDeep(createData)
-      } else {
-        api.channel.detail(this.channelId).then(res => {
-          this.data = res.data
-          this.initName = res.data.channelName
-          this.puserName = res.data.userName
-          this.ppassword = res.data.passWord
-        })
-      }
-    },
-    back () {
-      this.$router.push({
-        path: '/channel-manage/list-info/' + this.catalogId
-      })
-    },
-    edit () {
-      this.isEdit = true
-    },
-    save () {
-      this.validatePpasswordError()
-      this.validatePuserNameError()
-      this.$validator.validateAll().then(
-        result => {
-          if (result) {
-            this.commit()
+  let isDebug = false
+  export default {
+    $validates: true,
+    data () {
+      return {
+        channelTypeOptions: channelTypeOptions,
+        channelId: parseInt(this.$route.params.id),
+        catalogId: parseInt(this.$route.params.catalogId),
+        initName: '',
+        data: _.cloneDeep(detailData),
+        isEdit: false,
+        nameExpression: {
+          rules: {
+            required: true,
+            nameExist: null
+          }
+        },
+        puserNameError: false,
+        ppasswordError: false,
+        puserName: '',
+        ppassword: '',
+        portExpression: {
+          rules: {
+            required: true,
+            lessThanNumberEquals: 1,
+            moreThanNumberEquals: 65535,
+            isInteger: true
           }
         }
-      )
+      }
     },
-    commit () {
-      this.data.catalogId = this.catalogId
-      this.data.passWord = this.ppassword
-      this.data.userName = this.puserName
-      if (!isDebug) {
+    components: {
+    },
+    created () {
+      this.init()
+    },
+    watch: {
+    },
+    computed: {
+      ...mapGetters({
+        loading: 'loading',
+        saving: 'saving'
+      }),
+      isDisabledEditBtn () {
+        return false
+      },
+      title () {
+        return this.channelId === -1 ? "新建通道" : (this.isEdit ? '编辑通道' : '通道详情')
+      }
+    },
+    methods: {
+      validatePuserNameError(){
+        this.puserNameError = !this.puserName || _.trim(this.puserName).length==0;
+      },
+      validatePpasswordError(){
+        this.ppasswordError = !this.ppassword || _.trim(this.ppassword).length==0;
+      },
+      init () {
+        this.nameExpression.rules.nameExist = this.validateChannelName
+       
         if (this.channelId === -1) {
-          api.channel.save(this.data).then(res => {
-		            if (res.code == '0000') {
+          this.isEdit = true
+          this.data = _.cloneDeep(createData) 
+        }else{
+          api.channel.detail(this.channelId).then(res => {
+            this.data = res.data
+            this.initName = res.data.channelName
+            this.puserName = res.data.userName
+            this.ppassword = res.data.passWord
+          })
+        }
+      },
+      back () {
+        this.$router.push({
+          path: '/channel-manage/list-info/'+this.catalogId
+        })
+      },
+      edit () {
+        this.isEdit = true
+      },
+      save() {
+        this.validatePpasswordError()
+        this.validatePuserNameError()
+        this.$validator.validateAll().then(
+          result => {
+            if(result){
+                 this.commit();
+             }
+           }
+        )
+      },
+      commit () {
+        this.data.catalogId = this.catalogId
+        this.data.passWord = this.ppassword
+        this.data.userName = this.puserName
+        if(!isDebug){
+            if(this.channelId === -1){
+               api.channel.save(this.data).then(res => {
+		            if ('0000' == res.code ) {
 		                this.$message.success('创建成功')
 		            	this.$router.back(-1)
 		            } else if (res.msg) {
-		                this.$message({
+		                this.$message({ 
 				          message: res.msg,
 				          type: 'error'
 				        })
 		            }
-		       }).catch(v => {
-            this.$message({
+		       }).catch(v=>{
+                    this.$message({ 
 			          message: '创建异常',
 			          type: 'error'
-			        })
-          })
-        } else {
+			        }) 
+               })
+            }else{
 	            api.channel.update(this.data).then(res => {
-		            if (res.code == '0000') {
+		            if ('0000' == res.code ) {
 		                this.$message.success('更新成功')
 		            	this.$router.back(-1)
 		            } else if (res.msg) {
-		                this.$message({
+		                this.$message({ 
 				          message: res.msg,
 				          type: 'error'
 				        })
 		            }
-		        }).catch(v => {
-            this.$message({
+		        }).catch(v=>{
+                    this.$message({ 
 			          message: '更新异常',
 			          type: 'error'
-			        })
-          })
+			        }) 
+                })
 	        }
-      } else {
-        this.$router.push('/')
-      }
-    },
-    validateChannelName (value) {
-      if (this.channelId != -1 && value == this.initName) {
-        return true
-      }
-      return api.ifChannelNameExist(encodeURIComponent(value)).then(
-        res => {
-          return res.data
-        }, () => {
-          return false
+        }else{
+          this.$router.push('/')
         }
-      )
+      },
+      validateChannelName (value) {
+        if(-1 != this.channelId && value == this.initName){
+          return true
+        }
+        return api.ifChannelNameExist(encodeURIComponent(value)).then(
+          res => {
+            return res.data
+          }, () => {
+            return false
+          }
+        )
+      }
     }
-  }
 }
 </script>
 <style lang="scss" scoped>

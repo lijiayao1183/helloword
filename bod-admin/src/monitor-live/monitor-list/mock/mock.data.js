@@ -18,5 +18,5 @@ const suspendTimes = [
 ]
 
 export {
-  suspendTimes
+	suspendTimes
 }

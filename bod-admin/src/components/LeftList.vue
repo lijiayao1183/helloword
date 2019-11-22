@@ -46,104 +46,104 @@
   </div>
 </template>
 <script type="text/babel">
-export default {
-  props: {
-    data: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    notSnapshot: {
-      type: Boolean,
-      default: true
-    },
-    operateIcon: {
-      type: String,
-      default: '&#xe632;'
-    },
-    itemIcon: {
-      type: String,
-      default: '&#xe637;'
-    },
-    createLabel: {
-      type: String,
-      default: '创建'
-    },
-    prop: {
-      type: Object,
-      default () {
-        return {
-          name: 'name',
-          id: 'id',
-          isHighlight: 'isHighlight'
+  export default {
+    props: {
+      data: {
+        type: Array,
+        default() {
+          return [];
         }
+      },
+      notSnapshot: {
+        type: Boolean,
+        default: true
+      },
+      operateIcon: {
+        type: String,
+        default: '&#xe632;'
+      },
+      itemIcon: {
+        type: String,
+        default: '&#xe637;'
+      },
+      createLabel: {
+        type: String,
+        default: '创建'
+      },
+      prop: {
+        type: Object,
+        default() {
+          return {
+            name: 'name',
+            id: 'id',
+            isHighlight: 'isHighlight'
+          }
+        }
+      },
+      isEdit: {
+        type: Boolean,
+        default: true
+      },
+      selectItemId: {
+        type: [String, Number],
+        default: Number.MAX_VALUE
+      },
+      isShowBadge: {
+        type: Boolean,
+        default: false
+      },
+      isSearch: {
+        type: Boolean,
+        default: true
       }
     },
-    isEdit: {
-      type: Boolean,
-      default: true
-    },
-    selectItemId: {
-      type: [String, Number],
-      default: Number.MAX_VALUE
-    },
-    isShowBadge: {
-      type: Boolean,
-      default: false
-    },
-    isSearch: {
-      type: Boolean,
-      default: true
-    }
-  },
-  data () {
-    return {
-      listItemKey: '',
-      tipDisabled: {}
-    }
-  },
-  created () {
-    console.dir(this.selectItemId)
-  },
-  computed: {
-    filteredData () {
-      let filteredData = this.data
-      let key = _.trim(this.listItemKey)
-      if (key) {
-        filteredData = _.filter(this.data, (item) => {
-          return item[this.prop.name].indexOf(key) > -1
-        })
+    data() {
+      return {
+        listItemKey: '',
+        tipDisabled: {},
       }
-      return filteredData
-    }
-  },
-  methods: {
-    back () {
-      this.$router.push({
-        name: 'snapshot-list',
-        params: {engineId: this.$route.params.engineId}
+    },
+    created() {
+      console.dir(this.selectItemId);
+    },
+    computed: {
+      filteredData(){
+          let filteredData = this.data;
+          let key = _.trim(this.listItemKey);
+          if (key) {
+            filteredData = _.filter(this.data, (item) => {
+              return item[this.prop.name].indexOf(key) > -1
+            })
+          }
+          return filteredData;
+      }
+    },
+    methods: {
+      back() {
+        this.$router.push({
+          name: "snapshot-list",
+          params: {engineId: this.$route.params.engineId}
+        });
+      },
+      createItem() {
+        this.$emit('createItem');
+      },
+      deleteItem(id, name) {
+        this.$emit('deleteItem', id, name);
+      },
+      listItemClick(id) {
+        this.$emit('listItemClick', id);
+      }
+    },
+    updated() {
+      this.$nextTick(() => {
+        _.forEach($('.ellipsis'), (item, index) => {
+          let disabled = item.offsetWidth >= item.scrollWidth;
+          this.$set(this.tipDisabled, index, disabled)
+        });
       })
-    },
-    createItem () {
-      this.$emit('createItem')
-    },
-    deleteItem (id, name) {
-      this.$emit('deleteItem', id, name)
-    },
-    listItemClick (id) {
-      this.$emit('listItemClick', id)
     }
-  },
-  updated () {
-    this.$nextTick(() => {
-      _.forEach($('.ellipsis'), (item, index) => {
-        let disabled = item.offsetWidth >= item.scrollWidth
-        this.$set(this.tipDisabled, index, disabled)
-      })
-    })
   }
-}
 </script>
 <style lang="scss">
   #left-list {

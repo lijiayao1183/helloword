@@ -37,42 +37,42 @@
 </template>
 
 <script>
-export default {
-  name: 'snapshotOutputFieldDialog',
-  data () {
-    return {
-      isModal: true
-    }
-  },
-  created () {
-    if (this.$parent.$route.name === 'decision-flow') {
-      this.isModal = false
-    }
-  },
-  props: {
-    segmentSetVisible: {
-      type: Boolean,
-      default: false
-    },
-    segmentsModel: {
-      segmentsTable: {
-        type: Array,
-        default () {
-          return []
+    export default {
+      name: "snapshotOutputFieldDialog",
+      data() {
+        return {
+          isModal: true
         }
       },
-      outRangeValue: {
-        type: String,
-        default: ''
+      created(){
+        if (this.$parent.$route.name === "decision-flow") {
+          this.isModal = false
+        }
+      },
+      props:{
+        segmentSetVisible: {
+          type: Boolean,
+          default: false
+        },
+        segmentsModel: {
+          segmentsTable:{
+            type: Array,
+            default(){
+              return []
+            }
+          },
+          outRangeValue:{
+            type: String,
+            default: ""
+          }
+        }
+      },
+      methods: {
+        ok(){
+          this.$emit('ok')
+        }
       }
     }
-  },
-  methods: {
-    ok () {
-      this.$emit('ok')
-    }
-  }
-}
 </script>
 
 <style lang="scss">

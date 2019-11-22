@@ -8,7 +8,7 @@
                       placeholder="选择日期范围">
       </el-date-picker>
       <div class="right">
-        <el-select v-if="!isHaiguan"
+        <el-select v-if="!isHaiguan" 
                    v-model="type"
                    @change="loadData"
                    class="value-select"
@@ -112,21 +112,21 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       isHaiguan: this.$root.$data.isHaiguan,
       tableData: [],
       typeOptions: applyOptions.type
     }
   },
-  created () {
+  created() {
     this.loadData()
   },
   computed: {
-    applyOptions () {
+    applyOptions() {
       return applyOptions.status[this.queryType]
     },
-    typeText () {
+    typeText() {
       return this.queryType === 1 ? '申请' : '审批'
     },
     ...mapGetters({
@@ -134,34 +134,34 @@ export default {
       pageInfo: 'pagination'
     }),
     dateRange: {
-      get () {
+      get() {
         return this.search.dateRange
       },
-      set (dateRange) {
+      set(dateRange) {
         this.updateMyApplyListDateRange(dateRange)
       }
     },
     type: {
-      get () {
+      get() {
         return this.search.type
       },
-      set (type) {
+      set(type) {
         this.updateMyApplyListType(type)
       }
     },
     status: {
-      get () {
+      get() {
         return this.search.status
       },
-      set (status) {
+      set(status) {
         this.updateMyApplyListStatus(status)
       }
     },
     keyword: {
-      get () {
+      get() {
         return this.search.keyword
       },
-      set (keyword) {
+      set(keyword) {
         this.updateMyApplyListSearchKey(keyword)
       }
     }
@@ -174,19 +174,19 @@ export default {
       updateMyApplyListSearchKey: 'updateMyApplyListSearchKey',
       updatePageTotal: 'updatePageTotal'
     }),
-    formatDate (date) {
+    formatDate(date){
       return DateUtil.formate(date)
     },
-    getStatus (row) {
-      if (this.queryType == 1) {
+    getStatus(row){
+      if(this.queryType==1){
         return row.applyStatus
-      } else if (this.queryType == 2) {
+      }else if(this.queryType==2){
         return row.auditStatus
-      } else {
+      }else{
         return row.processStatus
       }
     },
-    loadData () {
+    loadData() {
       let params = {
         ...this.search,
         ...this.pageInfo
@@ -198,12 +198,12 @@ export default {
       delete params.pageSizes
       delete params.total
       delete params.pageIndex
-      comApi.apply.getApplyList(this.queryType, params).then(res => {
+      comApi.apply.getApplyList(this.queryType,params).then(res=>{
         this.tableData = res.list
         this.updatePageTotal(res.total)
       })
     },
-    showDetail (id) {
+    showDetail(id) {
       this.$router.push('/applyDetail/' + this.queryType + '/' + id)
     }
   },
@@ -214,3 +214,4 @@ export default {
 </script>
 <style lang="scss">
 </style>
+

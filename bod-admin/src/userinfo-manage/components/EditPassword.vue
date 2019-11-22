@@ -53,20 +53,20 @@
 
 <script>
 export default {
-  name: 'EditPwdinfo',
+  name: "EditPwdinfo",
   props: ['userData'],
-  data () {
+  data() {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请确认新密码'))
+        callback(new Error('请确认新密码'));
       } else if (value !== this.userPwd.password) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error('两次输入密码不一致!'));
       } else {
-        callback()
+        callback();
       }
     }
     var validateIfInitPass = (rule, value, callback) => {
-      if (value === this.userData.account) {
+      if(value===this.userData.account) {
         return callback(new Error('密码不能与账户名相同'))
       }
       let level = 0
@@ -84,7 +84,7 @@ export default {
       }
       if (level < 3) {
         callback(new Error('密码必须为大小写字母、数字、特殊字符至少3种组合'))
-      } else if (value === this.userPwd.oldPassword && rule.field.indexOf('password') > -1) {
+      } else if (value === this.userPwd.oldPassword&& rule.field.indexOf('password')>-1) {
         callback(new Error('新密码不能与原密码相同'))
       } else {
         callback()
@@ -108,18 +108,18 @@ export default {
         confirmPassword: [
           { validator: validatePass, trigger: 'blur' }
         ]
-      }
+      },
     }
   },
   methods: {
-    updateUserPwd (formName) {
+    updateUserPwd(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$emit('updateUserPwd', this.userPwd)
         } else {
-          return false
+          return false;
         }
-      })
+      });
     }
   }
 }
@@ -145,3 +145,4 @@ export default {
   }
 }
 </style>
+

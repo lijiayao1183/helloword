@@ -80,7 +80,7 @@ export default {
     },
     data: {
       type: Array,
-      default () {
+      default() {
         return []
       }
     },
@@ -90,7 +90,7 @@ export default {
     },
     defaultCheckedRows: {
       type: Array,
-      default () {
+      default() {
         return []
       }
     },
@@ -102,7 +102,7 @@ export default {
       type: Number
     }
   },
-  data () {
+  data() {
     return {
       disabled: this.$root.$data.isReadOnly,
       engineId: this.$route.params.engineId,
@@ -113,10 +113,10 @@ export default {
   },
   mixins: [selectOption],
   computed: {
-    tmpCurrentData () {
-      this.currentData = this.data
+    tmpCurrentData() {
+      this.currentData = this.data;
     },
-    filteredData () {
+    filteredData() {
       let data = this.currentData
       let key = _.trim(this.key)
       if (key) {
@@ -132,20 +132,20 @@ export default {
     'cascader': cascader
   },
   watch: {
-    defaultCheckedRows () {
+    defaultCheckedRows() {
       this.checkedRows = this.defaultCheckedRows
     },
-    visible () {
+    visible() {
       if (this.visible) {
         this.beforeOpen()
       }
     }
   },
   methods: {
-    selectChange: function (rows) {
+    selectChange: function(rows) {
       this.checkedRows = rows
     },
-    valueChange (value) {
+    valueChange(value) {
       if (_.first(value) === 1) {
         if (value.length > 1) {
           generalApi.field.get('', _.last(value), '', {}, this.isOutput, '').then((data) => {
@@ -170,15 +170,16 @@ export default {
         this.currentData = this.data
       }
     },
-    filterData (data) {
+    filterData(data) {
       if (this.valueType) {
-        this.currentData = _.filter(data.list, { isOutput: 1 ? 1 : 0, status: 1, valueType: this.valueType })
+        this.currentData = _.filter(data.list, { isOutput: 1 ? 1 : 0, status: 1, valueType: this.valueType });
       } else {
-        this.currentData = _.filter(data.list, { isOutput: 1 ? 1 : 0, status: 1 })
+        this.currentData = _.filter(data.list, { isOutput: 1 ? 1 : 0, status: 1 });
       }
     },
-    beforeOpen () {
+    beforeOpen() {
       this.$nextTick(() => {
+
         if (!_.isEmpty(this.defaultCheckedRows)) {
           _.forEach(this.defaultCheckedRows, rowId => {
             let isChecked = !_.isEmpty(_.find(this.currentData, { id: rowId.id }))
@@ -190,13 +191,13 @@ export default {
         }
       })
     },
-    cancel () {
+    cancel() {
       this.$emit('cancel')
     },
-    ok () {
+    ok() {
       this.$emit('ok', this.checkedRows)
     },
-    formatType (row, column) {
+    formatType(row, column) {
       let value = row[column.property]
       if (value) {
         return _.find(this.fieldValueTypeOption, { value: value }).label

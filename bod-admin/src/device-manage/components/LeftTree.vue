@@ -23,87 +23,87 @@
           </el-tree>
         </el-collapse-item>
       </el-collapse>
-    </div>
+    </div> 
   </div>
 </template>
 <script>
-import bus from '../scripts/bus'
-import * as _ from 'lodash'
+  import bus from '../scripts/bus'
+  import * as _ from 'lodash'
 
-export default {
-  props: {
-    rootNodes: {
-      type: Array,
-      default: () => {
-        return [{name: '通用xx', id: 0}]
-      }
-    },
-    treeData: {
-      type: Array,
-      default: () => {
-        return []
-      }
-    },
-    defaultNodeId: [Number, String],
-    treeProps: {
-      type: Object,
-      default: () => {
-        return {
-          id: 'id',
-          label: 'name',
-          children: 'children'
+  export default {
+    props: {
+      rootNodes: {
+        type: Array,
+        default: () => {
+          return [{name: '通用xx', id: 0}]
+        }
+      },
+      treeData: {
+        type: Array,
+        default: () => {
+          return []
+        }
+      },
+      defaultNodeId: [Number, String],
+      treeProps: {
+        type: Object,
+        default: () => {
+          return {
+            id: 'id',
+            label: 'name',
+            children: 'children'
+          }
         }
       }
-    }
-  },
-  created () {
-    bus.$on('openId', (data) => {
-      this.currentNodeId = data
-      this.$emit('node-click', data)
-    })
-  },
-  data () {
-    return {
-      currentNodeIdStr: '',
-      currentTypeIds: '',
-      treeNodeKey: '',
-      currentNodeId: parseInt(this.defaultNodeId) || 0,
-      selectedFiles: [],
-      leftFoldNameTitle: '通道分类',
-      selectedFileTitle: '已选通道'
-    }
-  },
-  watch: {
-    treeNodeKey (val) {
-      this.$refs.tree.filter(val)
     },
-    currentNodeId () {
-      let copyCurrentNodeId = _.cloneDeep(this.currentNodeId)
-      this.currentNodeIdStr = copyCurrentNodeId.toString()
-    }
-  },
-  methods: {
-    filterNode (value, data) {
-      if (!value) return true
-      return data[this.treeProps.label].indexOf(_.trim(value)) !== -1
+    created () {
+      bus.$on('openId', (data) => {
+        this.currentNodeId = data
+        this.$emit('node-click', data)
+      })
     },
-    renderContent (createElement, {node, data, store}) {
-      return createElement('span', [
-        createElement('i', {
-          attrs: {class: 'iconfont'},
-          domProps: {innerHTML: '&#xe637;'}
-        }), createElement('span', {style: {paddingLeft: '10px'}}, node.label)])
+    data () {
+      return {
+        currentNodeIdStr: '',
+        currentTypeIds: '', 
+        treeNodeKey: '', 
+        currentNodeId: parseInt(this.defaultNodeId) || 0,
+        selectedFiles: [],
+        leftFoldNameTitle: '通道分类',
+        selectedFileTitle: '已选通道'
+      }
     },
-    collapseChange (id) {
-      this.currentNodeId = id
-      this.$emit('node-click', id)
+    watch: {
+      treeNodeKey (val) {
+        this.$refs.tree.filter(val)
+      },
+      currentNodeId () {
+        let copyCurrentNodeId = _.cloneDeep(this.currentNodeId)
+        this.currentNodeIdStr = copyCurrentNodeId.toString()
+      }
     },
-    nodeClick (data) {
-      this.currentNodeId = data.id
-      this.$emit('node-click', data.id)
+    methods: { 
+      filterNode (value, data) {
+        if (!value) return true
+        return data[this.treeProps.label].indexOf(_.trim(value)) !== -1
+      },
+      renderContent (createElement, {node, data, store}) {
+        return createElement('span', [
+          createElement('i', {
+            attrs: {class: 'iconfont'},
+            domProps: {innerHTML: '&#xe637;'}
+          }), createElement('span', {style: {paddingLeft: '10px'}}, node.label)])
+      },
+      collapseChange (id) {
+        this.currentNodeId = id
+        this.$emit('node-click', id)
+      },
+      nodeClick (data) {
+        this.currentNodeId = data.id
+        this.$emit('node-click', data.id)
+      }
     }
   }
-}
 </script>
 
 <style lang="scss">
@@ -114,7 +114,7 @@ export default {
     .el-dialog.el-dialog--tiny {
       width: 700px;
     }
-
+    
     .el-collapse {
       box-sizing: border-box;
       height: calc(100% - 39px);
@@ -127,7 +127,7 @@ export default {
         background-color: $two-nav-focus;
       }
     }
-
+    
     .el-collapse-item__header {
       padding-left: 10px;
       height: 37px;

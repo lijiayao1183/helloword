@@ -1,7 +1,7 @@
 <template>
-  <div class="card"
+  <div class="card" 
     @mouseenter="isShowActionBtn=true"
-    @mouseleave="isShowActionBtn=false">
+    @mouseleave="isShowActionBtn=false"> 
     <template v-if="title">
 	    <videoPlayer ref="videoPlayer" :key="index" :playsinline="true" :options="playerOptions"  autoplay="autoplay" class="vjs-custom-skin videoPlayer" ></videoPlayer>
 	    <span class="action-container" v-show="isShowActionBtn && title">
@@ -15,68 +15,68 @@
   </div>
 </template>
 <script>
-import  videojs from 'video.js'
-import 'video.js/dist/video-js.css'
-import {videoPlayer} from 'vue-video-player'
-import 'videojs-flash'
-let imgUrl = require('../../../assets/img/shuzunta_home.png')
-
-export default {
-  props: {
-    playerHeight: {
-      type: Number,
-      default: 300
-    },
-    playerOptions: {
-      type: Object,
-      default: {
-        height: this.playerHeight,
-        notSupportedMessage: '不支持的视频格格式',
-        poster: imgUrl,
-        sources: [],
-        techOrder: ['flash'],
-        autoplay: true,
-        controls: true
+  import 'video.js/dist/video-js.css' 
+  import {videoPlayer} from 'vue-video-player'
+ // import 'video.js/dist/lang/zh-CN'
+  import 'videojs-flash'
+  let imgUrl = require('../../../assets/img/shuzunta_home.png')
+  
+  export default {
+    props: {
+      playerHeight: {
+        type: Number,
+        default: 300
+      },
+      playerOptions: {
+        type: Object,
+        default: {
+			height: this.playerHeight,
+			notSupportedMessage: '不支持得的视频格式',
+			poster: imgUrl,
+			sources: [],
+			techOrder: ['flash'],
+			autoplay: true,
+			controls: true 
+		}
+      },
+      index: {
+        type: Number,
+        default: 0
+      },
+      title: {
+        type: String,
+        default: ''
       }
     },
-    index: {
-      type: Number,
-      default: 0
+    components: {
+      videoPlayer
     },
-    title: {
-      type: String,
-      default: ''
-    }
-  },
-  components: {
-    videoPlayer
-  },
-  data () {
-    return {
-      isShowActionBtn: false,
-      imgUrl: imgUrl
-    }
-  },
-  watch: {
-    playerHeight () {
-      if (this.$refs.videoPlayer && this.$refs.videoPlayer.player) {
-        this.playerOptions.height = this.playerHeight
-        this.$refs.videoPlayer.player.height(this.playerHeight)
-        this.$refs.videoPlayer.player.language('zh-CN')
+    data () {
+      return {
+        isShowActionBtn: false,
+        imgUrl: imgUrl
       }
     },
-    playerOptions: {
-      deep: true,
-      handler: function () {
-        if (this.$refs.videoPlayer && this.$refs.videoPlayer.palyer) {
-          this.$refs.videoPlayer.player.load()
+    watch: {
+      playerHeight(){
+        if(this.$refs.videoPlayer && this.$refs.videoPlayer.player){ 
+          this.playerOptions.height = this.playerHeight 
           this.$refs.videoPlayer.player.height(this.playerHeight)
           this.$refs.videoPlayer.player.language('zh-CN')
+        }
+      },
+      playerOptions: {
+        deep: true,
+        handler: function () {
+          if(this.$refs.videoPlayer && this.$refs.videoPlayer.palyer){
+            this.$refs.videoPlayer.player.load()
+            this.$refs.videoPlayer.player.height(this.playerHeight)
+            this.$refs.videoPlayer.player.language('zh-CN')
+          }
         }
       }
     }
   }
-}
 </script>
 <style lang="scss">
    .video-js .vjs-volume-panel{
@@ -109,7 +109,7 @@ export default {
     line-height: 30px;
     color: #fefefe;
     font-size: 15px;
-
+    
     span{
       line-height: normal;
       display: table-cell;

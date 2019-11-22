@@ -14,31 +14,31 @@
   </el-dialog>
 </template>
 <script>
-export default {
-  props: {
-    data: {
-      type: Array,
-      default () {
-        return []
+  export default {
+    props: {
+      data: {
+        type: Array,
+        default () {
+          return []
+        }
       }
-    }
-  },
-  data () {
-    return {
-      innerVisible: false
-    }
-  },
-  created () {
-    this.innerVisible = !_.isEmpty(this.data)
-  },
-  watch: {
-    innerVisible (newVal) {
-      if (!newVal) {
-        this.$emit('close')
+    },
+    data () {
+      return {
+        innerVisible: false
+      }
+    },
+    created () {
+      this.innerVisible = !_.isEmpty(this.data)
+    },
+    watch: {
+      innerVisible (newVal) {
+        if (!newVal) {
+          this.$emit('close')
+        }
       }
     }
   }
-}
 </script>
 <style lang="scss">
   #validate-result {

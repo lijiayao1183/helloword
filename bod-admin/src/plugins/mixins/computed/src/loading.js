@@ -6,5 +6,5 @@ const Loading = {
       loading: 'loading'
     })
   }
-}
+};
 export default Loading

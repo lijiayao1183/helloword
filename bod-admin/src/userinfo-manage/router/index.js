@@ -17,27 +17,27 @@ export default new Router({
     {
       path: '/userinfo_edit',
       component: EditUserinfo,
-      name: 'userinfo_edit'
+      name: 'userinfo_edit',
     },
     {
       path: '/userPassword_edit',
       component: EditPassword,
-      name: 'userPassword_edit'
+      name: 'userPassword_edit',
     },
     {
       path: '/myApplication',
       component: ApplicationList,
-      name: 'myApplication'
+      name: 'myApplication',
     },
     {
       path: '/myApproval',
       component: ApprovalList,
-      name: 'myApproval'
+      name: 'myApproval',
     },
     {
       path: '/applyDetail/:type/:id',
       component: ApplyDetail,
-      name: 'applyDetail'
+      name: 'applyDetail',
     }
   ]
 })

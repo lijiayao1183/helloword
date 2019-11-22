@@ -25,16 +25,16 @@
 import api from './scripts/api'
 import commonApi from '../scripts/api'
 import MsgInfo from './scripts/msg-info'
+
+let url = require('../scripts/url')
 import myLocalStorage from '../scripts/my-local-storage'
 import moduleName from '../scripts/module-name'
 import resourceCodeMap from '../scripts/module-name-resource-code-map'
 import { mapGetters } from 'vuex'
 
-let url = require('../scripts/url')
-
 export default {
-  data () {
-    return {
+  data() {
+    return { 
       loginForm: {
         username: '',
         password: ''
@@ -74,7 +74,7 @@ export default {
     ...mapGetters({
       saving: 'saving'
     }),
-    formTitle () {
+    formTitle() {
       if (this.ifLogin) {
         return '登录'
       }
@@ -82,7 +82,7 @@ export default {
     }
   },
   methods: {
-    login: function () {
+    login: function() {
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
           api.login.post(this.loginForm).then((data) => {
@@ -105,7 +105,8 @@ export default {
                   this.successRetrieve(codes)
                 }
               })
-            } else if (retCode != 11) {
+            }
+            else if (retCode != 11) {
               this.$message({ type: 'warning', message: data.msg })
             }
           })
@@ -115,7 +116,7 @@ export default {
         }
       })
     },
-    resetPass (ref) {
+    resetPass(ref) {
       this.$refs[ref].validate((valid) => {
         if (valid) {
           api.resetPassword(this.loginForm.username, this.resetPassForm.pass).then(
@@ -127,6 +128,8 @@ export default {
                   // this.loginForm.username="";
                   // this.loginForm.password="";
                   this.ifLogin = true
+
+                  return
                 }
               })
             }, (err) => {
@@ -136,14 +139,14 @@ export default {
         }
       })
     },
-    validateSamePass (rule, value, callback) {
+    validateSamePass(rule, value, callback) {
       if (value !== this.resetPassForm.pass) {
         callback(new Error('两次输入密码不一致，请重新输入'))
       } else {
         callback()
       }
     },
-    validateIfInitPass (rule, value, callback) {
+    validateIfInitPass(rule, value, callback) {
       if (value === this.loginForm.username) {
         return callback(new Error('密码不能与账户名相同'))
       }
@@ -166,14 +169,14 @@ export default {
         callback()
       }
     },
-    initLocalStorage (data, resourceCodes) {
+    initLocalStorage(data, resourceCodes) { 
       myLocalStorage.clear()
       myLocalStorage.mergeItem(moduleName.USER_INFO.MODULE_NAME, moduleName.USER_INFO.USER_NAME, data.data)
       myLocalStorage.mergeItem(moduleName.SYSTEM.MODULE_NAME, moduleName.SYSTEM.RESOURCES_CODES, resourceCodes)
       // 添加当前用户账户名到localstorage
       localStorage.setItem('admin_name', this.loginForm.username)
     },
-    successRetrieve (codes) {
+    successRetrieve(codes) {
       let link = url.getQueryParams().link || url.login.defaultLink
       let htmlName = this.getLinkHtmlName(link)
       let linkCode = resourceCodeMap[htmlName]
@@ -182,11 +185,11 @@ export default {
       }
       window.location.href = link
     },
-    getLinkHtmlName (link) {
+    getLinkHtmlName(link) {
       let result = link.split(/[\\/\\.]/)
       return result[result.length - 2]
     },
-    getFirstPermissionUrl (codes) {
+    getFirstPermissionUrl(codes) {
       let first = ''
       for (let htmlName in resourceCodeMap) {
         if (codes.indexOf(resourceCodeMap[htmlName]) > -1) {

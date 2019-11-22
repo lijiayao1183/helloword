@@ -70,7 +70,7 @@ export default {
   props: {
     data: {
       type: Array,
-      default () {
+      default() {
         return []
       }
     },
@@ -96,7 +96,7 @@ export default {
     },
     prop: {
       type: Object,
-      default () {
+      default() {
         return {
           name: 'name',
           id: 'id',
@@ -121,21 +121,21 @@ export default {
       default: true
     }
   },
-  data () {
+  data() {
     return {
       listItemKey: '',
       tipDisabled: {}
     }
   },
-  created () {
+  created() {
     console.dir(this.selectItemId)
   },
   computed: {
-    filteredData () {
+    filteredData() {
       let filteredData = _.cloneDeep(this.data)
       let key = _.trim(this.listItemKey)
       if (key) {
-        filteredData.forEach(_data => {
+        filteredData.forEach(_data=>{
           _data.list = _.filter(_data.list, item => {
             return item[this.prop.name].indexOf(key) > -1
           })
@@ -145,26 +145,26 @@ export default {
     }
   },
   methods: {
-    back () {
+    back() {
       this.$router.push({
         name: 'snapshot-list',
         params: { engineId: this.$route.params.engineId }
       })
     },
-    createItem () {
+    createItem() {
       this.$emit('createItem')
     },
-    deleteItem (id, name) {
+    deleteItem(id, name) {
       this.$emit('deleteItem', id, name)
     },
-    listItemClick (id) {
+    listItemClick(id) {
       this.$emit('listItemClick', id)
     },
-    collapseChange (node) {
+    collapseChange(node) {
       this.$emit('collapseChange', node)
     }
   },
-  updated () {
+  updated() {
     this.$nextTick(() => {
       _.forEach($('.ellipsis'), (item, index) => {
         let disabled = item.offsetWidth >= item.scrollWidth

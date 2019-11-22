@@ -1,7 +1,7 @@
 import NumberUtils from './number-utils'
 
 export default (function () {
-  return {
+  return  {
     name: [
       {required: true, message: `不能为空`, trigger: 'blur'},
       {max: 30, message: '不能超过30个字符', trigger: 'blur'},
@@ -12,8 +12,7 @@ export default (function () {
           } else {
             callback()
           }
-        },
-        trigger: 'blur'
+        }, trigger: 'blur'
       },
       {
         validator: (rule, value, callback) => {
@@ -22,8 +21,7 @@ export default (function () {
           } else {
             callback()
           }
-        },
-        trigger: 'blur'
+        }, trigger: 'blur'
       }
     ],
     code: [
@@ -38,8 +36,7 @@ export default (function () {
           } else {
             callback()
           }
-        },
-        trigger: 'blur'
+        }, trigger: 'blur'
       }
     ],
     description: [
@@ -53,8 +50,9 @@ export default (function () {
       trigger: 'blur',
       validator: (rule, value, callback) => {
         value = _.trim(value)
-        if (!value) { // 不可以为空
+        if (!value) {//不可以为空
           callback(new Error('不能为空'))
+          return
         } else {
           callback()
         }
@@ -75,13 +73,12 @@ export default (function () {
       return {
         validator: (rule, value, callback) => {
           const keyList = ['quota']
-          if (keyList.indexOf(value) > -1) {
+          if (keyList.indexOf(value)>-1) {
             callback(new Error('特殊名称已被占用'))
           } else {
             callback()
           }
-        },
-        trigger: 'blur'
+        },trigger: 'blur'
       }
     },
     isNumber: [
@@ -93,8 +90,7 @@ export default (function () {
           } else {
             callback()
           }
-        },
-        trigger: 'blur'
+        }, trigger: 'blur'
       }
     ],
     isCellphoneNum: [
@@ -106,8 +102,7 @@ export default (function () {
           } else {
             callback()
           }
-        },
-        trigger: 'blur'
+        }, trigger: 'blur'
       }
     ],
     isDateRange: [
@@ -123,3 +118,4 @@ export default (function () {
     ]
   }
 })()
+

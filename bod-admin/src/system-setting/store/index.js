@@ -19,14 +19,14 @@ export default new Vuex.Store({
   actions,
   getters,
   modules: {
-    system,
-    usermanage,
-    rolemanage,
-    loggermanage,
-    organmanage,
-    sourcemanage,
-    applyLogmanage,
-    pagination
+      system,
+      usermanage,
+      rolemanage,
+      loggermanage,
+      organmanage,
+      sourcemanage,
+      applyLogmanage,
+      pagination
   },
   strict: debug,
   plugins: []

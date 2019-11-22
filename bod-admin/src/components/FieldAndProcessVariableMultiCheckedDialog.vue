@@ -107,204 +107,205 @@
   </el-dialog>
 </template>
 <script>
-import selectOptionMixin from '../mixins/select-option.mixin'
-import Cascader from './Cascader.vue'
-import generalApi from '../field-manage/general-field/scripts/api'
-import engineApi from '../engine-manage/field/scripts/api'
-import api from '../scripts/api'
-import * as _ from 'lodash'
+  import selectOptionMixin from '../mixins/select-option.mixin'
+  import Cascader from './Cascader.vue'
+  import generalApi from '../field-manage/general-field/scripts/api'
+  import engineApi from '../engine-manage/field/scripts/api'
+  import api from '../scripts/api'
+  import * as _ from 'lodash'
 
-export default {
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    isReadOnly: {
-      type: Boolean,
-      default: false
-    },
-    defaultCheckedRows: {
-      type: Array,
-      default () {
-        return []
+  export default {
+    props: {
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      isReadOnly: {
+        type: Boolean,
+        default: false
+      },
+      defaultCheckedRows: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      data: {
+        type: Array,
+        default () {
+          return []
+        }
       }
     },
-    data: {
-      type: Array,
-      default () {
-        return []
+    mixins: [selectOptionMixin],
+    data () {
+      return {
+        keyType: 0,
+        currentData:[],
+        engineId:this.$route.params.engineId,
+        key: '',
+        checkedRows: this.updateFieldName(this.defaultCheckedRows)
       }
-    }
-  },
-  mixins: [selectOptionMixin],
-  data () {
-    return {
-      keyType: 0,
-      currentData: [],
-      engineId: this.$route.params.engineId,
-      key: '',
-      checkedRows: this.updateFieldName(this.defaultCheckedRows)
-    }
-  },
-  components: {
-    'cascader': Cascader
-  },
-  watch: {
-    defaultCheckedRows () {
-      this.checkedRows = this.updateFieldName(this.defaultCheckedRows)
     },
-    keyType () {
-      if (this.keyType == 2) {
-        this.currentData = this.data
-      }
-    }
-  },
-  computed: {
-    tmpCurrentData () {
-      this.currentData = this.data
+    components:{
+      'cascader':Cascader
     },
-    filteredData () {
-      let data = this.currentData
-      if (this.keyType !== 0) {
-        data = _.filter(data, {fieldSource: this.keyType})
+    watch: {
+      defaultCheckedRows () {
+        this.checkedRows = this.updateFieldName(this.defaultCheckedRows)
+      },
+      keyType () {
+        if(this.keyType==2){
+          this.currentData = this.data;
+        }
       }
-      let key = _.trim(this.key)
-      if (key) {
-        data = _.filter(data, (item) => {
-          return item.fieldCn.indexOf(key) > -1
+    },
+    computed: {
+      tmpCurrentData(){
+        this.currentData=this.data;
+      },
+      filteredData () {
+        let data = this.currentData
+        if (this.keyType !== 0) {
+          data = _.filter(data, {fieldSource: this.keyType})
+        }
+        let key = _.trim(this.key)
+        if (key) {
+          data = _.filter(data, (item) => {
+            return item.fieldCn.indexOf(key) > -1
+          })
+        }
+        this.setDefaultChecked()
+        return data
+      }
+    },
+    methods: {
+      formatType (row, column) {
+        let value = row[column.property]
+        if (value) {
+          return _.find(this.fieldValueTypeOption, {value: value}).label
+        } else {
+          return ''
+        }
+      },
+      updateFieldName (rows) {
+        let data = _.cloneDeep(rows)
+        _.forEach(data, row => {
+          let field = _.find(this.data, {fieldEn: row.fieldEn}) || {}
+          row.fieldCn = field.fieldCn
+          row.fieldType = field.fieldType
         })
-      }
-      this.setDefaultChecked()
-      return data
-    }
-  },
-  methods: {
-    formatType (row, column) {
-      let value = row[column.property]
-      if (value) {
-        return _.find(this.fieldValueTypeOption, {value: value}).label
-      } else {
-        return ''
-      }
-    },
-    updateFieldName (rows) {
-      let data = _.cloneDeep(rows)
-      _.forEach(data, row => {
-        let field = _.find(this.data, {fieldEn: row.fieldEn}) || {}
-        row.fieldCn = field.fieldCn
-        row.fieldType = field.fieldType
-      })
 
-      return data
-    },
-    valueChange (value) {
-      if (_.first(value) === 1) {
-        if (value.length > 1) {
-          generalApi.field.get('', _.last(value), '', {}, this.isOutput, '').then((data) => {
-            this.currentData = _.filter(data.list, {isOutput: 0 ? 1 : 0, status: 1})
-            _.forEach(this.currentData, (item) => {
-              item.fieldSource = 1
+        return data
+      },
+      valueChange(value){
+        if(_.first(value)=== 1){
+          if(value.length>1){
+            generalApi.field.get('',_.last(value),'',{},this.isOutput,'').then((data)=>{
+              this.currentData=_.filter(data.list, {isOutput: 0 ? 1 : 0, status: 1});
+              _.forEach(this.currentData,(item)=>{
+                item.fieldSource = 1;
+              })
             })
-          })
-        } else {
-          generalApi.field.get('', 0, '', {}, this.isOutput, '').then((data) => {
-            this.currentData = _.filter(data.list, {isOutput: 0 ? 1 : 0, status: 1})
-            _.forEach(this.currentData, (item) => {
-              item.fieldSource = 1
-            })
-            this.currentData = this.adjustFieldModels(this.currentData)
-          })
-        }
-      } else if (_.first(value) === 2) {
-        if (value.length > 1) {
-          engineApi.field.get(this.engineId, _.last(value), '', {pageSize: 0, pageNo: 0}, '', '').then(data => {
-            this.currentData = _.filter(data.list, {isOutput: 0 ? 1 : 0, status: 1})
-            _.forEach(this.currentData, (item) => {
-              item.fieldSource = 1
-            })
-            this.currentData = this.adjustFieldModels(this.currentData)
-          })
-        } else {
-          engineApi.field.get(this.engineId, '0', '', {pageSize: 0, pageNo: 0}, '', '').then(data => {
-            this.currentData = _.filter(data.list, {isOutput: 0 ? 1 : 0, status: 1})
-            _.forEach(this.currentData, (item) => {
-              item.fieldSource = 1
-            })
-            this.currentData = this.adjustFieldModels(this.currentData)
-          })
-        }
-      } else {
-        this.currentData = this.data
-      }
-    },
-    adjustFieldModels (orginalData) {
-      let data = []
-      if (_.isArray(orginalData)) {
-        _.forEach(orginalData, function (item) {
-          if (item.fieldSource === 1) { // 字段
-            data.push({
-              fieldId: item.id,
-              fieldSource: item.fieldSource,
-              fieldEn: item.fieldEn,
-              fieldCn: item.fieldCn,
-              fieldType: item.fieldType,
-              valueType: item.valueType,
-              valueScope: item.valueScope
+          }else{
+            generalApi.field.get('',0,'',{},this.isOutput,'').then((data)=>{
+              this.currentData=_.filter(data.list, {isOutput: 0 ? 1 : 0, status: 1});
+              _.forEach(this.currentData,(item)=>{
+                item.fieldSource = 1;
+              })
+              this.currentData = this.adjustFieldModels(this.currentData)
             })
           }
-        })
-      }
+        }else if(_.first(value)=== 2){
+          if(value.length>1){
+            engineApi.field.get(this.engineId,_.last(value),'',{pageSize:0,pageNo:0},'','').then(data=>{
+              this.currentData=_.filter(data.list, {isOutput: 0 ? 1 : 0, status: 1});
+              _.forEach(this.currentData,(item)=>{
+                item.fieldSource = 1;
+              })
+              this.currentData = this.adjustFieldModels(this.currentData)
+            })
+          }else{
+            engineApi.field.get(this.engineId,'0','',{pageSize:0,pageNo:0},'','').then(data=>{
+              this.currentData=_.filter(data.list, {isOutput: 0 ? 1 : 0, status: 1})
+              _.forEach(this.currentData,(item)=>{
+                item.fieldSource = 1;
+              })
+              this.currentData = this.adjustFieldModels(this.currentData)
+            })
+          }
+        }else{
+          this.currentData = this.data
 
-      return data
-    },
-    selectAll (rows) {
-      this.checkedRows = _.cloneDeep(rows)
-    },
-    select (selection, row) {
-      if (!_.find(this.checkedRows, {fieldEn: row.fieldEn})) {
-        this.checkedRows.push(row)
-      } else {
-        this.removeArrayItem(this.checkedRows, row)
-      }
-    },
-    removeArrayItem (data, item) {
-      let index = _.findIndex(data, {fieldEn: item.fieldEn})
-      if (index > -1) {
-        data.splice(index, 1)
-      }
-    },
-    setDefaultChecked () {
-      this.$nextTick(() => {
-        _.forEach(this.filteredData, row => {
-          this.$refs.table.toggleRowSelection(row, !_.isEmpty(_.find(this.checkedRows, {fieldEn: row.fieldEn})))
+        }
+      },
+      adjustFieldModels (orginalData) {
+        let data = []
+        if (_.isArray(orginalData)) {
+          _.forEach(orginalData, function (item) {
+            if (item.fieldSource === 1) { // 字段
+              data.push({
+                fieldId: item.id,
+                fieldSource: item.fieldSource,
+                fieldEn: item.fieldEn,
+                fieldCn: item.fieldCn,
+                fieldType: item.fieldType,
+                valueType: item.valueType,
+                valueScope: item.valueScope
+              })
+            }
+          })
+        }
+
+        return data
+      },
+      selectAll (rows) {
+        this.checkedRows = _.cloneDeep(rows)
+      },
+      select (selection, row) {
+        if (!_.find(this.checkedRows, {fieldEn: row.fieldEn})) {
+          this.checkedRows.push(row)
+        } else {
+          this.removeArrayItem(this.checkedRows, row)
+        }
+      },
+      removeArrayItem (data, item) {
+        let index = _.findIndex(data, {fieldEn: item.fieldEn})
+        if (index > -1) {
+          data.splice(index, 1)
+        }
+      },
+      setDefaultChecked () {
+        this.$nextTick(() => {
+          _.forEach(this.filteredData, row => {
+            this.$refs.table.toggleRowSelection(row, !_.isEmpty(_.find(this.checkedRows, {fieldEn: row.fieldEn})))
+          })
         })
-      })
-    },
-    removeCheckedRow (row) {
-      this.checkedRows = _.differenceBy(this.checkedRows, [row], 'fieldEn')
-      this.setDefaultChecked()
-    },
-    tableRowClassName (row, index) {
-      if (!_.find(this.data, {fieldEn: row.fieldEn})) {
-        return 'not-exist-row'
+      },
+      removeCheckedRow (row) {
+        this.checkedRows = _.differenceBy(this.checkedRows, [row], 'fieldEn')
+        this.setDefaultChecked()
+      },
+      tableRowClassName (row, index) {
+        if (!_.find(this.data, {fieldEn: row.fieldEn})) {
+          return 'not-exist-row'
+        }
+      },
+      ok () {
+        this.$emit('ok', this.checkedRows)
+      },
+      cancel () {
+        this.$emit('cancel')
+      },
+      getFieldSourceLabel (value) {
+        return _.find(this.fieldSourceOption, {value: value}).label
+      },
+      formatFieldSource (row, column) {
+        let value = row[column.property]
+        return this.getFieldSourceLabel(value)
       }
-    },
-    ok () {
-      this.$emit('ok', this.checkedRows)
-    },
-    cancel () {
-      this.$emit('cancel')
-    },
-    getFieldSourceLabel (value) {
-      return _.find(this.fieldSourceOption, {value: value}).label
-    },
-    formatFieldSource (row, column) {
-      let value = row[column.property]
-      return this.getFieldSourceLabel(value)
     }
   }
-}
 </script>
 <style lang="scss">
   #field-and-process-variable-multi-checked-dialog {

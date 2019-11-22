@@ -33,133 +33,133 @@
   </div>
 </template>
 <script>
-import OrgansApi from '@system/api/systemconfig/organmanage.api'
-import OrgansManageMock from '@system/mock/organmanage.mock'
-import ResponseUtils from '../../../../scripts/response-utils'
-export default {
-  data () {
-    return {
-      backPath: '/organ_manage',
-      organ: {
-        organId: '',
-        name: '',
-        code: '',
-        author: '',
-        birth: '',
-        email: '',
-        status: 1,
-        telephone: '',
-        token: ''
+  import OrgansApi from '@system/api/systemconfig/organmanage.api'
+  import OrgansManageMock from '@system/mock/organmanage.mock'
+  import ResponseUtils from '../../../../scripts/response-utils';
+  export default {
+    data() {
+      return {
+        backPath: '/organ_manage',
+        organ: {
+          organId: '',
+          name: '',
+          code: '',
+          author: '',
+          birth: '',
+          email: '',
+          status: 1,
+          telephone: '',
+          token: ''
+        },
+        copiedOrganName: '',
+        copiedOrganCode:'',
+        organRules: {},
+        timeout: null
+      }
+    },
+    methods: {
+      quit() {
+        this.$router.push(this.backPath)
       },
-      copiedOrganName: '',
-      copiedOrganCode: '',
-      organRules: {},
-      timeout: null
-    }
-  },
-  methods: {
-    quit () {
-      this.$router.push(this.backPath)
-    },
-    // 保存验证操作
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.doneSave()
-        }
-      })
-    },
-    doneSave () {
-      let payload = Object.assign({}, this.organ)
-      if (this.organ.organId) {
-        OrgansApi.updateOrgan(payload).then(
-          (data) => {
-            this.$router.push(this.backPath)
-          }, (error) => {
-            ResponseUtils.showErrorMessage(error, '组织保存失败')
+      // 保存验证操作
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.doneSave()
           }
-        )
-      } else {
-        delete payload.organId
-        OrgansApi.saveOrgan(payload).then(
+        })
+      },
+      doneSave() {
+        let payload = Object.assign({}, this.organ)
+        if (this.organ.organId) {
+          OrgansApi.updateOrgan(payload).then(
+            (data) => {
+              this.$router.push(this.backPath)
+            }, (error) => {
+              ResponseUtils.showErrorMessage(error, '组织保存失败');
+            }
+          )
+        } else {
+          delete payload.organId
+          OrgansApi.saveOrgan(payload).then(
+            (data) => {
+              this.$router.push(this.backPath)
+            }, (error) => {
+              ResponseUtils.showErrorMessage(error, '组织保存失败');
+            }
+          )
+        }
+      },
+      checkOrgan(rule, value, callback) {
+        let self = this
+        self.timeout = setTimeout(
+          function () {
+            if (self.organ.organId && value === self.copiedOrganName) {
+              callback()
+              return
+            }
+            OrgansApi.exitName(value,self.$route.params.id !== 'add' ? self.$route.params.id : '').then(
+              (res) => {
+                if (res && value !== self.copiedOrganName) {
+                  callback(new Error('该组织名称已经存在，请更改'))
+                } else {
+                  callback()
+                }
+              }, (err) => {
+                console.log(err)
+                callback()
+              }
+            )
+          }, 200)
+      },
+      checkOrganCode(rule, value, callback){
+        let self = this
+        self.timeout = setTimeout(
+          function () {
+            if (self.organ.organId && value === self.copiedOrganCode) {
+              callback()
+              return
+            }
+            OrgansApi.isHasOrganCode(value,self.$route.params.id ==='add' ? '' : self.$route.params.id).then(
+              (res) => {
+                if (res) {
+                  callback(new Error('该组织代号已经存在，请更改'))
+                } else {
+                  callback()
+                }
+              }, (err) => {
+                console.log(err)
+                callback()
+              }
+            )
+          }, 200)
+      }
+    },
+    created() {
+      // 根据路由信息赋值roleId
+      this.organ.organId = this.$route.params.id !== 'add' ? this.$route.params.id : ''
+      this.organRules = OrgansManageMock.organRules()
+      this.organRules.code.push({
+        validator: this.checkOrganCode, trigger: 'change'
+      })
+      this.organRules.name.push(
+        {validator: this.checkOrgan, trigger: 'change'}
+      )
+      if (this.organ.organId) {
+        OrgansApi.getOrganById(this.organ.organId).then(
           (data) => {
-            this.$router.push(this.backPath)
-          }, (error) => {
-            ResponseUtils.showErrorMessage(error, '组织保存失败')
+            this.organ = data
+            this.organ.organId = this.organ.organId.toString()
+            this.copiedOrganName = this.organ.name
+            this.copiedOrganCode = this.organ.code
+          }, (err) => {
+            console.log(err)
+            this.$message('组织信息加载失败')
           }
         )
       }
-    },
-    checkOrgan (rule, value, callback) {
-      let self = this
-      self.timeout = setTimeout(
-        function () {
-          if (self.organ.organId && value === self.copiedOrganName) {
-            callback()
-            return
-          }
-          OrgansApi.exitName(value, self.$route.params.id !== 'add' ? self.$route.params.id : '').then(
-            (res) => {
-              if (res && value !== self.copiedOrganName) {
-                callback(new Error('该组织名称已经存在，请更改'))
-              } else {
-                callback()
-              }
-            }, (err) => {
-              console.log(err)
-              callback()
-            }
-          )
-        }, 200)
-    },
-    checkOrganCode (rule, value, callback) {
-      let self = this
-      self.timeout = setTimeout(
-        function () {
-          if (self.organ.organId && value === self.copiedOrganCode) {
-            callback()
-            return
-          }
-          OrgansApi.isHasOrganCode(value, self.$route.params.id === 'add' ? '' : self.$route.params.id).then(
-            (res) => {
-              if (res) {
-                callback(new Error('该组织代号已经存在，请更改'))
-              } else {
-                callback()
-              }
-            }, (err) => {
-              console.log(err)
-              callback()
-            }
-          )
-        }, 200)
-    }
-  },
-  created () {
-    // 根据路由信息赋值roleId
-    this.organ.organId = this.$route.params.id !== 'add' ? this.$route.params.id : ''
-    this.organRules = OrgansManageMock.organRules()
-    this.organRules.code.push({
-      validator: this.checkOrganCode, trigger: 'change'
-    })
-    this.organRules.name.push(
-      {validator: this.checkOrgan, trigger: 'change'}
-    )
-    if (this.organ.organId) {
-      OrgansApi.getOrganById(this.organ.organId).then(
-        (data) => {
-          this.organ = data
-          this.organ.organId = this.organ.organId.toString()
-          this.copiedOrganName = this.organ.name
-          this.copiedOrganCode = this.organ.code
-        }, (err) => {
-          console.log(err)
-          this.$message('组织信息加载失败')
-        }
-      )
     }
   }
-}
 </script>
 <style lang="scss" scoped>
   .userTitle {

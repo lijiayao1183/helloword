@@ -16,38 +16,38 @@
   </el-table>
 </template>
 <script>
-import * as _ from 'lodash'
+  import * as _ from 'lodash'
 
-export default {
+  export default {
 
-  props: {
-    data: {
-      type: Array,
-      default () {
-        return []
+    props: {
+      data: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      cols: {
+        type: Array,
+        default () {
+          return [{prop: '', label: ''}]
+        }
+      },
+      maxHeight: {
+        type: Number,
+        default: 300
       }
     },
-    cols: {
-      type: Array,
-      default () {
-        return [{prop: '', label: ''}]
-      }
-    },
-    maxHeight: {
-      type: Number,
-      default: 300
-    }
-  },
-  methods: {
-    formatValue (row, column, formatter) {
-      if (_.isFunction(formatter)) {
-        return formatter(row, column)
-      } else {
-        return row[column.property]
+    methods: {
+      formatValue (row, column, formatter) {
+        if (_.isFunction(formatter)) {
+          return formatter(row, column)
+        } else {
+          return row[column.property]
+        }
       }
     }
   }
-}
 </script>
 <style>
 

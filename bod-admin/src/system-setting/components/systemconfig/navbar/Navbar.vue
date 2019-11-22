@@ -9,7 +9,7 @@
 import LeftNavBarMockData from '@system/mock/navbar.mock.js'
 
 export default {
-  data () {
+  data() {
     return {
       navbars: LeftNavBarMockData,
       defaultActive: '/'
@@ -17,11 +17,11 @@ export default {
   },
   props: ['permissions'],
   methods: {
-    clickMenu (el) {
-      sessionStorage.setItem('organId', -2)
+    clickMenu(el) {
+      sessionStorage.setItem("organId", -2)
       this.$router.push({ path: el.index })
     },
-    transformedNavbars () {
+    transformedNavbars() {
       return this.navbars.map(
         item => {
           let arr = item.path.split(/[\/\_]/g)
@@ -31,7 +31,7 @@ export default {
     }
   },
   computed: {
-    computedNavbars () {
+    computedNavbars() {
       let resultNavs = []
       if (localStorage && localStorage.getItem('admin_name') && localStorage.getItem('admin_name') === 'admin') {
         resultNavs = this.navbars

@@ -67,172 +67,172 @@
   </div>
 </template>
 <script>
-import RolesApi from '@system/api/systemconfig/rolemanage.api'
-import UserApi from '@system/api/systemconfig/usermanage.api'
-import CommonTree from '@system/components/systemconfig/common/CommonTree'
-import UtilsMock from '@system/mock/utils.mock'
+  import RolesApi from '@system/api/systemconfig/rolemanage.api'
+  import UserApi from '@system/api/systemconfig/usermanage.api'
+  import CommonTree from '@system/components/systemconfig/common/CommonTree'
+  import UtilsMock from '@system/mock/utils.mock'
 
-let url = require('../../../../scripts/url')
+  let url = require('../../../../scripts/url')
 
-export default {
-  data () {
-    return {
-      backPath: '/role_manage',
-      role: {
-        roleId: '',
-        roleName: '',
-        organId: '',
-        parentId: ''
-      },
-      tree: {
-        treeRef: '',
-        treeData: [],
-        defaultProps: {
-          children: 'children',
-          label: 'name'
+  export default {
+    data () {
+      return {
+        backPath: '/role_manage',
+        role: {
+          roleId: '',
+          roleName: '',
+          organId: '',
+          parentId: ''
         },
-        node: {
-          id: 'resourceId',
-          parentId: 'parentId'
+        tree: {
+          treeRef: '',
+          treeData: [],
+          defaultProps: {
+            children: 'children',
+            label: 'name'
+          },
+          node: {
+            id: 'resourceId',
+            parentId: 'parentId'
+          },
+          selectedNodesKeys: [],
+          checkStrictly: false
         },
-        selectedNodesKeys: [],
-        checkStrictly: false
-      },
-      dataTree: [],
-      companies: [],
-      getOrganPromise: null,
-      getRolePrommise: null,
-      getPermissionPromise: null
-    }
-  },
-  methods: {
-    quit () {
-      this.$router.push(this.backPath)
-    },
-    // 保存验证操作
-    submitForm () {
-      let payload = {
-        ids: this.tree.selectedNodesKeys.join(','),
-        roleId: this.role.roleId
+        dataTree: [],
+        companies: [],
+        getOrganPromise: null,
+        getRolePrommise: null,
+        getPermissionPromise: null
       }
-      this.getRolePrommise = RolesApi.putRoleResource(payload).then(
-        (res) => {
-          RolesApi.getUserinfo().then((data) => {
-            console.log(this.role)
-            if (data.roleId === this.role.roleId) {
-              this.$message.success('分配权限成功,请重新登陆！')
-              setTimeout(() => {
-                // window.location.href = `${url.rootPath}/html/login.html?link=${window.location.pathname}`
-              }, 1500)
+    },
+    methods: {
+      quit () {
+        this.$router.push(this.backPath)
+      },
+      // 保存验证操作
+      submitForm () {
+        let payload = {
+          ids: this.tree.selectedNodesKeys.join(','),
+          roleId: this.role.roleId
+        }
+        this.getRolePrommise = RolesApi.putRoleResource(payload).then(
+          (res) => {
+            RolesApi.getUserinfo().then((data) => {
+              console.log(this.role);
+              if (data.roleId === this.role.roleId) {
+                this.$message.success('分配权限成功,请重新登陆！')
+                setTimeout(() => {
+                 // window.location.href = `${url.rootPath}/html/login.html?link=${window.location.pathname}`
+                }, 1500)
+              }
+            }).catch((err) => {
+            })
+          }, (err) => {
+            console.log(err)
+          }
+        )
+
+        let addRoleRelPromises = []
+        _.forEach(this.dataTree, tree => {
+          let ids = tree.selectedNodesKeys.join(',')
+            addRoleRelPromises.push(RolesApi.addRoleResource(this.role.roleId, ids, tree.serviceName).then(
+              res => {
+                console.log(res)
+              }, err => {
+                console.log(err)
+              }
+            ))
+        })
+        Promise.all(_.concat(this.getRolePrommise, addRoleRelPromises)).then(
+          (res) => {
+            this.$message('分配权限成功')
+            this.$router.push('/role_manage')
+          }, (err) => {
+            console.log(err)
+          }
+        )
+      },
+      afterSuccessSave () {
+        this.$message('角色保存成功')
+        this.$router.push(this.backPath)
+      },
+      afterFailSave (err) {
+        console.log(err)
+        this.$message('角色保存失败')
+      },
+      /**
+       * 获得选中的节点（包含虚拟选中的父节点）
+       */
+      getCheckedNodeIds (nodeIds) {
+        this.tree.selectedNodesKeys = nodeIds
+        let index = this.tree.selectedNodesKeys.indexOf(0)
+        if (index !== -1) {
+          this.tree.selectedNodesKeys.splice(index, 1)
+        }
+      },
+      treeCheckChange (tree) {
+        tree.selectedNodesKeys = this.$refs[tree.treeRef][0].getCheckedKeys(false)
+      }
+    },
+    created () {
+      // 根据路由信息赋值roleId
+      this.role.roleId = this.$route.params.id
+      this.tree.treeRef = UtilsMock.randomString(10)
+      this.getPermissionPromise = RolesApi.getRolePermissions(this.role.roleId).then(
+        (data) => {
+          this.tree.treeData = data
+          UtilsMock.traverseTree(this.tree.treeData, 'isCheck', 'resourceId', 'children', this.tree.selectedNodesKeys)
+        }, (err) => {
+          console.log(err)
+        }
+      )
+
+      UserApi.getOrgans().then(
+        (data) => {
+          this.companies = data.list
+        }, (err) => {
+          console.log(err)
+        }
+      )
+      RolesApi.getRoleById(this.role.roleId).then(
+        (data) => {
+          this.role.roleId = data.roleId
+          this.role.organId = data.organId
+          this.role.roleName = data.roleName
+          RolesApi.getResourceList(this.role.roleId).then((res) => {
+            for (let serviceName in res) {
+              let tempTree = {}
+              tempTree.serviceName = serviceName
+              tempTree.treeRef = serviceName
+              tempTree.title = serviceName === 'roleChannelCatalogService' ? '通道权限' : ''
+              tempTree.treeData = res[serviceName]
+              tempTree.defaultCheckedKeys = []
+              tempTree.treeData.forEach(
+                item => {
+                  if (item.isSelect) {
+                    tempTree.defaultCheckedKeys.push(item.id)
+                  }
+                }
+              )
+              tempTree.defaultProps = {
+                children: 'children',
+                label: 'name'
+              }
+              tempTree.selectedNodesKeys = tempTree.defaultCheckedKeys
+              this.dataTree.push(tempTree)
             }
-          }).catch((err) => {
+          }).catch(error => {
+
           })
         }, (err) => {
           console.log(err)
         }
       )
-
-      let addRoleRelPromises = []
-      _.forEach(this.dataTree, tree => {
-        let ids = tree.selectedNodesKeys.join(',')
-        addRoleRelPromises.push(RolesApi.addRoleResource(this.role.roleId, ids, tree.serviceName).then(
-          res => {
-            console.log(res)
-          }, err => {
-            console.log(err)
-          }
-        ))
-      })
-      Promise.all(_.concat(this.getRolePrommise, addRoleRelPromises)).then(
-        (res) => {
-          this.$message('分配权限成功')
-          this.$router.push('/role_manage')
-        }, (err) => {
-          console.log(err)
-        }
-      )
     },
-    afterSuccessSave () {
-      this.$message('角色保存成功')
-      this.$router.push(this.backPath)
-    },
-    afterFailSave (err) {
-      console.log(err)
-      this.$message('角色保存失败')
-    },
-    /**
-       * 获得选中的节点（包含虚拟选中的父节点）
-       */
-    getCheckedNodeIds (nodeIds) {
-      this.tree.selectedNodesKeys = nodeIds
-      let index = this.tree.selectedNodesKeys.indexOf(0)
-      if (index !== -1) {
-        this.tree.selectedNodesKeys.splice(index, 1)
-      }
-    },
-    treeCheckChange (tree) {
-      tree.selectedNodesKeys = this.$refs[tree.treeRef][0].getCheckedKeys(false)
+    components: {
+      'common-tree': CommonTree
     }
-  },
-  created () {
-    // 根据路由信息赋值roleId
-    this.role.roleId = this.$route.params.id
-    this.tree.treeRef = UtilsMock.randomString(10)
-    this.getPermissionPromise = RolesApi.getRolePermissions(this.role.roleId).then(
-      (data) => {
-        this.tree.treeData = data
-        UtilsMock.traverseTree(this.tree.treeData, 'isCheck', 'resourceId', 'children', this.tree.selectedNodesKeys)
-      }, (err) => {
-        console.log(err)
-      }
-    )
-
-    UserApi.getOrgans().then(
-      (data) => {
-        this.companies = data.list
-      }, (err) => {
-        console.log(err)
-      }
-    )
-    RolesApi.getRoleById(this.role.roleId).then(
-      (data) => {
-        this.role.roleId = data.roleId
-        this.role.organId = data.organId
-        this.role.roleName = data.roleName
-        RolesApi.getResourceList(this.role.roleId).then((res) => {
-          for (let serviceName in res) {
-            let tempTree = {}
-            tempTree.serviceName = serviceName
-            tempTree.treeRef = serviceName
-            tempTree.title = serviceName === 'roleChannelCatalogService' ? '通道权限' : ''
-            tempTree.treeData = res[serviceName]
-            tempTree.defaultCheckedKeys = []
-            tempTree.treeData.forEach(
-              item => {
-                if (item.isSelect) {
-                  tempTree.defaultCheckedKeys.push(item.id)
-                }
-              }
-            )
-            tempTree.defaultProps = {
-              children: 'children',
-              label: 'name'
-            }
-            tempTree.selectedNodesKeys = tempTree.defaultCheckedKeys
-            this.dataTree.push(tempTree)
-          }
-        }).catch(error => {
-
-        })
-      }, (err) => {
-        console.log(err)
-      }
-    )
-  },
-  components: {
-    'common-tree': CommonTree
   }
-}
 </script>
 <style lang="scss" scoped>
   .userTitle {

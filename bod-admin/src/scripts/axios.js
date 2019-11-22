@@ -7,7 +7,7 @@ let waitGetRespCount = 0
 let waitUpdateRespCount = 0
 
 axios.interceptors.request.use(function (config) {
-  if (config.method === 'get' || config.method === 'put') {
+  if (config.method === 'get' || config.method === 'put'   ) {
     showLoading(config)
   } else {
     showSaving(config)
@@ -56,7 +56,7 @@ const hideLoading = (res) => {
     waitGetRespCount--
     if (waitGetRespCount <= 0) {
       store.dispatch('hideLoading')
-    } else {
+    }else{
       store.dispatch('showLoading')
     }
   }

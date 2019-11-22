@@ -24,35 +24,35 @@
   </el-dialog>
 </template>
 <script>
-import { suspendTimes } from '../../mock/mock.data'
+  import { suspendTimes } from '../../mock/mock.data'
 
-export default {
-  props: {
-    value: {
-      type: Object,
-      default () {
-        return {
-          name: '',
-          description: ''
+  export default {
+    props: {
+      value: {
+        type: Object,
+        default () {
+          return {
+            name: '',
+            description: ''
+          }
         }
       }
-    }
-  },
-  data () {
-    return {
-      currentSuspendTime: '',
-      suspendTimes: suspendTimes
-    }
-  },
-  methods: {
-    ok () {
-      this.$emit('ok', this.currentSuspendTime)
     },
-    cancel () {
-      this.$emit('cancel')
+    data () {
+      return {
+        currentSuspendTime: '',
+        suspendTimes: suspendTimes
+      }
+    },
+    methods: {
+      ok () {
+        this.$emit('ok', this.currentSuspendTime)
+      },
+      cancel () {
+        this.$emit('cancel')
+      }
     }
   }
-}
 </script>
 <style lang="scss" scoped>
 

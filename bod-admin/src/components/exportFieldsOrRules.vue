@@ -56,143 +56,144 @@
   </div>
 </template>
 <script>
-import { ElTreeCustomer } from '../plugins/components/treeCustomer'
+  import { ElTreeCustomer } from '../plugins/components/treeCustomer'
 
-export default ({
-  props: {
-    exportTitle: {
-      type: String,
-      default: ''
-    },
-    leftFoldNameTitle: {
-      type: String,
-      default: ''
-    },
-    exportDisabled: {
-      type: Boolean,
-      default: true
-    },
-    selectedFileTitle: {
-      type: String,
-      default: ''
-    },
-    typeData: {
-      type: Array,
-      default: []
-    },
-    treeProps: {
-      type: Object,
-      default: () => {
-        return {
-          id: 'id',
-          label: 'fieldType',
-          children: 'children'
+  export default ({
+    props: {
+      exportTitle: {
+        type: String,
+        default: ''
+      },
+      leftFoldNameTitle: {
+        type: String,
+        default: ''
+      },
+      exportDisabled: {
+        type: Boolean,
+        default: true
+      },
+      selectedFileTitle: {
+        type: String,
+        default: ''
+      },
+      typeData: {
+        type: Array,
+        default: []
+      },
+      treeProps: {
+        type: Object,
+        default: () => {
+          return {
+            id: 'id',
+            label: 'fieldType',
+            children: 'children'
+          }
         }
+      },
+      detailTitle: {
+        type: String,
+        default: ''
+      },
+      selectedFiles: {
+        type: Array,
+        default: []
+      },
+      exportDialogVisible: {
+        type: Boolean,
+        default: false
       }
     },
-    detailTitle: {
-      type: String,
-      default: ''
+    data () {
+      return {
+        isIndeterminate: false,
+        checkAll: false,
+        treeNodes:0 ,
+        oldSelect:[]
+      }
     },
-    selectedFiles: {
-      type: Array,
-      default: []
+    created () {
     },
-    exportDialogVisible: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      isIndeterminate: false,
-      checkAll: false,
-      treeNodes: 0,
-      oldSelect: []
-    }
-  },
-  created () {
-  },
-  components: {
-    'tree-customer': ElTreeCustomer
-  },
-  watch: {
+    components: {
+      'tree-customer': ElTreeCustomer
+    },
+    watch:{
 	    oldSelect: {
-      handler (newValue, oldValue) {
-	        if (newValue.join(',') !== oldValue.join(',')) {
+	　　　　handler(newValue, oldValue) {
+	        if(newValue.join(',') !== oldValue.join(',')){
 	         const $tree = this.$refs.tree
 	         let data = $tree.getCheckedKeys()
-	         this.getAllNodes(this.typeData, this.treeNodes = 0)
+	         this.getAllNodes(this.typeData, this.treeNodes=0)
 	         if (data.length < this.treeNodes) {
 	          this.checkAll = false
 	         } else {
 	          this.checkAll = true
 	         }
 
+
 	　　　　　　    this.$emit('getCheckedKeys', newValue)
 	        }
-      },
-      deep: true
+	　　　　},
+	　　　　deep: true
 	　　   }
-  },
-  methods: {
-    handleCheckAllChange (event) {
-      let cls = this.$refs.tree.$data.root.data
-      let that = this
-      _.forEach(cls, function (item, index) {
-        that.$refs.tree.setChecked(item, that.checkAll, true)
-      })
-      this.currentChange()
-    },
-    currentChange () {
-      const $tree = this.$refs.tree
-      let data = $tree.getCheckedKeys()
-      this.getAllNodes(this.typeData, this.treeNodes = 0)
-      if (data.length < this.treeNodes) {
-        this.checkAll = false
-      } else {
-        this.checkAll = true
-      }
-      this.oldSelect = data
-    },
-    getCheckedKeys (nodeData, checked, chilChecked) {
-      if (checked) {
-        this.$refs.tree.setChecked(nodeData, checked, true)
-      }
-      this.currentChange()
-    },
-    getAllNodes (typeData) {
-      _.each(typeData, item => {
-        if (!_.isEmpty(item)) {
-          this.treeNodes++
-        }
-        this.getAllNodes(item.children)
-      })
-    },
-    formatStrTooLang (strValue) {
-      let tmpStr = ''
-      if (strValue.length > 15) {
-        tmpStr = strValue.slice(0, 14) + '...'
-      } else {
-        tmpStr = strValue
-      }
-      return tmpStr
-    },
-    handleClose () {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$emit('exportCancel')
+	},
+    methods: {
+      handleCheckAllChange (event) {
+        let cls = this.$refs.tree.$data.root.data
+        let that = this
+        _.forEach(cls, function(item, index){
+          that.$refs.tree.setChecked(item, that.checkAll ,true)
         })
-        .catch(_ => {})
-    },
-    exportCancel () {
-      this.$emit('exportCancel')
-    },
-    exportSure () {
-      this.$emit('exportSure')
+        this.currentChange()
+      },
+      currentChange(){
+        const $tree = this.$refs.tree
+        let data = $tree.getCheckedKeys()
+        this.getAllNodes(this.typeData, this.treeNodes=0)
+        if (data.length < this.treeNodes) {
+          this.checkAll = false
+        } else {
+          this.checkAll = true
+        }
+        this.oldSelect = data
+      },
+      getCheckedKeys (nodeData,checked, chilChecked) {
+        if(checked){
+          this.$refs.tree.setChecked(nodeData, checked ,true)
+        }
+        this.currentChange()
+      },
+      getAllNodes (typeData) {
+        _.each(typeData, item => {
+          if (!_.isEmpty(item)) {
+            this.treeNodes++
+          }
+          this.getAllNodes(item.children)
+        })
+      },
+      formatStrTooLang(strValue){
+        let tmpStr='';
+        if(strValue.length>15){
+          tmpStr = strValue.slice(0,14)+'...';
+        }else{
+          tmpStr = strValue
+        }
+        return tmpStr
+      },
+      handleClose () {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$emit('exportCancel')
+          })
+          .catch(_ => {})
+      },
+      exportCancel () {
+        this.$emit('exportCancel')
+      },
+      exportSure () {
+        this.$emit('exportSure')
+      }
     }
-  }
-})
+  })
 </script>
 <style lang="scss">
   #export-fields-rules {

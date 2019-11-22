@@ -1,7 +1,7 @@
-import api from '../scripts/api.js'
-import applyOptions from '../components/apply/apply-option.mock.js'
+import api from "../scripts/api.js"
+import applyOptions from "../components/apply/apply-option.mock.js"
 export default {
-  data () {
+  data() {
     return {
       applyList: null
     }
@@ -24,12 +24,12 @@ export default {
      * @param {Boolean} isFormData 是否formData格式的提交数据
      * @returns {Promise} 返回值
      */
-    $_addApply (type, data, isFormData) {
+    $_addApply(type, data, isFormData) {
       let text = applyOptions.type[type]
       data.type = type
       let content = {}
       for (let key in data) {
-        if (key !== 'reason' && key !== 'nodes' && key !== 'type') {
+        if (key !== "reason" && key !== "nodes" && key !== "type") {
           content[key] = data[key]
         }
       }
@@ -38,7 +38,7 @@ export default {
       if (isFormData) {
         let formData = new FormData()
         for (let key in data) {
-          if (key === 'nodes') {
+          if (key === "nodes") {
             formData.append(key, JSON.stringify(data[key]))
           } else {
             formData.append(key, data[key])
@@ -47,19 +47,19 @@ export default {
         postData = formData
       }
       let promise = api.apply.addApply(postData, isFormData)
-      let typeText = data.nodes ? '申请' : ''
+      let typeText = data.nodes ? "申请" : ""
       promise
         .then(res => {
-          this.$message.success(text + typeText + '成功')
+          this.$message.success(text + typeText + "成功")
         })
         .catch(err => {
           this.$message.warning(
-            text + typeText + '失败：' + err.response.data.error.message
+            text + typeText + "失败：" + err.response.data.error.message
           )
         })
       return promise
     },
-    $_loadApplyList (type) {
+    $_loadApplyList(type) {
       api.apply
         .getList()
         .then(res => {
@@ -67,7 +67,7 @@ export default {
         })
         .catch(() => {
           this.applyList = null
-          this.$message.warning('审批人员加载失败,请重试')
+          this.$message.warning("审批人员加载失败,请重试")
         })
     }
   }

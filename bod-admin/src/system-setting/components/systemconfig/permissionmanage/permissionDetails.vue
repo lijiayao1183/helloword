@@ -72,90 +72,90 @@
   </div>
 </template>
 <script>
-import PermissionManageApi from '@system/api/systemconfig/permissionmanage.api'//
-import DateUtil from '../../../../scripts/date-utils'
-export default {
-  data () {
-    return {
-      tableData: [],
-      tableRowKey: ''
-    }
-  },
-  methods: {
-    formatDate: function (date) {
-      if (date == undefined || date == '--') {
-        return '--'
+  import PermissionManageApi from '@system/api/systemconfig/permissionmanage.api'//
+  import DateUtil from '../../../../scripts/date-utils'
+  export default {
+    data() {
+      return {
+        tableData:[],
+        tableRowKey:''
       }
-      return DateUtil.formate(date)
     },
-    formatUser: function (userInfos) {
-      if (userInfos == null || userInfos.length == 0) {
-        return '--'
+    methods: {
+      formatDate:function (date) {
+        if(date==undefined || date=='--'){
+          return '--'
+        }
+        return DateUtil.formate(date)
+      },
+      formatUser:function (userInfos) {
+        if(userInfos==null || userInfos.length==0){
+          return '--'
+        }
+        return _.map(userInfos,function (item) {
+          return item.account + '(' + item.nickName + ')'
+        }).toString()
+      },
+      loadFieldData:function () {
+        let _this = this
+        PermissionManageApi.getData().then((data) => {
+          _this.tableData = _.cloneDeep(data)
+          _this.tableData.unshift({
+            id: "0",
+            level: '0',
+            name: "申请人",
+            userInfos: [],
+            users: "--",
+            updateTime: "--"
+          })
+          sessionStorage.setItem('nameStr',_.map(_this.tableData,'name').toString())
+        })
+      },
+      add:function (row) {
+        this.$router.push('/editPermission/0?level='+row.level)
+      },
+      batchDelete:function (row) {
+        let _this = this
+        this.$confirm('确认删除？','权限删除').then(res => {
+          PermissionManageApi.deleteData(row.id).then((data) =>{
+            if(data.code=="1"){
+              _this.loadFieldData()
+            }
+          }).catch((res)=>{
+              this.$message.warning(res.response.data.error.message)
+          })
+        }).catch(res => {
+        })
+      },
+      look:function (row) {
+        sessionStorage.setItem(row.id,JSON.stringify(row))
+        let nameStr = sessionStorage.getItem('nameStr').split(',')
+        nameStr.splice(nameStr.indexOf(row.name),1)
+        sessionStorage.setItem('nameStr',nameStr.toString())
+        this.$router.push('/editPermission/'+row.id)
       }
-      return _.map(userInfos, function (item) {
-        return item.account + '(' + item.nickName + ')'
-      }).toString()
     },
-    loadFieldData: function () {
-      let _this = this
-      PermissionManageApi.getData().then((data) => {
-        _this.tableData = _.cloneDeep(data)
-        _this.tableData.unshift({
-          id: '0',
-          level: '0',
-          name: '申请人',
-          userInfos: [],
-          users: '--',
-          updateTime: '--'
-        })
-        sessionStorage.setItem('nameStr', _.map(_this.tableData, 'name').toString())
-      })
+    created(){
+      this.loadFieldData()
     },
-    add: function (row) {
-      this.$router.push('/editPermission/0?level=' + row.level)
-    },
-    batchDelete: function (row) {
-      let _this = this
-      this.$confirm('确认删除？', '权限删除').then(res => {
-        PermissionManageApi.deleteData(row.id).then((data) => {
-          if (data.code == '1') {
-            _this.loadFieldData()
-          }
-        }).catch((res) => {
-          this.$message.warning(res.response.data.error.message)
-        })
-      }).catch(res => {
-      })
-    },
-    look: function (row) {
-      sessionStorage.setItem(row.id, JSON.stringify(row))
-      let nameStr = sessionStorage.getItem('nameStr').split(',')
-      nameStr.splice(nameStr.indexOf(row.name), 1)
-      sessionStorage.setItem('nameStr', nameStr.toString())
-      this.$router.push('/editPermission/' + row.id)
-    }
-  },
-  created () {
-    this.loadFieldData()
-  },
-  computed: {
-    tableDataFn () {
-      let tableData = _.cloneDeep(this.tableData)
-      let key = _.trim(this.tableRowKey)
-      let name = ''
-      if (key) {
-        tableData = _.filter(tableData, (field) => {
-          name = _.map(field.userInfos, function (item) {
-            return item.nickName + '_' + item.account
-          }).toString()
-          return (field.name && field.name.indexOf(key) > -1) ||
+    computed: {
+      tableDataFn () {
+        let tableData = _.cloneDeep(this.tableData)
+        let key = _.trim(this.tableRowKey)
+        let name = ""
+        if (key) {
+          tableData = _.filter(tableData, (field) => {
+            name = _.map(field.userInfos,function(item){
+              return item.nickName+"_"+item.account
+            }).toString()
+            return (field.name && field.name.indexOf(key) > -1) ||
                   (name && name.indexOf(key) > -1)
-        })
+          })
+        }
+        return tableData
       }
-      return tableData
     }
   }
-}
 </script>
 <style lang="scss" scoped>
   .action-btn-container {

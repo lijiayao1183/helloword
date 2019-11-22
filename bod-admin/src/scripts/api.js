@@ -1,121 +1,122 @@
-import axios from './axios'
+import axios from "./axios"
 
 export default {
   field: {
-    getUnPage (keyWord, engineId, isOutput) {
+    getUnPage(keyWord, engineId, isOutput) {
+
       let url = `/api/field/unpage?keyWord=${keyWord}`
       if (engineId) {
         url = `/api/field/unpage?keyWord=${keyWord}&engineId=${engineId}`
       }
-      if (isOutput != undefined) {
+      if(isOutput!=undefined){
         url += `&isOutput=${isOutput}`
       }
 
       return axios({
-        method: 'get',
+        method: "get",
         isShowLoading: false,
         url
       })
     },
-    getField (id) {
+    getField(id) {
       const url = `/api/field/getField?id=${id}`
       return axios({
-        method: 'get',
+        method: "get",
         url
       })
     }
   },
   login: {
-    put () {
+    put() {
       const url = `/api/login`
       return axios({
-        method: 'get',
+        method: "get",
         url
       })
     }
   },
-  getApplyNum () {
+  getApplyNum() {
     return axios({
-      url: '/api/audit/apply/getRemind',
-      method: 'get'
+      url: "/api/audit/apply/getRemind",
+      method: "get"
     })
   },
-  getAllUsers () {
+  getAllUsers() {
     return axios({
-      url: '/api/user/list?status=1&pageSize=0',
-      method: 'get'
+      url: "/api/user/list?status=1&pageSize=0",
+      method: "get"
     })
   },
   resource: {
-    getUserResourceCodes () {
+    getUserResourceCodes() {
       const url = `/api/resource/getUserResourceCodes`
       return axios({
-        method: 'get',
+        method: "get",
         url
       })
     }
   },
   user: {
-    updateUserInfo (data) {
+    updateUserInfo(data) {
       const url = `/api/user/updateUserInfo?cellphone=${
         data.cellphone
-      }&userId=${data.userId}&nickName=${data.nickName}&email=${
+        }&userId=${data.userId}&nickName=${data.nickName}&email=${
         data.email
-      }&employeeId=${data.employeeId}`
+        }&employeeId=${data.employeeId}`
       return axios({
-        method: 'post',
+        method: "post",
         url
       })
     }
   },
   psw: {
-    updatePsw (data) {
+    updatePsw(data) {
       const url = `/api/user/updatePassword?userId=${data.userId}&oldPassword=${
         data.oldPassword
-      }&newPassword=${data.newPassword}`
+        }&newPassword=${data.newPassword}`
       return axios({
-        method: 'post',
+        method: "post",
         url
       })
     }
   },
   apply: {
-    getList () {
-      return axios.get('/api/audit/permission/getPermissions', {
+    getList() {
+      return axios.get("/api/audit/permission/getPermissions", {
         // isShowLoading: false
       })
     },
-    addApply (data, isFormData) {
+    addApply(data, isFormData) {
       if (isFormData) {
-        return axios.post('/api/audit/apply/formData', data, {
+        return axios.post("/api/audit/apply/formData", data, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            "Content-Type": "multipart/form-data"
           }
         })
       } else {
-        return axios.post('/api/audit/apply', data)
+        return axios.post("/api/audit/apply", data)
       }
     },
-    getApplyList (queryType, params) {
-      return axios.get('/api/audit/apply/getApplys/' + queryType, { params })
+    getApplyList(queryType, params) {
+      return axios.get("/api/audit/apply/getApplys/" + queryType, { params })
     },
-    getDetail (applyId) {
-      return axios.get('/api/audit/apply?id=' + applyId)
+    getDetail(applyId) {
+      return axios.get("/api/audit/apply?id=" + applyId)
     },
-    approveApply (data) {
-      return axios.post('/api/audit/apply/audit', data)
+    approveApply(data) {
+      return axios.post("/api/audit/apply/audit", data)
     },
-    executeApply (data) {
-      return axios.post('/api/audit/apply/execute', data)
+    executeApply(data) {
+      return axios.post("/api/audit/apply/execute", data)
     },
-    authorization (id) {
-      return axios.get('/api/audit/permission?id=' + id)
+    authorization(id) {
+      return axios.get("/api/audit/permission?id=" + id)
     },
-    getSublicense () {
-      return axios.get('/api/audit/sublicense')
+    getSublicense() {
+      return axios.get("/api/audit/sublicense")
     },
-    saveSublicense (data) {
-      return axios.post('/api/audit/sublicense', data)
+    saveSublicense(data) {
+      return axios.post("/api/audit/sublicense", data)
     }
   }
 }

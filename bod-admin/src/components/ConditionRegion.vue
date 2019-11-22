@@ -289,305 +289,305 @@
 </template>
 
 <script>
-import selectOptionMixin from '../mixins/select-option.mixin'
-import fieldMixin from '../mixins/field-mixin'
-import bus from '../field-manage/scripts/bus'
-import api from '../scripts/api'
+  import selectOptionMixin from '../mixins/select-option.mixin'
+  import fieldMixin from '../mixins/field-mixin'
+  import bus from '../field-manage/scripts/bus'
+  import api from '../scripts/api'
 
-export default {
-  props: {
-    versionId: {
-      type: Number,
-      default () {
-        return null
+  export default {
+    props: {
+      versionId: {
+        type: Number,
+        default () {
+          return null
+        }
+      },
+      data: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      fieldData: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      outputField: {
+        type: Object,
+        default () {
+          return {}
+        }
+      },
+      isShowOutPutTitle: {
+        type: Boolean,
+        default: false
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      isShowOutputValue: {
+        type: Boolean,
+        default: true
+      },
+      isScreenfull: {
+        type: Boolean,
+        default: false
+      },
+      canSelectField: {
+        type: Boolean,
+        default: true
+      },
+      canChangeField: {
+        type: Boolean,
+        default: true
+      },
+      selectEnumText: {
+        type: Boolean,
+        default: false
       }
-    },
-    data: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    fieldData: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    outputField: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    isShowOutPutTitle: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    isShowOutputValue: {
-      type: Boolean,
-      default: true
-    },
-    isScreenfull: {
-      type: Boolean,
-      default: false
-    },
-    canSelectField: {
-      type: Boolean,
-      default: true
-    },
-    canChangeField: {
-      type: Boolean,
-      default: true
-    },
-    selectEnumText: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      engineId: this.$route.params.engineId,
-      conditions: [this.getNewCondition()],
-      fieldDataSource: [],
-      isDeleteItem: false,
-      isSelect: false
-    }
-  },
-  watch: {
-    versionId () {
-      console.dir(this.versionId)
-      this.conditions = [this.getNewCondition()]
     },
     data () {
-      this.initConditions()
-    },
-    fieldData: {
-      deep: true,
-      handler: function (newValue, oldValue) {
-        this.initFieldDataSource()
-        // this.conditions = [this.getNewCondition()]
+      return {
+        engineId: this.$route.params.engineId,
+        conditions: [this.getNewCondition()],
+        fieldDataSource: [],
+        isDeleteItem: false,
+        isSelect: false
       }
-    }
-  },
-  beforeDestroy () {
-    bus.$off('sure')
-  },
-  created () {
-    this.initData()
-    let that = this
-  },
-  mixins: [selectOptionMixin, fieldMixin],
-  methods: {
-    validate () {
-      if (this.$refs['condition'].length > 0) {
-        let validator = true
-        _.forEach(this.$refs['condition'], function (obj) {
-          obj.validate((valid) => {
-            if (!valid) {
-              validator = false
+    },
+    watch: {
+      versionId() {
+        console.dir(this.versionId)
+        this.conditions = [this.getNewCondition()]
+      },
+      data () {
+        this.initConditions()
+      },
+      fieldData:{
+        deep: true,
+        handler: function (newValue, oldValue) {
+          this.initFieldDataSource()
+          //this.conditions = [this.getNewCondition()]
+        }
+      }
+    },
+    beforeDestroy () {
+      bus.$off('sure')
+    },
+    created () {
+      this.initData()
+      let that = this
+    },
+    mixins: [selectOptionMixin, fieldMixin],
+    methods: {
+      validate () {
+        if (this.$refs['condition'].length > 0) {
+          let validator = true
+          _.forEach(this.$refs['condition'], function (obj) {
+            obj.validate((valid) => {
+              if (!valid) {
+                validator = false
+              }
+            })
+          })
+          return validator
+        } else {
+          return 0
+        }
+      },
+      initData () {
+        this.initFieldDataSource()
+        this.initConditions()
+      },
+      initFieldDataSource () {
+        if (!_.isEmpty(this.fieldData)) {
+          this.fieldDataSource = _.cloneDeep(this.fieldData)
+        } else if (this.engineId) {
+          this.loadData()
+        }
+      },
+      initConditions () {
+        if (this.data && this.data.length > 0) {
+          this.conditions = _.cloneDeep(this.data)
+        }
+      },
+      loadData () {
+        api.field.getUnPage('', this.engineId,0).then((data) => {
+          this.fieldDataSource = _.filter(data, item => {
+            return item.fieldEn !== this.outputField.fieldEn
+          })
+        }).catch(() => {
+
+        })
+      },
+      querySelectField (key, cb, valueType) {
+        if (this.isSelectField(key)) {
+          key = key.substring(1, key.length - 1)
+        }
+        let data = _.filter(this.fieldDataSource, item => {
+          let isContains = item.valueType === valueType
+          if (key) {
+            isContains = isContains && item.fieldCn.indexOf(key) > -1
+          }
+          return isContains
+        })
+
+        data = _.map(data, item => {
+          return {value: item.fieldCn, code: item.fieldEn}
+        })
+        console.log('------data-----')
+        console.log(data)
+
+        cb(data)
+      },
+      selectField (item, input) {
+        input.fieldValue = _.pad(item.value, item.value.length + 2, '@')
+        input.isSelectField = 1
+        input.selectField = _.first(_.map(_.filter(this.fieldDataSource, {fieldEn: item.code}), item => {
+          return {
+            fieldId: item.id,
+            fieldCn: item.fieldCn,
+            fieldEn: item.fieldEn,
+            fieldSource : item.fieldSource || '',
+            valueScope: item.valueScope,
+            valueType: item.valueType,
+          }
+        }))
+      },
+      fieldValueChange (value, input) {
+        if (this.isSelectField(input.fieldValue)) {
+          input.fieldValue = ''
+          input.isSelectField = 0
+          input.selectField = {}
+        } else {
+          input.fieldValue = value
+        }
+        this.change()
+      },
+      isSelectField (value) {
+        return value && _.startsWith(value, '@') && _.endsWith(value, '@')
+      },
+      getNewCondition () {
+        let condition = {
+          key: Date.now(),
+          fieldValue: '',
+          item: [
+            {
+              key: Date.now(),
+              fieldCn: '',
+              fieldEn: '',
+              fieldSource:'',
+              fieldId: '',
+              fieldValue: '',
+              isSelectField: 0,
+              selectField: {
+                fieldCn: '',
+                fieldEn: '',
+                fieldId: '',
+                fieldSource:'',
+                valueScope: '',
+                valueType: '',
+              },
+              logical: '',
+              lastLogical: '',
+              operator: '',
+              valueScope: '',
+              valueType: ''
+            }
+          ]
+        }
+        console.log(_.merge(condition, this.outputField))
+        return _.merge(condition, this.outputField)
+      },
+      addCondition () {
+        this.conditions.push(this.getNewCondition())
+        this.$nextTick(() => {
+            const $vm = $("#condition-region .condition-tables-screensmall")[0]
+            $vm.scrollTop = $vm.scrollHeight
+        })
+      },
+      deleteCondition (index) {
+        if (this.disabled) {
+          return
+        }
+        this.conditions.splice(index, 1)
+        this.change()
+      },
+      addConditionItem (outerIndex, index) {
+        let tmp = this.conditions[outerIndex].item[0]
+        this.conditions[outerIndex].item.splice(index + 1, 0, {
+          key: Date.now(),
+          fieldId: !this.canChangeField? tmp.fieldId : '',
+          fieldEn: !this.canChangeField? tmp.fieldEn : '',
+          fieldCn: !this.canChangeField? tmp.fieldCn : '',
+          fieldSource: !this.canChangeField? tmp.fieldSource : '',
+          fieldValue: '',
+          isSelectField: !this.canChangeField? tmp.isSelectField : 0,
+          selectField: {
+            fieldCn: !this.canChangeField ? tmp.selectField.fieldCn : '',
+            fieldEn: !this.canChangeField ? tmp.selectField.fieldEn : '',
+            fieldSource: !this.canChangeField ? tmp.selectField.fieldSource : '',
+            fieldId: !this.canChangeField ? tmp.selectField.fieldId : '',
+            valueScope: !this.canChangeField ? tmp.selectField.valueScope : '',
+            valueType: !this.canChangeField ? tmp.selectField.valueType : '',
+          },
+          logical: '',
+          lastLogical: '',
+          operator: '',
+          valueScope: !this.canChangeField? tmp.valueScope : '',
+          valueType: !this.canChangeField? tmp.valueType : ''
+        })
+        this.change()
+      },
+      deleteConditionItem (outerIndex, index) {
+        this.isDeleteItem = true
+        _.forEach(this.conditions, arr => {
+          _.forEach(arr.item, obj => {
+            if (obj.fieldEn != '' || this.isSelect) {
+              this.isDeleteItem = true
+              this.isSelect = true
             }
           })
         })
-        return validator
-      } else {
-        return 0
-      }
-    },
-    initData () {
-      this.initFieldDataSource()
-      this.initConditions()
-    },
-    initFieldDataSource () {
-      if (!_.isEmpty(this.fieldData)) {
-        this.fieldDataSource = _.cloneDeep(this.fieldData)
-      } else if (this.engineId) {
-        this.loadData()
-      }
-    },
-    initConditions () {
-      if (this.data && this.data.length > 0) {
-        this.conditions = _.cloneDeep(this.data)
-      }
-    },
-    loadData () {
-      api.field.getUnPage('', this.engineId, 0).then((data) => {
-        this.fieldDataSource = _.filter(data, item => {
-          return item.fieldEn !== this.outputField.fieldEn
-        })
-      }).catch(() => {
-
-      })
-    },
-    querySelectField (key, cb, valueType) {
-      if (this.isSelectField(key)) {
-        key = key.substring(1, key.length - 1)
-      }
-      let data = _.filter(this.fieldDataSource, item => {
-        let isContains = item.valueType === valueType
-        if (key) {
-          isContains = isContains && item.fieldCn.indexOf(key) > -1
-        }
-        return isContains
-      })
-
-      data = _.map(data, item => {
-        return {value: item.fieldCn, code: item.fieldEn}
-      })
-      console.log('------data-----')
-      console.log(data)
-
-      cb(data)
-    },
-    selectField (item, input) {
-      input.fieldValue = _.pad(item.value, item.value.length + 2, '@')
-      input.isSelectField = 1
-      input.selectField = _.first(_.map(_.filter(this.fieldDataSource, {fieldEn: item.code}), item => {
-        return {
-          fieldId: item.id,
-          fieldCn: item.fieldCn,
-          fieldEn: item.fieldEn,
-          fieldSource: item.fieldSource || '',
-          valueScope: item.valueScope,
-          valueType: item.valueType
-        }
-      }))
-    },
-    fieldValueChange (value, input) {
-      if (this.isSelectField(input.fieldValue)) {
-        input.fieldValue = ''
-        input.isSelectField = 0
-        input.selectField = {}
-      } else {
-        input.fieldValue = value
-      }
-      this.change()
-    },
-    isSelectField (value) {
-      return value && _.startsWith(value, '@') && _.endsWith(value, '@')
-    },
-    getNewCondition () {
-      let condition = {
-        key: Date.now(),
-        fieldValue: '',
-        item: [
-          {
-            key: Date.now(),
-            fieldCn: '',
-            fieldEn: '',
-            fieldSource: '',
-            fieldId: '',
-            fieldValue: '',
-            isSelectField: 0,
-            selectField: {
-              fieldCn: '',
-              fieldEn: '',
-              fieldId: '',
-              fieldSource: '',
-              valueScope: '',
-              valueType: ''
-            },
-            logical: '',
-            lastLogical: '',
-            operator: '',
-            valueScope: '',
-            valueType: ''
+        this.conditions[outerIndex].item.splice(index, 1)
+        this.change()
+        setTimeout(()=>{
+          this.isDeleteItem = false
+        },500)
+      },
+      fieldCheckedChange (value, field, outerIndex) {
+        if (!this.isDeleteItem || value != '') {
+          let newField = _.find(this.fieldDataSource, {fieldEn: value})
+          if (newField) {
+            field.fieldCn = newField.fieldCn
+            field.fieldId = newField.id
+            field.fieldEn = newField.fieldEn
+            field.fieldSource = newField.fieldSource || ''
+            field.valueScope = newField.valueScope
+            field.valueType = newField.valueType
+            field.operator = ''
+            field.fieldValue = ''
+            field.isSelectField = 0
+            field.selectField = {}
+            if(!this.canChangeField){
+              this.conditions[outerIndex].item=this.conditions[outerIndex].item.splice(0, 1)
+            }
+            this.change()
           }
-        ]
-      }
-      console.log(_.merge(condition, this.outputField))
-      return _.merge(condition, this.outputField)
-    },
-    addCondition () {
-      this.conditions.push(this.getNewCondition())
-      this.$nextTick(() => {
-        const $vm = $('#condition-region .condition-tables-screensmall')[0]
-        $vm.scrollTop = $vm.scrollHeight
-      })
-    },
-    deleteCondition (index) {
-      if (this.disabled) {
-        return
-      }
-      this.conditions.splice(index, 1)
-      this.change()
-    },
-    addConditionItem (outerIndex, index) {
-      let tmp = this.conditions[outerIndex].item[0]
-      this.conditions[outerIndex].item.splice(index + 1, 0, {
-        key: Date.now(),
-        fieldId: !this.canChangeField ? tmp.fieldId : '',
-        fieldEn: !this.canChangeField ? tmp.fieldEn : '',
-        fieldCn: !this.canChangeField ? tmp.fieldCn : '',
-        fieldSource: !this.canChangeField ? tmp.fieldSource : '',
-        fieldValue: '',
-        isSelectField: !this.canChangeField ? tmp.isSelectField : 0,
-        selectField: {
-          fieldCn: !this.canChangeField ? tmp.selectField.fieldCn : '',
-          fieldEn: !this.canChangeField ? tmp.selectField.fieldEn : '',
-          fieldSource: !this.canChangeField ? tmp.selectField.fieldSource : '',
-          fieldId: !this.canChangeField ? tmp.selectField.fieldId : '',
-          valueScope: !this.canChangeField ? tmp.selectField.valueScope : '',
-          valueType: !this.canChangeField ? tmp.selectField.valueType : ''
-        },
-        logical: '',
-        lastLogical: '',
-        operator: '',
-        valueScope: !this.canChangeField ? tmp.valueScope : '',
-        valueType: !this.canChangeField ? tmp.valueType : ''
-      })
-      this.change()
-    },
-    deleteConditionItem (outerIndex, index) {
-      this.isDeleteItem = true
-      _.forEach(this.conditions, arr => {
-        _.forEach(arr.item, obj => {
-          if (obj.fieldEn != '' || this.isSelect) {
-            this.isDeleteItem = true
-            this.isSelect = true
-          }
-        })
-      })
-      this.conditions[outerIndex].item.splice(index, 1)
-      this.change()
-      setTimeout(() => {
-        this.isDeleteItem = false
-      }, 500)
-    },
-    fieldCheckedChange (value, field, outerIndex) {
-      if (!this.isDeleteItem || value != '') {
-        let newField = _.find(this.fieldDataSource, {fieldEn: value})
-        if (newField) {
-          field.fieldCn = newField.fieldCn
-          field.fieldId = newField.id
-          field.fieldEn = newField.fieldEn
-          field.fieldSource = newField.fieldSource || ''
-          field.valueScope = newField.valueScope
-          field.valueType = newField.valueType
-          field.operator = ''
-          field.fieldValue = ''
-          field.isSelectField = 0
-          field.selectField = {}
-          if (!this.canChangeField) {
-            this.conditions[outerIndex].item = this.conditions[outerIndex].item.splice(0, 1)
-          }
-          this.change()
         }
+        // this.isDeleteItem = false
+      },
+      change () {
+        clearTimeout(this.changeTimer)
+        this.changeTimer = setTimeout(()=>{
+          this.$emit('change', this.conditions);
+        },200)
       }
-      // this.isDeleteItem = false
-    },
-    change () {
-      clearTimeout(this.changeTimer)
-      this.changeTimer = setTimeout(() => {
-        this.$emit('change', this.conditions)
-      }, 200)
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>

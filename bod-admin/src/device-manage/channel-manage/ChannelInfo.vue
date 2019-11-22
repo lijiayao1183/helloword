@@ -13,48 +13,48 @@
   </div>
 </template>
 <script>
-import LeftTree from '../components/LeftTree.vue'
-import api from './scripts/api'
-import * as _ from 'lodash'
-import bus from '../scripts/bus'
+  import LeftTree from '../components/LeftTree.vue'
+  import api from './scripts/api'
+  import * as _ from 'lodash'
+  import bus from '../scripts/bus'
 
-export default {
-  data () {
-    return {
-      treeData: [],
-      rootNodes: [{name: '分组', id: 0}],
-      treeProps: {
-        id: 'id',
-        label: 'catalog',
-        children: 'children'
+  export default {
+    data () {
+      return {
+        treeData: [],
+        rootNodes: [{name: '分组', id: 0}],
+        treeProps: {
+          id: 'id',
+          label: 'catalog',
+          children: 'children'
+        }
       }
-    }
-  },
-  created () {
-    this.loadTreeData()
-    bus.$on('treeDataChange', this.loadTreeData)
-    bus.$on('openId', this.catalogClick)
-  },
-  methods: {
-    loadTreeData () {
-      api.catalogTree.getAllTree().then(data => {
-        this.treeData = data
-      }).catch((data) => {
-
-      })
     },
-    catalogClick (id) {
-      this.$router.push({name: 'channel-list-info', params: {catalogId: id}})
+    created () {
+      this.loadTreeData()
+      bus.$on('treeDataChange', this.loadTreeData)
+      bus.$on('openId', this.catalogClick)
+    },
+    methods: {
+      loadTreeData () {
+        api.catalogTree.getAllTree().then(data => {
+          this.treeData = data
+        }).catch((data) => {
+
+        })
+      },
+      catalogClick (id) {
+        this.$router.push({name: 'channel-list-info', params: {catalogId: id}})
+      }
+    },
+    beforeDestroy () {
+      bus.$off('treeDataChange', this.loadTreeData)
+      bus.$off('openId', this.catalogClick)
+    },
+    components: {
+      'left-tree': LeftTree
     }
-  },
-  beforeDestroy () {
-    bus.$off('treeDataChange', this.loadTreeData)
-    bus.$off('openId', this.catalogClick)
-  },
-  components: {
-    'left-tree': LeftTree
   }
-}
 </script>
 <style lang="scss">
   #common-field-com {

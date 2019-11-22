@@ -26,37 +26,37 @@ import LoggerApi from '@system/api/systemconfig/loggermanage.api'
 
 export default {
   data () {
-    return {
-      logger: {
-        id: '',
-        organId: '',
-        name: '',
-        opUserId: '',
-        ip: '',
-        requestParam: '',
-        responseParam: '',
-        requestPath: '',
-        startTime: '',
-        endTime: ''
+      return {
+        logger: {
+            id: '',
+            organId: '',
+            name: '',
+            opUserId: '',
+            ip: '',
+            requestParam: '',
+            responseParam: '',
+            requestPath: '',
+            startTime: '',
+            endTime: ''
+        }
       }
-    }
   },
   methods: {
-    back () {
-      this.$router.push('/logger_manage')
-    }
+      back () {
+          this.$router.push('/logger_manage')
+      }
   },
   created () {
-    this.logger.id = this.$route.params.id
-    LoggerApi.getLoggerById(this.logger.id).then(
-      (res) => {
-        this.logger = res
-        this.$message('日志加载成功')
-      }, (err) => {
-        console.log(err)
-        this.$message('日志加载失败')
-      }
-    )
+      this.logger.id = this.$route.params.id
+      LoggerApi.getLoggerById(this.logger.id).then(
+          (res) => {
+              this.logger = res
+              this.$message('日志加载成功')
+          }, (err) => {
+              console.log(err)
+              this.$message('日志加载失败')
+          }
+      )
   }
 }
 </script>

@@ -48,7 +48,7 @@
 import ApplyList from '@/components/apply/ApplyList.vue'
 import comApi from '@/scripts/api.js'
 export default {
-  data () {
+  data() {
     return {
       dialogShow: false,
       applyList: [],
@@ -58,32 +58,32 @@ export default {
     }
   },
   methods: {
-    saveForm () {
+    saveForm() {
       let nodes = []
       let isSublicense = this.transferForm.isSublicense
       for (let key in this.transferForm) {
-        // 将转授权账户的改动存入nodes中,一旦改动,不论是否转授权,信息都需要保存提交给后台
+        //将转授权账户的改动存入nodes中,一旦改动,不论是否转授权,信息都需要保存提交给后台
         if (key != 'isSublicense' && this.transferForm[key]) {
           let auditId = key.slice(10) * 1
           nodes.push({
             auditId,
             authId: this.transferForm[key],
-            isSublicense
+            isSublicense,
           })
         }
       }
-      // 是否转授权:是
+      //是否转授权:是
       if (isSublicense) {
         if (nodes.length) {
           this.doneSave(nodes)
         } else {
-          this.$message.warning('请至少转授权一项')
+          this.$message.warning("请至少转授权一项")
         }
       }
-      // 是否转授权:否
+      //是否转授权:否
       else {
-        // 转授权账户只要发生改动.则nodes中就会提交isSublicense: 0,
-        // 所以需要判断 避免提交两份isSublicense: 0,
+        //转授权账户只要发生改动.则nodes中就会提交isSublicense: 0,
+        //所以需要判断 避免提交两份isSublicense: 0,
         if (!nodes.length) {
           nodes.push({
             isSublicense: 0
@@ -92,25 +92,25 @@ export default {
         this.doneSave(nodes)
       }
     },
-    transfer () {
+    transfer() {
       comApi.apply.getSublicense().then((res) => {
         if (res.nodes.length) {
           this.dialogShow = true
           this.applyList = res.nodes
-          // 设置回显
+          //设置回显
           this.transferForm.isSublicense = res.isSublicense
           res.nodes.forEach(item => {
             this.$set(this.transferForm, 'applyLevel' + item.id, item.authId)
             // this.transferForm['applyLevel' + item.id] = item.authId
           })
         } else {
-          this.$message.warning('当前账户没有审批权限,无法进行转授权')
+          this.$message.warning("当前账户没有审批权限,无法进行转授权")
         }
       }).catch(() => {
-        this.$message.warning('获取转授权信息失败')
+        this.$message.warning("获取转授权信息失败")
       })
     },
-    doneSave (nodes) {
+    doneSave(nodes) {
       comApi.apply.saveSublicense(nodes).then(() => {
         this.dialogShow = false
       })
@@ -126,3 +126,4 @@ export default {
   margin-bottom: 20px;
 }
 </style>
+

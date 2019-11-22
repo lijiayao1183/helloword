@@ -23,11 +23,11 @@
 <script>
 import ApplyStep from './ApplyStep.vue'
 import ApplyDetailBase from './ApplyDetailBase.vue'
-import axios from '@/scripts/axios'
+import axios from '@/scripts/axios';
 
 import comApi from '@/scripts/api.js'
 export default {
-  data () {
+  data() {
     return {
       detailType: 1,
       baseInfo: {
@@ -36,20 +36,20 @@ export default {
       nodes: []
     }
   },
-  created () {
+  created() {
     this.detailType = this.$route.params.type * 1
     this.loadDetailData()
   },
   computed: {
-    title () {
+    title() {
       return this.detailType === 1 ? '申请' : '审批'
     }
   },
   methods: {
-    back () {
+    back() {
       history.back()
     },
-    loadDetailData () {
+    loadDetailData() {
       comApi.apply.getDetail(this.$route.params.id).then(res => {
         let { username, account, created, type, reason } = res
         res.nodes.unshift({
@@ -93,7 +93,7 @@ export default {
         delete this.baseInfo.nodes
       })
     },
-    reload () {
+    reload() {
       this.loadDetailData()
     }
   },
@@ -123,3 +123,4 @@ export default {
   }
 }
 </style>
+

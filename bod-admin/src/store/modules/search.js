@@ -12,13 +12,13 @@ const state = {
     },
     taskList: {
       searchKey: '',
-      filter: [2, 1, 0, 7, 6, 3, 4, 5]
+      filter: [2, 1, 0, 7, 6, 3, 4, 5],
     }
   },
   dataAccess: {
     list: {
       searchKey: '',
-      filter: []
+      filter: [],
     },
     charging: {
       companyNo: '',
@@ -42,15 +42,15 @@ const state = {
     },
     dbConfig: {
       searchKey: '',
-      filter: []
+      filter: [],
     },
     queryConfig: {
       searchKey: '',
-      filter: []
+      filter: [],
     },
     intoQueryConfig: {
       searchKey: '',
-      filter: []
+      filter: [],
     },
     queryDetail: {
 	  searchKey: '',
@@ -63,19 +63,19 @@ const state = {
     },
     executeLog: {
   	    searchKey: '',
-      statusType: '',
-      dateRange: (() => {
-        let end = new Date()
-        let start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000)
-        return [start, end]
-      })()
-    }
+        statusType: '',
+        dateRange: (() => {
+          let end = new Date()
+          let start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000)
+          return [start, end]
+        })()
+      }
   },
   snapShotManage: {
     decisionResultOverview: {
       dateRange: (() => {
         let d = new Date()
-        return [new Date(d.getTime() - 14 * 24 * 60 * 60 * 1000), d]// 默认14D
+        return [new Date(d.getTime() - 14 * 24 * 60 * 60 * 1000), d]//默认14D
       })()
     }
   },
@@ -85,12 +85,12 @@ const state = {
       dateRange: (() => {
         let end = new Date()
         let start = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 0, 0, 0)
-        return [ start, end]// 默认1D
+        return [ start, end]//默认1D
       })(),
       requestType: '',
       status: '',
       filterCondition: (() => {
-        return null// 默认1D
+        return null//默认1D
       })()
     }
   },
@@ -150,7 +150,7 @@ const state = {
     }
   },
   myApply: {
-    dateRange: (() => {
+    dateRange:(()=>{
       let end = new Date()
       end.setHours(23)
       end.setMinutes(59)
@@ -271,7 +271,7 @@ const actions = {
   updateDataAccessExecuteLogListDateRange ({commit, state}, searchKey) {
     commit(types.DATA_ACCESS_EXECUTE_LOG_LIST_DATE_RANGE, searchKey)
   },
-  updateSnapShotManageDecisionResultOverviewDateRange ({commit, state}, dateRange) {
+  updateSnapShotManageDecisionResultOverviewDateRange ({commit, state,}, dateRange) {
     commit(types.SNAPSHOT_MANAGE_DECISION_RESULT_OVERVIEW_DATE_RANGE, dateRange)
   },
   updateEngineManageDecisionResultListDateRange ({commit, state}, dateRange) {
@@ -352,17 +352,17 @@ const actions = {
   updateFlowVersionResultFlowVersionName ({commit, state}, flowVersionName) {
     commit(types.FLOW_VERSION_RESULT_FLOW_VERSION_NAME, flowVersionName)
   },
-  // 我的审批-列表
-  updateMyApplyListDateRange ({commit, state}, dateRange) {
+  //我的审批-列表
+  updateMyApplyListDateRange({commit, state},dateRange) {
     commit(types.APPLY_LIST_DATE_RANGE, dateRange)
   },
-  updateMyApplyListType ({commit, state}, type) {
+  updateMyApplyListType({commit, state},type) {
     commit(types.APPLY_LIST_APPLY_TYPE, type)
   },
-  updateMyApplyListStatus ({commit, state}, status) {
+  updateMyApplyListStatus({commit, state},status) {
     commit(types.APPLY_LIST_APPLY_STATUS, status)
   },
-  updateMyApplyListSearchKey ({commit, state}, keyWord) {
+  updateMyApplyListSearchKey({commit, state},keyWord) {
     commit(types.APPLY_LIST_APPLY_SEACH_KEY, keyWord)
   }
 }
@@ -553,3 +553,4 @@ export default {
   actions,
   mutations
 }
+

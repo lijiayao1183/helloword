@@ -1,14 +1,14 @@
 class TaskMock {
-  getRelationOperatorList () {
-    return [
-      {
-        id: '=',
-        text: '='
-      }
-    ]
-  }
-
-  getOperatorList () {
+	getRelationOperatorList () {
+		return [
+        {
+          id: '=',
+          text: '='
+        }
+      ]
+    }
+	
+	getOperatorList () {
     return [
       {
         id: '==',
@@ -163,7 +163,7 @@ class TaskMock {
         id: 'day',
         name: '天',
         type: ['yyyy-MM-dd', 'yyyy-MM-dd HH:mm:ss']
-      }
+      },
       // {
       //   id: 'week',
       //   name: '周'
@@ -475,26 +475,26 @@ class TaskMock {
   getTaskDetailExceptionMessage (code) {
     let errors = [
       {code: 1000, message: '未知错误'},
-      // 过滤器异常
+      //过滤器异常
       {code: 5000, message: '过滤器执行失败'},
       {code: 5001, message: '数据不满足过滤条件'},
       {code: 5002, message: '过滤器获取无法获取字段或字段为空'},
       {code: 5003, message: '过滤表达式执行失败'},
-      // 分组异常
+      //分组异常
       {code: 5100, message: '分组执行失败'},
       {code: 5101, message: '分组列表为空'},
       {code: 5102, message: '分组未指定数据'},
       {code: 5103, message: '分组不能获取指定数据'},
-      // 计算异常
+      //计算异常
       {code: 5200, message: '计算节点执行失败'},
       {code: 5201, message: '计算节点不能获取指定数据'},
       {code: 5202, message: '数据格式转化失败'},
       {code: 5203, message: '数据类型转化失败'},
-      // 数据库异常
+      //数据库异常
       {code: 5300, message: 'hbase执行失败'},
       {code: 5301, message: 'hbase连接失败'},
       {code: 5302, message: 'redis执行失败'},
-      {code: 5303, message: 'redis连接失败'}
+      {code: 5303, message: 'redis连接失败'},
     ]
     let error = _.find(errors, {code: code})
     return error ? error.message : ''

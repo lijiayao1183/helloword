@@ -20,8 +20,8 @@ const router = new Router({
       children: [
         {
           path: '',
-          name: 'list-info',
-          redirect: 'list-info/0'
+          name:'list-info',
+          redirect: 'list-info/0',
         },
         {
           path: 'list-info/:catalogId',
@@ -34,7 +34,7 @@ const router = new Router({
           component: ChannelEditInfo
         }
       ]
-    }
+    } 
   ]
 })
 

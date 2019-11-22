@@ -88,8 +88,8 @@ export default {
         },
         treeData: [],
         defaultProps: {
-          children: 'children',
-          label: 'name'
+            children: 'children',
+            label: 'name'
         },
         checkedKeys: [],
         treeRef: '',
@@ -106,7 +106,7 @@ export default {
       this.$router.push(this.backPath)
     },
     checkChange (ref) {
-      this.tree.checkedKeys = [ref]
+        this.tree.checkedKeys = [ref]
     },
     // 保存验证操作
     submitForm (formName) {
@@ -131,7 +131,7 @@ export default {
       } else {
         SourcesApi.updateSource(payload).then(
           (data) => {
-            this.afterSuccessSave()
+              this.afterSuccessSave()
           }, (error) => {
             this.afterFailSave(error)
           }
@@ -139,10 +139,10 @@ export default {
       }
     },
     afterSuccessSave (data) {
-      if (data.code > 0) {
-        this.$message('资源保存成功')
-      } else {
-        this.$message(data.msg)
+      if(data.code>0){
+        this.$message('资源保存成功');
+      }else{
+        this.$message(data.msg);
       }
 
       this.$router.push(this.backPath)
@@ -183,7 +183,7 @@ export default {
     }
   },
   components: {
-    'common-tree': CommonTree
+      'common-tree': CommonTree
   }
 }
 </script>

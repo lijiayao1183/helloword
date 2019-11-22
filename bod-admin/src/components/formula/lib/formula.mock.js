@@ -90,7 +90,7 @@ const operatorData = [
   {
     prop: 23,
     label: 'median'
-  }
+  },
 ]
 const input = []
 const output = {

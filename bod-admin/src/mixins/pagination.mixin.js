@@ -1,5 +1,5 @@
 export default {
-  data () {
+  data() {
     return {
       pageInfo: {
         total: 0,
@@ -10,48 +10,48 @@ export default {
     }
   },
   methods: {
-    getAdjustmentData (data) {
-      let hasLength = data.length
+    getAdjustmentData(data) {
+      let hasLength = data.length;
       if (hasLength > 0) {
-        let hasPageNum = Math.ceil(hasLength / this.pageInfo.pageSize)
-        let hasPageSize = hasLength % this.pageInfo.pageSize
+        let hasPageNum = Math.ceil(hasLength / this.pageInfo.pageSize);
+        let hasPageSize = hasLength % this.pageInfo.pageSize;
         if (this.pageInfo.pageNo === hasPageNum) {
-          return _.takeRight(data, hasPageSize || this.pageInfo.pageSize)
+          return _.takeRight(data, hasPageSize || this.pageInfo.pageSize);
         } else if (this.pageInfo.pageNo < hasPageNum) {
           return _.slice(data, (this.pageInfo.pageNo - 1) * this.pageInfo.pageSize,
-            (this.pageInfo.pageNo - 1) * this.pageInfo.pageSize + this.pageInfo.pageSize)
+            (this.pageInfo.pageNo - 1) * this.pageInfo.pageSize + this.pageInfo.pageSize);
         } else {
-          return []
+          return [];
         }
       } else {
-        return []
+        return [];
       }
     },
-    getPageOffset (totalHasDataLength, currentPageHasDataLength) {
-      let startIndex = this.pageInfo.pageSize * (this.pageInfo.pageNo - 1)
+    getPageOffset(totalHasDataLength, currentPageHasDataLength) {
+      let startIndex = this.pageInfo.pageSize * (this.pageInfo.pageNo - 1);
       if (startIndex > totalHasDataLength) {
-        startIndex = startIndex - totalHasDataLength
+        startIndex = startIndex - totalHasDataLength;
       } else {
-        startIndex = 0
+        startIndex = 0;
       }
-      let endIndex = startIndex + this.pageInfo.pageSize - currentPageHasDataLength
+      let endIndex = startIndex + this.pageInfo.pageSize - currentPageHasDataLength;
       return {startIndex, endIndex}
     },
-    pageSizeChange (pageSize) {
-      this.pageInfo.pageSize = pageSize
-      this.pageInfoChangeCallBack()
+    pageSizeChange(pageSize) {
+      this.pageInfo.pageSize = pageSize;
+      this.pageInfoChangeCallBack();
     },
-    pageCurrentChange (pageNo) {
-      this.pageInfo.pageNo = pageNo
-      this.pageInfoChangeCallBack()
+    pageCurrentChange(pageNo) {
+      this.pageInfo.pageNo = pageNo;
+      this.pageInfoChangeCallBack();
     },
-    pageInfoChangeCallBack () {
+    pageInfoChangeCallBack() {
       this.$router.replace({
         name: this.$route.name,
         params: this.$route.params,
         query: {pageNo: this.pageInfo.pageNo, pageSize: this.pageInfo.pageSize}
-      })
-      this.pageInfoChange()
+      });
+      this.pageInfoChange();
     }
   }
 }

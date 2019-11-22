@@ -67,10 +67,10 @@ class RolesManageApi {
       method: 'put'
     })
   }
-  getUserinfo () {
+  getUserinfo(){
     return axios({
-      url: '/api/user/getCurrentUser',
-      method: 'get'
+      url:'/api/user/getCurrentUser',
+      method:'get'
     })
   }
   getResourceList (roleId) {
@@ -89,7 +89,8 @@ class RolesManageApi {
     })
   }
 
-  checkRoleNameExist (organId, roleName, roleId) {
+
+  checkRoleNameExist (organId, roleName ,roleId) {
     const url = `/api/role/isHasRole?organId=${organId}&roleName=${roleName}&roleId=${roleId}`
     return axios({
       method: 'get',

@@ -1,5 +1,8 @@
-/build/
-/config/
-/dist/
-/*.js
-/test/unit/coverage/
+build/*.js
+config/*.js
+static/*.js
+node_modules/
+src/lib/
+src/components/formula/lib
+src
+

@@ -1,7 +1,7 @@
 import * as types from '../types'
 const state = {
   myApply: {
-    dateRange: (() => {
+    dateRange:(()=>{
       let end = new Date()
       end.setHours(23)
       end.setMinutes(59)
@@ -24,16 +24,16 @@ const getters = {
 
 const actions = {
   // 我的审批-列表
-  updateMyApplyListDateRange ({commit, state}, dateRange) {
+  updateMyApplyListDateRange({commit, state},dateRange) {
     commit(types.APPLY_LIST_DATE_RANGE, dateRange)
   },
-  updateMyApplyListType ({commit, state}, type) {
+  updateMyApplyListType({commit, state},type) {
     commit(types.APPLY_LIST_APPLY_TYPE, type)
   },
-  updateMyApplyListStatus ({commit, state}, status) {
+  updateMyApplyListStatus({commit, state},status) {
     commit(types.APPLY_LIST_APPLY_STATUS, status)
   },
-  updateMyApplyListSearchKey ({commit, state}, keyWord) {
+  updateMyApplyListSearchKey({commit, state},keyWord) {
     commit(types.APPLY_LIST_APPLY_SEACH_KEY, keyWord)
   }
 }
@@ -56,8 +56,8 @@ const mutations = {
 }
 
 export default {
-  state,
-  getters,
-  actions,
-  mutations
+    state,
+    getters,
+    actions,
+    mutations
 }

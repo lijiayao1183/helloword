@@ -70,7 +70,7 @@ export default {
         code: '',
         status: 1,
         token: '',
-        organId: ''
+        organId:""
       },
       interfaceRules: {},
       timeout: null,
@@ -80,51 +80,52 @@ export default {
   },
   methods: {
   	quit () {
-      this.$router.push(this.backPath)
+      this.$router.push(this.backPath);
     },
-    selectOrgan (value, rule, callback) {
-      let company = _.find(this.companies, {organId: value})
+    selectOrgan(value, rule, callback) {
+      let company = _.find(this.companies, {organId: value});
 
-      if (company) {
-      	this.interface.token = company.token
+      if(company){
+      	this.interface.token = company.token;
       }
     },
     // 保存验证操作
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.doneSave()
-        }
+          if (valid) {
+            this.doneSave()
+          }
       })
     },
     doneSave () {
-      let payload = Object.assign({}, this.interface)
-      if (this.interface.id) {
-        InterfacesApi.updateInterface(payload).then(
-          (data) => {
-            if (data.code == -3) {
-              this.$message.warning(data.msg)
-            } else {
-              this.afterSuccessSave()
+        let payload = Object.assign({}, this.interface)
+        if (this.interface.id) {
+          InterfacesApi.updateInterface(payload).then(
+            (data) => {
+              if(data.code == -3){
+                this.$message.warning(data.msg);
+              }else{
+                this.afterSuccessSave()
+              }
+
+            }, (error) => {
+              this.afterFailSave(error)
             }
-          }, (error) => {
-            this.afterFailSave(error)
-          }
-        )
-      } else {
-        delete payload.id
-        InterfacesApi.saveInterface(payload).then(
-          (data) => {
-            if (data.code == -3) {
-              this.$message.warning(data.msg)
-            } else {
-              this.afterSuccessSave()
+          )
+        } else {
+          delete payload.id
+          InterfacesApi.saveInterface(payload).then(
+            (data) => {
+              if(data.code == -3){
+                this.$message.warning(data.msg);
+              }else{
+                this.afterSuccessSave()
+              }
+            }, (error) => {
+              this.afterFailSave(error)
             }
-          }, (error) => {
-            this.afterFailSave(error)
-          }
-        )
-      }
+          )
+        }
     },
     afterSuccessSave () {
       this.$message('接口保存成功')
@@ -148,7 +149,7 @@ export default {
         }
       )
     }
-    if (this.$route.params.id === 'add') {
+    if( this.$route.params.id === 'add'){
 	    InterfacesApi.getOrgans().then(
 	      (data) => {
 	        this.companies = data
@@ -156,7 +157,7 @@ export default {
 	        this.$message('加载公司数据失败')
 	      }
 	    )
-    } else {
+    }else{
     	UsersApi.getOrgans().then(
 	      (data) => {
 	        this.companies = data.list
@@ -165,6 +166,7 @@ export default {
 	      }
 	    )
     }
+
   }
 }
 </script>

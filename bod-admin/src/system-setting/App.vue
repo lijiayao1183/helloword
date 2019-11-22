@@ -35,9 +35,9 @@ export default {
     'sz-navbar': Navbar,
     'top-navabr': TopNavBar
   },
-  watch: {
-    $route (to, from) {
-      this.isShowLeftBar = to.query.isFromUserName !== 'true'
+  watch:{
+    $route(to,from){
+      this.isShowLeftBar = to.query.isFromUserName !== 'true';
     }
   },
   created () {

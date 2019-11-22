@@ -53,11 +53,11 @@
   </div>
 </template>
 <script>
-import MyLocalStorage from '@system/../scripts/my-local-storage'
-import ModuleName from '@system/../scripts/module-name'
+import MyLocalStorage from '@system/../scripts/my-local-storage';
+import ModuleName from '@system/../scripts/module-name';
 import UserApi from '@system/api/systemconfig/usermanage.api'
 import UserManageMock from '@system/mock/usersmanage.mock'
-import loginApi from '@system/../login/scripts/api'
+import loginApi from '@system/../login/scripts/api';
 
 import PswDialog from './EditPswDialog.vue'
 
@@ -95,34 +95,35 @@ export default {
     }
   },
   components: {
-    'psw-dialog': PswDialog
+      'psw-dialog': PswDialog
   },
-  watch: {
-    $route (to, from) {
-      if (to.query.notFromUserName == false) {
-        console.log(to.query.notFromUserName)
+  watch:{
+    $route(to,from){
+      if(to.query.notFromUserName==false){
+        console.log(to.query.notFromUserName);
       }
     }
   },
   methods: {
-    updatePsw () {
-    	this.isShowPswDialog = true
+    updatePsw(){
+    	this.isShowPswDialog = true;
     },
-    savePsw (params) {
+    savePsw(params){
     	loginApi.resetPassword(params.username, params.password).then(
-        res => {
-          this.isShowPswDialog = false
-          this.$alert('密码重置成功，请重新登录', '提示', {
-            confirmButtonText: '确定',
-            type: 'info',
-            callback: action => {
-              this.ifLogin = true
-            }
-          })
-        }, (err) => {
-          console.log(err)
-        }
-      )
+          res => {
+            this.isShowPswDialog = false;
+            this.$alert('密码重置成功，请重新登录', '提示', {
+              confirmButtonText: '确定',
+              type: 'info',
+              callback: action => {
+                this.ifLogin = true
+                return
+              }
+            })
+          }, (err) => {
+            console.log(err)
+          }
+        )
     },
     quit () {
       this.$router.push(this.backPath)
@@ -180,7 +181,7 @@ export default {
     },
     afterSuccessSave () {
       this.$message('用户保存成功')
-      //      this.$router.push(this.backPath);
+//      this.$router.push(this.backPath);
       window.history.go(-1)
     },
     afterFailSave (err) {
@@ -198,23 +199,23 @@ export default {
             return
           }
           UserApi.checkIfExistAccout(value).then(
-            (res) => {
-              if (res && value !== self.userInitAccount) {
-                callback(new Error('该账户已经存在，请更改账户名'))
-              } else {
-                callback()
+              (res) => {
+                  if (res && value !== self.userInitAccount) {
+                      callback(new Error('该账户已经存在，请更改账户名'))
+                  } else {
+                      callback()
+                }
+              }, (err) => {
+                  console.log(err)
+                  callback()
               }
-            }, (err) => {
-              console.log(err)
-              callback()
-            }
           )
         }, 500)
     }
   },
   created () {
     // 根据路由信息赋值userId
-    this.user.userName = localStorage.getItem('admin_name')
+    this.user.userName = localStorage.getItem('admin_name');
     this.existRuleItem = { validator: this.checkAccout, trigger: 'change' }
     this.userRules = UserManageMock.userRules()
     this.userRules.account.push(this.existRuleItem)
@@ -233,7 +234,7 @@ export default {
           this.changeOrgan(true)
         }, (err) => {
           console.log(err)
-          //          this.$message('用户信息加载失败')
+//          this.$message('用户信息加载失败')
         }
       )
     }
@@ -314,3 +315,4 @@ export default {
     }
   }
 </style>
+

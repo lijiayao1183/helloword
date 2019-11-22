@@ -38,56 +38,56 @@
   </div>
 </template>
 <script>
-export default ({
-  props: {
-    importTitle: {
-      type: String,
-      default: ''
+  export default ({
+    props: {
+      importTitle: {
+        type: String,
+        default: ''
+      },
+      importStatusDialogVisible: {
+        type: Boolean,
+        default: false
+      },
+      successContent: {
+        type: String,
+        default: ''
+      },
+      downloadAddress: {
+        type: String,
+        default: ''
+      },
+      downloadContent: {
+        type: String,
+        default: ''
+      },
+      isSuccess: {
+        type: Boolean,
+        default: true
+      },
+      failedContent: {
+        type: String,
+        default: ''
+      }
     },
-    importStatusDialogVisible: {
-      type: Boolean,
-      default: false
+    data () {
+      return {}
     },
-    successContent: {
-      type: String,
-      default: ''
-    },
-    downloadAddress: {
-      type: String,
-      default: ''
-    },
-    downloadContent: {
-      type: String,
-      default: ''
-    },
-    isSuccess: {
-      type: Boolean,
-      default: true
-    },
-    failedContent: {
-      type: String,
-      default: ''
-    }
-  },
-  data () {
-    return {}
-  },
-  created () {
+    created () {
 
-  },
-  methods: {
-    handleClose () {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$emit('dialogSure')
-        })
-        .catch(_ => {})
     },
-    dialogSure () {
-      this.$emit('dialogSure')
+    methods: {
+      handleClose () {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$emit('dialogSure')
+          })
+          .catch(_ => {})
+      },
+      dialogSure () {
+        this.$emit('dialogSure')
+      }
     }
-  }
-})
+  })
 </script>
 <style lang="scss" scoped>
   #container-import {

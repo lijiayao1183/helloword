@@ -45,7 +45,7 @@ export default {
     filter: {
       type: Object,
       default: function () {
-        return { show: false, text: '', radio: false }
+          return { show: false, text: '', radio: false }
       }
     },
     checkStrictly: {
@@ -56,11 +56,11 @@ export default {
     }
   },
   data () {
-    return {
-      checkedId: '',
-      computedCheckedKeys: [],
-      currentNodeKey: ''
-    }
+      return {
+        checkedId: '',
+        computedCheckedKeys: [],
+        currentNodeKey: ''
+      }
   },
   computed: {
     computedData () {
@@ -107,37 +107,37 @@ export default {
     }
   },
   methods: {
-    fatherNodeCheck (node) {
+    fatherNodeCheck(node) {
       if (node.children && node.children.length) {
-        return node.children.some(
+         return node.children.some(
           child => {
-            if (child.children && child.children.length) {
+            if(child.children&&child.children.length) {
               return this.fatherNodeCheck(child)
-            } else {
+            }else{
               return this.computedCheckedIds.indexOf(child.resourceId) === -1
             }
           }
         )
-      } else {
+      }else{
         return false
       }
     },
     filterNode (value, data) {
-      if (!value) return true
-      return data.label.indexOf(value) !== -1
+        if (!value) return true
+        return data.label.indexOf(value) !== -1
     },
     // 根据id获得节点数据
     getNodeById (data, id, idName = 'resourceId') {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i][idName] === id) {
-          return data[i]
-        } else if (data[i].children) {
-          let deep = this.getNodeById(data[i].children, id, idName)
-          if (deep) {
-            return deep
-          }
+        for (let i = 0; i < data.length; i++) {
+            if (data[i][idName] === id) {
+                return data[i]
+            } else if (data[i].children) {
+                let deep =  this.getNodeById(data[i].children, id, idName)
+                if (deep) {
+                  return deep
+                }
+            }
         }
-      }
     },
     compare (val1, val2) {
       if (val1 < val2) {
@@ -168,14 +168,14 @@ export default {
       )
     },
     handleCheckChange (data, checked, indeterminate) {
-      if (this.filter && this.filter.radio && checked) {
-        this.checkedId = data.resourceId
-        this.$refs[this.treeRef].setCheckedKeys([])
-        this.$refs[this.treeRef].setChecked(this.checkedId, true, false)
-        this.$emit('checkChange', this.checkedId)
-        return
-      }
-      this.$emit('getCheckedNodeIds', this.filterCheckedNodeIds(this.$refs[this.treeRef].getCheckedNodes()))
+        if (this.filter && this.filter.radio && checked) {
+          this.checkedId = data.resourceId
+          this.$refs[this.treeRef].setCheckedKeys([])
+          this.$refs[this.treeRef].setChecked(this.checkedId, true, false)
+          this.$emit('checkChange', this.checkedId)
+          return
+        }
+        this.$emit('getCheckedNodeIds', this.filterCheckedNodeIds(this.$refs[this.treeRef].getCheckedNodes()))
     },
     filterCheckedNodeIds (nodes) {
       let tempArr = []

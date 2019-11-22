@@ -1,11 +1,11 @@
 export default {
-  isNumberInRange (value, scope) { // scope is : 1,(0,1000),[-1,1000],[0,100),(0,100],value is number
+  isNumberInRange (value, scope) {//scope is : 1,(0,1000),[-1,1000],[0,100),(0,100],value is number
     console.log(value, scope)
     if (!value) {
       return true
     }
     if (!this.isNumber(value)) {
-      // throw new Error("value is not number");
+      //throw new Error("value is not number");
       return false
     }
     if (!scope) {
@@ -30,7 +30,7 @@ export default {
       }
       return isIn
     } else {
-      // throw new Error('The format of scope is incorrect');
+      //throw new Error('The format of scope is incorrect');
       return false
     }
   },

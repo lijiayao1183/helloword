@@ -12,24 +12,26 @@
 </template>
 
 <script type="text/babel">
-import { mapGetters } from 'vuex'
-import TopNavBar from '../components/TopNavBar.vue'
+  import { mapGetters } from 'vuex'
+  import TopNavBar from '../components/TopNavBar.vue'
 
-export default {
-  data () {
-    return {}
-  },
-  computed: {
-    ...mapGetters({
-      loading: 'loading'
-    })
-  },
-  methods: {},
-  components: {
-    'top-nav-bar': TopNavBar
+  export default {
+    data () {
+      return {}
+    },
+    computed: {
+      ...mapGetters({
+        loading: 'loading'
+      })
+    },
+    methods: {},
+    components: {
+      'top-nav-bar': TopNavBar,
+    }
   }
-}
 </script>
 <style lang="scss">
   @import "../assets/sass/common/common";
 </style>
+
+

@@ -77,110 +77,111 @@
   </el-dialog>
 </template>
 <script type="text/babel">
-import selectOptionMixin from '../mixins/select-option.mixin'
-import fieldMixin from '../mixins/field-mixin'
-import FieldValue from './FieldValue.vue'
-import validateRules from '../scripts/validate-rules'
+  import selectOptionMixin from '../mixins/select-option.mixin';
+  import fieldMixin from '../mixins/field-mixin';
+  import FieldValue from './FieldValue.vue';
+  import validateRules from '../scripts/validate-rules';
 
-export default {
-  props: {
-    okName: {
-      type: String,
-      default: '确定'
-    },
-    title: {
-      type: String,
-      default: '新增数据'
-    },
-    isName: {
-      type: Boolean,
-      default: false
-    },
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    fields: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    requiredFields: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    data: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    isDynamic: {
-      type: Boolean,
-      default: false
-    },
-    label: {}
-  },
-  components: {
-    'field-value': FieldValue
-  },
-  data () {
-    return {
-      formData: _.cloneDeep(this.data)
-    }
-  },
-  watch: {
-    data () {
-      this.formData = _.cloneDeep(this.data)
-    }
-  },
-  mixins: [selectOptionMixin, fieldMixin],
-  methods: {
-    ok () {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$emit('ok', this.formData)
+  export default {
+    props: {
+      okName: {
+        type: String,
+        default: '确定'
+      },
+      title: {
+        type: String,
+        default: '新增数据'
+      },
+      isName:{
+        type:Boolean,
+        default:false
+      },
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      fields: {
+        type: Array,
+        default() {
+          return [];
         }
-      })
+      },
+      requiredFields: {
+        type: Array,
+        default() {
+          return [];
+        }
+      },
+      data: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
+      isDynamic: {
+        type: Boolean,
+        default: false
+      },
+      label: {}
     },
-    inputCheckE (ev) {
-      if (ev.data === 'e' || ev.data === 'E') {
-        ev.target.value = ''
+    components: {
+      'field-value': FieldValue
+    },
+    data() {
+      return {
+        formData: _.cloneDeep(this.data)
       }
     },
-    inputCheckE (ev) {
-      if (!ev.target.value) {
-        ev.target.value = ''
+    watch: {
+      data() {
+        this.formData = _.cloneDeep(this.data);
       }
     },
-    cancel () {
-      this.$emit('cancel')
-    },
-    inputCheckE (ev) {
-      if (ev.data === 'e') {
-        ev.target.value = ''
+    mixins: [selectOptionMixin, fieldMixin],
+    methods: {
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$emit('ok', this.formData);
+          }
+        });
+
+      },
+      inputCheckE(ev) {
+       if (ev.data === "e" || ev.data === "E") {
+         ev.target.value = ''
+       }
+      },
+      inputCheckE(ev) {
+       if (!ev.target.value) {
+         ev.target.value = ''
+       }
+      },
+      cancel() {
+        this.$emit('cancel');
+      },
+      inputCheckE(ev) {
+        if (ev.data === "e") {
+          ev.target.value = ''
+        }
+      },
+      getRules(field) {
+        let rules = [];
+        if (this.isFieldRequired(field.fieldEn)&&this.isName) {
+          rules = [{required: true, message: '不能为空', trigger: 'blur'}];
+        }else{
+          rules = [{required: false}]
+        }
+//        if (this.isNumberField(field)) {
+//          rules = _.concat(rules, validateRules.isNumberInRange(field.valueScope));
+//        }
+        return rules;
+      },
+      isFieldRequired(fieldCode) {
+        return !!_.find(this.requiredFields, {fieldEn: fieldCode});
       }
-    },
-    getRules (field) {
-      let rules = []
-      if (this.isFieldRequired(field.fieldEn) && this.isName) {
-        rules = [{required: true, message: '不能为空', trigger: 'blur'}]
-      } else {
-        rules = [{required: false}]
-      }
-      //        if (this.isNumberField(field)) {
-      //          rules = _.concat(rules, validateRules.isNumberInRange(field.valueScope));
-      //        }
-      return rules
-    },
-    isFieldRequired (fieldCode) {
-      return !!_.find(this.requiredFields, {fieldEn: fieldCode})
     }
   }
-}
 </script>
 <style lang="scss">
   #field-input-dialog {

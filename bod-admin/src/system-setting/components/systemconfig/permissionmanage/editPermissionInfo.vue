@@ -59,104 +59,103 @@
   </div>
 </template>
 <script>
-import validateRules from '../../../../scripts/validate-rules'
-import PermissionManageApi from '@system/api/systemconfig/permissionmanage.api'
-export default {
-  data () {
-    return {
-      userOptinos: [],
-      approval: {
-        name: '',
-        level: '',
-        userIds: []
-      },
-      approvalRules: {},
-      isReadOnly: true,
-      isEdit: false,
-      rowDetail: {},
-      nameStr: [],
-      userInfos: []
-    }
-  },
-  methods: {
-    submitForm: function (formName) {
-      let _this = this
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let userIdMap = _.cloneDeep(this.approval)
-          PermissionManageApi.saveData(userIdMap).then((data) => {
-            if (data.code == '1') {
-              this.$router.push('/permission_manage')
-            }
-          })
-        }
-      })
-    },
-    submitFormEdit: function (formName) {
-      let _this = this
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let userIdMap = _.cloneDeep(this.approval)
-          userIdMap['id'] = this.$route.params.id
-          PermissionManageApi.editData(userIdMap).then((data) => {
-            if (data.code == '1') {
-              this.$router.push('/permission_manage')
-            }
-          }).catch((res) => {
-            this.$message.warning(res.response.data.error.message)
-          })
-        }
-      })
-    },
-    quit: function () {
-      this.$router.go(-1)
-    },
-    organRules () {
-      let _this = this
-      let validateName = _.cloneDeep(validateRules.name)
-      validateName.push({
-        validator: (rule, value, callback) => {
-          if (value && _this.nameStr.indexOf(value) != -1) {
-            callback(new Error('审批权限重复'))
-          } else {
-            callback()
-          }
-        },
-        trigger: 'blur'
-      })
+  import validateRules from '../../../../scripts/validate-rules'
+  import PermissionManageApi from '@system/api/systemconfig/permissionmanage.api'
+  export default {
+    data() {
       return {
-        name: validateName,
-        userIds: [{type: 'array', required: true, message: '不能为空', trigger: 'change'}]
+        userOptinos:[],
+        approval: {
+          name:"",
+          level:"",
+          userIds:[]
+        },
+        approvalRules:{},
+        isReadOnly: true,
+        isEdit:false,
+        rowDetail: {},
+        nameStr:[],
+        userInfos:[]
       }
     },
-    update () {
-      this.isReadOnly = false
-      this.isEdit = true
-    },
-    getUsers () {
-      PermissionManageApi.getUsers().then((data) => {
-        this.userInfos = _.filter(data.list, function (item) {
-          return item.status == 1
+    methods: {
+      submitForm:function (formName) {
+        let _this = this
+        this.$refs[formName].validate((valid) => {
+          if(valid){
+            let userIdMap = _.cloneDeep(this.approval)
+            PermissionManageApi.saveData(userIdMap).then((data) =>{
+              if(data.code=="1"){
+                this.$router.push('/permission_manage')
+              }
+            })
+          }
+        });
+      },
+      submitFormEdit:function (formName) {
+        let _this = this
+        this.$refs[formName].validate((valid) => {
+          if(valid){
+            let userIdMap = _.cloneDeep(this.approval)
+            userIdMap['id'] = this.$route.params.id
+            PermissionManageApi.editData(userIdMap).then((data) =>{
+              if(data.code=="1"){
+                this.$router.push('/permission_manage')
+              }
+            }).catch((res)=>{
+              this.$message.warning(res.response.data.error.message)
+            })
+          }
+        });
+      },
+      quit:function () {
+        this.$router.go(-1);
+      },
+      organRules () {
+        let _this = this
+        let validateName = _.cloneDeep(validateRules.name)
+        validateName.push({
+          validator: (rule, value, callback) => {
+            if (value && _this.nameStr.indexOf(value) != -1) {
+              callback(new Error('审批权限重复'))
+            } else {
+              callback()
+            }
+          }, trigger: 'blur'
         })
-      })
+        return {
+          name: validateName,
+          userIds: [{type:'array', required: true, message: '不能为空', trigger: 'change'}]
+        }
+      },
+      update(){
+        this.isReadOnly = false
+        this.isEdit = true
+      },
+      getUsers(){
+        PermissionManageApi.getUsers().then((data) =>{
+          this.userInfos = _.filter(data.list,function (item) {
+            return item.status == 1
+          })
+        })
+      }
+    },
+    created(){
+      this.nameStr = sessionStorage.getItem('nameStr').split(',')
+      this.approvalRules = this.organRules()
+      if(this.$route.params.id!='0'){
+        this.rowDetail = JSON.parse(sessionStorage.getItem(this.$route.params.id))
+        this.approval.name = this.rowDetail.name
+        this.approval.userIds = _.map(this.rowDetail.userInfos,'userId')
+        this.approval.level = this.rowDetail.level
+        this.userOptinos = this.rowDetail.userInfos
+      }else{
+        this.isReadOnly = false
+        this.approval.level = this.$route.query.level- 0 + 1
+      }
+      this.getUsers()
     }
-  },
-  created () {
-    this.nameStr = sessionStorage.getItem('nameStr').split(',')
-    this.approvalRules = this.organRules()
-    if (this.$route.params.id != '0') {
-      this.rowDetail = JSON.parse(sessionStorage.getItem(this.$route.params.id))
-      this.approval.name = this.rowDetail.name
-      this.approval.userIds = _.map(this.rowDetail.userInfos, 'userId')
-      this.approval.level = this.rowDetail.level
-      this.userOptinos = this.rowDetail.userInfos
-    } else {
-      this.isReadOnly = false
-      this.approval.level = this.$route.query.level - 0 + 1
-    }
-    this.getUsers()
   }
-}
 </script>
 <style lang="scss" scoped>
   .userTitle {

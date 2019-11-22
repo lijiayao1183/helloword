@@ -25,13 +25,13 @@
 import { mapActions } from 'vuex'
 export default {
   name: 'LeftNavbar',
-  data () {
+  data() {
     return {
       navbars: []
     }
   },
   computed: {
-    applyNum () {
+    applyNum() {
       let info = this.$root.applyNum
       return {
         myApplication: info.applyNum,
@@ -49,7 +49,7 @@ export default {
       updatePageIndex: `updatePageIndex`,
       updatePageSize: `updatePageSize`
     }),
-    getRightContent: function (name) {
+    getRightContent: function(name) {
       // 重置我的申请-我的审批查询参数
       if (name !== this.$route.name && name.indexOf('myApp') > -1) {
         let end = new Date()
@@ -76,10 +76,10 @@ export default {
   props: {
     navData: {
       type: Array,
-      default () {
+      default() {
         return []
       }
-    }
+    },
   }
 }
 </script>

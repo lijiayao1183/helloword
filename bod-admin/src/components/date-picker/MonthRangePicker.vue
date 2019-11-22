@@ -18,41 +18,41 @@
   </div>
 </template>
 <script>
-export default {
-  props: {
-    defaultRange: {
-      type: Array,
-      default () {
-        let now = new Date()
-        let end = new Date(now.getFullYear(), now.getMonth(), 1)
-        let start = new Date(end).setMonth(end.getMonth() - 6)
-        return [start, end]
-      }
-    }
-  },
-  data () {
-    let self = this
-    return {
-      startTime: this.defaultRange[0],
-      endTime: this.defaultRange[1],
-      startPickerOptions: {
-        disabledDate (time) {
-          return new Date(time).getTime() > new Date(self.endTime).getTime()
-        }
-      },
-      endPickerOptions: {
-        disabledDate (time) {
-          return new Date(time).getTime() < new Date(self.startTime).getTime()
+  export default {
+    props: {
+      defaultRange: {
+        type: Array,
+        default () {
+          let now = new Date()
+          let end = new Date(now.getFullYear(), now.getMonth(), 1)
+          let start = new Date(end).setMonth(end.getMonth() - 6)
+          return [start, end]
         }
       }
-    }
-  },
-  methods: {
-    change () {
-      this.$emit('change', [new Date(this.startTime).getTime(), new Date(this.endTime).getTime()])
+    },
+    data () {
+      let self = this
+      return {
+        startTime: this.defaultRange[0],
+        endTime: this.defaultRange[1],
+        startPickerOptions: {
+          disabledDate (time) {
+            return new Date(time).getTime() > new Date(self.endTime).getTime()
+          }
+        },
+        endPickerOptions: {
+          disabledDate (time) {
+            return new Date(time).getTime() < new Date(self.startTime).getTime()
+          }
+        }
+      }
+    },
+    methods: {
+      change () {
+        this.$emit('change', [new Date(this.startTime).getTime(), new Date(this.endTime).getTime()])
+      }
     }
   }
-}
 </script>
 <style lang="scss" scoped>
 

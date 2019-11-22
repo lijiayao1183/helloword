@@ -18,27 +18,27 @@
   </div>
 </template>
 <script>
-export default {
-  props: {
-    defaultRange: {
-      type: Array,
-      default () {
-        return [new Date().getTime(), new Date().getTime()]
+  export default {
+    props: {
+      defaultRange: {
+        type: Array,
+        default () {
+          return [new Date().getTime(), new Date().getTime()]
+        }
+      }
+    },
+    data () {
+      return {
+        startTime: this.defaultRange[0],
+        endTime: this.defaultRange[1]
+      }
+    },
+    methods: {
+      change () {
+        this.$emit('change', [this.startTime, this.endTime])
       }
     }
-  },
-  data () {
-    return {
-      startTime: this.defaultRange[0],
-      endTime: this.defaultRange[1]
-    }
-  },
-  methods: {
-    change () {
-      this.$emit('change', [this.startTime, this.endTime])
-    }
   }
-}
 </script>
 <style lang="scss" scoped>
 

@@ -224,280 +224,281 @@
 </template>
 
 <script>
-import selectOptionMixin from '../mixins/select-option.mixin'
-import fieldMixin from '../mixins/field-mixin'
-import bus from '../engine-manage/scripts/bus'
-import api from '../scripts/api'
-import validateRules from '../scripts/validate-rules'
-const uuid = require('node-uuid')
+  import selectOptionMixin from '../mixins/select-option.mixin';
+  import fieldMixin from '../mixins/field-mixin';
+  import bus from '../engine-manage/scripts/bus';
+  import api from '../scripts/api';
+  import validateRules from '../scripts/validate-rules'
+  const uuid = require('node-uuid')
 
-export default {
-  props: {
-    data: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    fieldData: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    outputField: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    isShowOutPutTitle: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      engineId: this.$route.params.engineId,
-      conditions: [],
-      fieldDataSource: [],
-      validateRules: validateRules
-    }
-  },
-  watch: {
-    data () {
-      this.initConditions()
-    }
-  },
-  beforeDestroy () {
-    bus.$off('sure')
-  },
-  created () {
-    this.initData()
-  },
-  mixins: [selectOptionMixin, fieldMixin],
-  methods: {
-    validate () {
-      if (this.$refs['condition'].length > 0) {
-        let validator = true
-        _.forEach(this.$refs['condition'], function (obj) {
-          obj.validate((valid) => {
-            if (!valid) {
-              validator = false
-            }
-          })
-        })
-        return validator
-      } else {
-        return 0
-      }
-    },
-    initData () {
-      this.initFieldDataSource()
-      this.initConditions()
-    },
-    initFieldDataSource () {
-      if (this.fieldData.length) {
-        this.fieldDataSource = _.cloneDeep(this.fieldData)
-      } else {
-        this.loadData()
-      }
-    },
-    initConditions () {
-      if (this.data && this.data.length > 0) {
-        this.conditions = _.cloneDeep(this.data)
-
-        _.each(this.conditions, data => {
-          data.key = data.key ? data.key : uuid.v1()
-          _.each(data.item, once => {
-            once.key = once.key ? once.key : uuid.v1()
-          })
-        })
-      } else {
-        this.conditions = []
-        _.each([1, 2], () => {
-          this.conditions.push(this.getNewCondition())
-        })
-      }
-    },
-    loadData () {
-      api.field.getUnPage('', this.engineId, 0).then((data) => {
-        this.fieldDataSource = _.filter(data, item => {
-          return item.fieldEn !== this.outputField.fieldEn
-        })
-      }).catch(() => {
-
-      })
-    },
-    querySelectField (key, cb, valueType) {
-      if (this.isSelectField(key)) {
-        key = key.substring(1, key.length - 1)
-      }
-      let data = _.filter(this.fieldDataSource, item => {
-        let isContains = item.valueType === valueType
-        if (key) {
-          isContains = isContains && item.fieldCn.indexOf(key) > -1
+  export default {
+    props: {
+      data: {
+        type: Array,
+        default () {
+          return []
         }
-        return isContains
-      })
-
-      data = _.map(data, item => {
-        return {value: item.fieldCn, code: item.fieldEn}
-      })
-      console.log('------data-----')
-      console.log(data)
-      cb(data)
-      this.errors.clear()
+      },
+      fieldData: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      outputField: {
+        type: Object,
+        default () {
+          return {}
+        }
+      },
+      isShowOutPutTitle: {
+        type: Boolean,
+        default: false
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
     },
-    selectField (item, input) {
-      input.fieldValue = _.pad(item.value, item.value.length + 2, '@')
-      input.isSelectField = 1
-      input.selectField = _.first(_.map(_.filter(this.fieldDataSource, {fieldEn: item.code}), item => {
-        if (item.fieldSource === 2) {
-          return {
-            fieldId: '',
-            fieldCn: item.fieldCn,
-            fieldEn: item.fieldEn,
-            valueScope: item.valueScope,
-            valueType: item.valueType
-          }
+    data() {
+      return {
+        engineId: this.$route.params.engineId,
+        conditions: [],
+        fieldDataSource: [],
+        validateRules: validateRules
+      }
+    },
+    watch: {
+      data() {
+        this.initConditions();
+      }
+    },
+    beforeDestroy(){
+      bus.$off('sure')
+    },
+    created() {
+      this.initData();
+    },
+    mixins: [selectOptionMixin, fieldMixin],
+    methods: {
+      validate(){
+        if(this.$refs['condition'].length>0){
+          let validator=true;
+          _.forEach(this.$refs['condition'],function (obj) {
+            obj.validate((valid)=>{
+              if(!valid){
+                validator=false;
+              }
+            })
+          })
+          return validator
+        }else{
+          return 0
+        }
+      },
+      initData() {
+        this.initFieldDataSource();
+        this.initConditions();
+      },
+      initFieldDataSource() {　
+        if (this.fieldData.length) {
+          this.fieldDataSource = _.cloneDeep(this.fieldData);
         } else {
-          return {
-            fieldId: item.fieldId,
-            fieldCn: item.fieldCn,
-            fieldEn: item.fieldEn,
-            valueScope: item.valueScope,
-            valueType: item.valueType
-          }
+          this.loadData();
         }
-      }))
-    },
-    fieldValueChange (value, input) {
-      if (this.isSelectField(input.fieldValue)) {
-        input.fieldValue = ''
-        input.isSelectField = 0
-        input.selectField = {}
-      } else {
-        input.fieldValue = value
-      }
+      },
+      initConditions() {
+        if (this.data && this.data.length > 0) {
+          this.conditions = _.cloneDeep(this.data);
 
-      this.errors.clear()
-      this.change()
-    },
-    isSelectField (val) {
-      return val && _.startsWith(val, '@') && _.endsWith(val, '@')
-    },
-    getDefaultFieldName () {
-      let nameList = [], name = ''
-      if (this.conditions.length > 0) {
-        _.each(this.conditions, item => {
-          item.fieldValue.replace(/分组(\d+)/, function ($1, $2) {
-            nameList.push(parseInt($2))
+          _.each(this.conditions, data => {
+            data.key = data.key?data.key:uuid.v1()
+            _.each(data.item, once => {
+              once.key = once.key?once.key:uuid.v1()
+            })
           })
+        } else {
+          this.conditions = []
+          _.each([1,2], () => {
+            this.conditions.push(this.getNewCondition())
+          })
+        }
+      },
+      loadData() {
+        api.field.getUnPage('', this.engineId,0).then((data) => {
+          this.fieldDataSource = _.filter(data, item => {
+            return item.fieldEn !== this.outputField.fieldEn
+          });
+        }).catch(() => {
+
         })
-        name = _.isEmpty(nameList) ? '分组1' : '分组' + (parseInt(_.last(_.sortBy(nameList))) + 1)
-      } else {
-        name = '分组1'
-      }
-      return name
-    },
-    getNewCondition () {
-      const defaultFieldValue = this.getDefaultFieldName()
-      let condition = {
-        key: uuid.v1(),
-        fieldValue: defaultFieldValue,
-        item: [
-          {
-            key: uuid.v1(),
-            fieldCn: '',
-            fieldEn: '',
-            fieldId: '',
-            fieldValue: '',
-            isSelectField: 0,
-            selectField: {
+      },
+      querySelectField(key, cb, valueType) {
+        if (this.isSelectField(key)) {
+          key = key.substring(1, key.length - 1);
+        }
+        let data = _.filter(this.fieldDataSource, item => {
+          let isContains = item.valueType === valueType;
+          if (key) {
+            isContains = isContains && item.fieldCn.indexOf(key) > -1
+          }
+          return isContains;
+        });
+
+        data = _.map(data, item => {
+          return {value: item.fieldCn, code: item.fieldEn}
+        });
+        console.log("------data-----");
+        console.log(data);
+        cb(data);
+        this.errors.clear()
+      },
+      selectField(item, input) {
+        input.fieldValue = _.pad(item.value, item.value.length + 2, '@');
+        input.isSelectField = 1;
+        input.selectField = _.first(_.map(_.filter(this.fieldDataSource, {fieldEn: item.code}), item => {
+          if (item.fieldSource === 2) {
+            return {
+              fieldId: "",
+              fieldCn: item.fieldCn,
+              fieldEn: item.fieldEn,
+              valueScope: item.valueScope,
+              valueType: item.valueType,
+            }
+          } else {
+            return {
+              fieldId: item.fieldId,
+              fieldCn: item.fieldCn,
+              fieldEn: item.fieldEn,
+              valueScope: item.valueScope,
+              valueType: item.valueType,
+            }
+          }
+
+        }));
+      },
+      fieldValueChange(value, input) {
+        if (this.isSelectField(input.fieldValue)) {
+          input.fieldValue = '';
+          input.isSelectField = 0;
+          input.selectField = {};
+        } else {
+          input.fieldValue = value
+        }
+
+        this.errors.clear()
+        this.change();
+      },
+      isSelectField(val) {
+        return val && _.startsWith(val, '@') && _.endsWith(val, '@');
+      },
+      getDefaultFieldName() {
+        let nameList = [], name=''
+        if (this.conditions.length>0) {
+          _.each(this.conditions, item => {
+            item.fieldValue.replace( /分组(\d+)/, function($1, $2) {
+              nameList.push(parseInt($2))
+            })
+          })
+          name = _.isEmpty(nameList)? "分组1" : "分组" + (parseInt(_.last(_.sortBy(nameList))) + 1)
+        } else {
+          name = "分组1"
+        }
+        return name
+      },
+      getNewCondition() {
+        const defaultFieldValue = this.getDefaultFieldName()
+        let condition = {
+          key: uuid.v1(),
+          fieldValue : defaultFieldValue,
+          item: [
+            {
+              key: uuid.v1(),
               fieldCn: '',
               fieldEn: '',
               fieldId: '',
+              fieldValue: '',
+              isSelectField: 0,
+              selectField: {
+                fieldCn: '',
+                fieldEn: '',
+                fieldId: '',
+                valueScope: '',
+                valueType: '',
+              },
+              logical: '',
+              lastLogical: '',
+              operator: '',
               valueScope: '',
               valueType: ''
-            },
-            logical: '',
-            lastLogical: '',
-            operator: '',
-            valueScope: '',
-            valueType: ''
-          }
-        ]
-      }
-      return _.merge(condition, this.outputField)
-    },
-    addCondition () {
-      this.conditions.push(this.getNewCondition())
-    },
-    deleteCondition (index) {
-      if (this.disabled) {
-        return
-      }
-      this.conditions.splice(index, 1)
-      this.change()
-    },
-    addConditionItem (outerIndex, index) {
-      this.conditions[outerIndex].item.splice(index + 1, 0, {
-        key: uuid.v1(),
-        fieldId: '',
-        fieldEn: '',
-        fieldCn: '',
-        fieldValue: '',
-        isSelectField: 0,
-        selectField: {
-          fieldCn: '',
-          fieldEn: '',
+            }
+          ]
+        };
+        return _.merge(condition, this.outputField);
+      },
+      addCondition() {
+        this.conditions.push(this.getNewCondition());
+      },
+      deleteCondition(index) {
+        if (this.disabled) {
+          return
+        }
+        this.conditions.splice(index, 1);
+        this.change();
+      },
+      addConditionItem(outerIndex, index) {
+        this.conditions[outerIndex].item.splice(index + 1, 0, {
+          key:uuid.v1(),
           fieldId: '',
+          fieldEn: '',
+          fieldCn: '',
+          fieldValue: '',
+          isSelectField: 0,
+          selectField: {
+            fieldCn: '',
+            fieldEn: '',
+            fieldId: '',
+            valueScope: '',
+            valueType: '',
+          },
+          logical: '',
+          lastLogical: '',
+          operator: '',
           valueScope: '',
           valueType: ''
-        },
-        logical: '',
-        lastLogical: '',
-        operator: '',
-        valueScope: '',
-        valueType: ''
-      })
-    },
-    deleteConditionItem (outerIndex, index) {
-      this.conditions[outerIndex].item.splice(index, 1)
-      this.change()
-    },
-    fieldCheckedChange (value, field) {
-      let newField = _.find(this.fieldDataSource, {fieldEn: value})
-      if (newField) {
-        field.fieldCn = newField.fieldCn
-        field.fieldId = newField.id
-        field.fieldEn = newField.fieldEn
-        field.valueScope = newField.valueScope
-        field.valueType = newField.valueType
-        field.operator = ''
-        field.fieldValue = ''
-        field.isSelectField = 0
-        field.selectField = {}
+        });
+      },
+      deleteConditionItem(outerIndex, index) {
+        this.conditions[outerIndex].item.splice(index, 1);
+        this.change();
+      },
+      fieldCheckedChange(value, field) {
+        let newField = _.find(this.fieldDataSource, {fieldEn: value});
+        if (newField) {
+          field.fieldCn = newField.fieldCn;
+          field.fieldId = newField.id;
+          field.fieldEn = newField.fieldEn;
+          field.valueScope = newField.valueScope;
+          field.valueType = newField.valueType;
+          field.operator = '';
+          field.fieldValue = '';
+          field.isSelectField = 0;
+          field.selectField = {};
 
+          this.errors.clear()
+
+          this.change();
+        }
+      },
+      change() {
         this.errors.clear()
-
-        this.change()
+        clearTimeout(this.changeTimer)
+        this.changeTimer = setTimeout(()=>{
+          this.$emit('change', this.conditions);
+        },200)
       }
-    },
-    change () {
-      this.errors.clear()
-      clearTimeout(this.changeTimer)
-      this.changeTimer = setTimeout(() => {
-        this.$emit('change', this.conditions)
-      }, 200)
     }
   }
-}
 </script>
 
 <style lang="scss">

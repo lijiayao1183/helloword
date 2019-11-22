@@ -84,7 +84,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       formData: {}
     }
@@ -93,12 +93,12 @@ export default {
     /**
      * 审批人员列表
      */
-    applyList () {
+    applyList() {
       return this.$root.applyList
     }
   },
   watch: {
-    isShow (val) {
+    isShow(val) {
       if (val) {
         if (!this.applyList) {
           this.$root.$_loadApplyList()
@@ -110,7 +110,7 @@ export default {
     }
   },
   methods: {
-    validate () {
+    validate() {
       let validate = true
       if (this.applyList && this.applyList.length) {
         validate = false
@@ -141,14 +141,15 @@ export default {
       }
       return validate
     },
-    resetForm () {
+    resetForm() {
       this.formData = {}
     }
   },
-  mounted () {
+  mounted() {
     if (!this.applyList) {
       this.$root.$_loadApplyList()
     }
   }
 }
 </script>
+

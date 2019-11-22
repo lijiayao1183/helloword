@@ -1,19 +1,19 @@
-import axios from '../../scripts/axios'
+import axios from "../../scripts/axios"
 
 export default {
   login: {
-    post ({ username, password}) {
+    post({ username, password}) {
       let url = `/api/login?username=${username}&password=${encodeURIComponent(password)}`
       return axios({
-        method: 'post',
+        method: "post",
         url
       })
     }
   },
-  resetPassword (account, password) {
-    let url = '/api/login?password=' + encodeURIComponent(password) + '&username=' + encodeURIComponent(account)
+  resetPassword(account, password) {
+    let url = "/api/login?password=" + encodeURIComponent(password) + "&username=" + encodeURIComponent(account)
     return axios({
-      method: 'put',
+      method: "put",
       url
     })
   }

@@ -59,13 +59,13 @@ import * as _ from 'lodash'
 import FieldSection from './FieldSection.vue'
 import SnapshotOutputFieldDialog from './outputFieldDialog.vue'
 import DateUtils from '../../../src/scripts/date-utils.js'
-import debugDataMock from './mock/debug.mock'
+import debugDataMock from './mock/debug.mock';
 
 let url = require('../../scripts/url')
 
 export default {
   props: {
-    isMatrix: { // 是否是数组衍生
+    isMatrix: { //是否是数组衍生
       type: Boolean,
       default: false
     },
@@ -75,7 +75,7 @@ export default {
     },
     inputFields: {
       type: Array,
-      default: function () {
+      default: function() {
         return {}
       }
     },
@@ -93,13 +93,13 @@ export default {
     },
     outputField: {
       type: Object,
-      default: function () {
+      default: function() {
         return {}
       }
     },
     initFormula: {
       type: Object,
-      default: function () {
+      default: function() {
         return {}
       }
     },
@@ -117,13 +117,13 @@ export default {
     },
     placeholder: {
       type: String,
-      default: function () {
-        return '请输入" @"(@前加空格)选取字段开始编辑公式'
+      default: function() {
+        return "请输入\" @\"(@前加空格)选取字段开始编辑公式"
       }
     }
   },
   watch: {
-    modalVsible: function (val, oldVal) {
+    modalVsible: function(val, oldVal) {
       console.log('new: %s, old: %s', val, oldVal)
     }
   },
@@ -153,28 +153,28 @@ export default {
     blurTimer: null
   }),
   computed: {
-    computedFormula () {
+    computedFormula() {
       return _.cloneDeep(this.initFormula)
     },
     //      isReadOnly () {
     //        return this.$root.$data.isReadOnly
     //      },
-    separatedData () {
+    separatedData() {
       let afterData = Object.assign([], this.iconList)
       let preData = afterData.splice(0, 8)
       return [preData, afterData]
     },
-    separatedFirstLength () {
+    separatedFirstLength() {
       return this.separatedData[0].length + 1
     },
-    separatedAfterLength () {
+    separatedAfterLength() {
       return this.separatedData[1].length
     },
     /**
      * 输出字段是否枚举型
      * 是：false;否: true
      */
-    fieldType () {
+    fieldType() {
       if (this.outputField && this.outputField.valueType === 3) {
         return false
       }
@@ -184,7 +184,7 @@ export default {
      * 字段类型为枚举的可选值集合
      * 默认array length = 0
      */
-    fieldSetOptions () {
+    fieldSetOptions() {
       if (!this.fieldType) {
         if (!this.outputField.valueScope) {
           return []
@@ -208,11 +208,12 @@ export default {
           }
         )
       }
+      return
     },
     /**
      * 当前点击的字段具体信息
      */
-    selectedField () {
+    selectedField() {
       if (this.selectedFieldInfo && this.selectedFieldInfo[0] && this.selectedFieldInfo[0].text) {
         return this.inputFields.filter(
           item => {
@@ -225,11 +226,11 @@ export default {
         return []
       }
     },
-    activedEnumId () {
+    activedEnumId() {
       return this.fieldSetOptions[parseInt(this.activeElementId.match(/[0-9]{1,}$/))].prop
     },
     // 当前光标所在enum索引
-    activedEnumIndex () {
+    activedEnumIndex() {
       if (this.fieldType) {
         return -1
       }
@@ -240,7 +241,7 @@ export default {
       }
       return -1
     },
-    outputInfo () {
+    outputInfo() {
       if (!this.outputField || this.outputField && this.outputField.fieldEn === undefined) {
         return {
           field_name: '',
@@ -259,13 +260,13 @@ export default {
     }
   },
   methods: {
-    switchChange (switchValue) {
-      this.fieldSwitch = switchValue
+    switchChange(switchValue) {
+      this.fieldSwitch = switchValue;
     },
-    modalVsibleOpen () {
+    modalVsibleOpen() {
       let dlg = $('.c-field-equation').parents('.el-dialog__wrapper')
       if (dlg) {
-        // 控制遮罩z-index
+        //控制遮罩z-index
         let z_index = dlg.css('z-index')
         z_index = z_index - 2
         if ($('#score-card')) {
@@ -274,18 +275,19 @@ export default {
           })
         }
       }
+
     },
     /**
      * 关闭区间模态框
      */
-    shutSectionModal () {
+    shutSectionModal() {
       this.sectionModalVsible = false
     },
     /**
      * 运算符的点击事件
      * 1. 把运算符放到formula中；2. 运算符之后加一个空格，方便选择字段；3.自动把光标聚焦在运算符之后
      * */
-    clickOperator (operator) {
+    clickOperator(operator) {
       if (this.textDisabled) {
         return
       }
@@ -309,20 +311,20 @@ export default {
     /**
      * 转化实际运算符
      */
-    transformOperator (operator) {
+    transformOperator(operator) {
       let valid = operator.search(/^[\+\/\-\*π]|(\(\))$/)
       if (valid === -1) {
         return operator + '() '
       }
       return operator + ' '
     },
-    showMore () {
+    showMore() {
       this.moreBtn = !this.moreBtn
     },
     //      dispatchModelVisible () {
     //        return this.modalVsible
     //      },
-    handlerDelete (text) {
+    handlerDelete(text) {
       // if(this.modalVsible) {
       this.selectedFieldInfo = text
       this.deleteField(text)
@@ -330,11 +332,11 @@ export default {
       // }
       // return true
     },
-    setActivedEleId (id) {
+    setActivedEleId(id) {
       this.activeElementId = id
     },
     // 点击textarea中字段，弹出模态框
-    handleSelectedField (data, view, modalFlag) {
+    handleSelectedField(data, view, modalFlag) {
       // 获取当前焦点所在id
       this.activeElementId = document.activeElement.id
       // 得到当前点击字段的名称，进而得到该字段全部信息 【selectedField】
@@ -350,6 +352,7 @@ export default {
         if (_.isArray(existField) && existField[0] && existField[0].fieldSource == 2) {
           this.$message.warning('过程变量不能设置区间！')
           view.hide()
+          return
         } else {
           if (!existField.length) {
             this.caretChecked = false
@@ -362,7 +365,7 @@ export default {
             this.caretChecked = true
             return
           }
-          // this.modalVsible = true
+          //this.modalVsible = true
           this.sectionModalTitle = '区间设置'
           // 确定该字段的区间信息
           let inputArray = []
@@ -386,7 +389,7 @@ export default {
      * 设置区间功能
      * 1. 添加默认区间信息； 2. 弹出对应模态框
      */
-    setSection () {
+    setSection() {
       // 设置默认显示区间信息 activedEnumIndex
       console.log(JSON.parse(JSON.stringify(this.computedFormula)))
       let defaultConditions = {}
@@ -403,30 +406,30 @@ export default {
         //   }
         // }
       )
-      let segments = checkedFieldSection[0] && checkedFieldSection[0].segments || []
+      let segments = checkedFieldSection[0]&&checkedFieldSection[0].segments || []
       if (segments.length) {
         this.outRangeValue = checkedFieldSection[0].outRangeValue
         this.fieldSwitch = checkedFieldSection[0].fieldSwitch
         this.segments = Object.assign([], segments)
-        if (this.isReadOnly && this.fieldSwitch) { // 子维度评分卡只读状态
+        if (this.isReadOnly && this.fieldSwitch) {   // 子维度评分卡只读状态
           this.segmentsReadOnly = _.cloneDeep(segments)
           if (checkedFieldSection[0].field_type === 3) {
             _.each(this.segmentsReadOnly, (segItem) => {
               let itemVal = []
               _.each(JSON.parse(segItem.segment), data => {
-                _.each(checkedFieldSection[0].field_scope.split(','), item => {
-                  if (item.split(':')[1] === data) {
-                    itemVal.push(item.split(':')[0])
+                _.each(checkedFieldSection[0].field_scope.split(","), item => {
+                  if (item.split(":")[1] === data) {
+                    itemVal.push(item.split(":")[0])
                     return false
                   }
                 })
               })
-              segItem.segment = itemVal.join(',')
+              segItem.segment = itemVal.join(",")
             })
           } else if (checkedFieldSection[0].field_type === 4) {
             _.each(this.segmentsReadOnly, item => {
-              const timerStart = DateUtils.formate(JSON.parse(item.segment)[0], checkedFieldSection[0].field_scope.replace('HH', 'hh'))
-              const timerEnd = DateUtils.formate(JSON.parse(item.segment)[1], checkedFieldSection[0].field_scope.replace('HH', 'hh'))
+              const timerStart = DateUtils.formate(JSON.parse(item.segment)[0], checkedFieldSection[0].field_scope.replace("HH", "hh"))
+              const timerEnd = DateUtils.formate(JSON.parse(item.segment)[1], checkedFieldSection[0].field_scope.replace("HH", "hh"))
               item.segment = '[' + timerStart + '-' + timerEnd + ']'
             })
           }
@@ -456,14 +459,15 @@ export default {
           this.sectionModalVsible = true
         }
       }
+
     },
-    replaceAllFields (str, inputIndex) {
+    replaceAllFields(str, inputIndex) {
       let reg = /@[a-zA-Z0-9_\u4e00-\u9fa5()（）-]+@/
       let patt = new RegExp(reg, 'g')
       let arr0 = str.match(patt)
       if (arr0 != null && arr0.length > 0) {
         for (var i = 0; i < arr0.length; i++) {
-          let field = this.computedFormula.conditions[inputIndex].input.find(field => ('@' + field.field_name + '@') === arr0[i]) || {field_code: ''}
+          let field = this.computedFormula.conditions[inputIndex].input.find(field=>('@'+field.field_name+'@')===arr0[i]) || {field_code: ''}
           let transitionedFieldEn = '#{' + field.field_code + '}'
           // for (let index = 0; index < this.inputFields.length; index++) {
           //   if ('@' + this.inputFields[index].fieldCn + '@' === arr0[i]) {
@@ -476,17 +480,17 @@ export default {
       }
       return str.replace(/π/g, '#{PI}')
     },
-    getInputFieldNames (str) {
+    getInputFieldNames(str) {
       let reg = /@[a-zA-Z0-9_\u4e00-\u9fa5()（）-]+@/
       let patt = new RegExp(reg, 'g')
-      return (str.match(patt) || []).map(name => name.slice(1, -1))
+      return (str.match(patt)||[]).map(name=>name.slice(1,-1))
     },
-    validateFormulaInputField (condition) {
+    validateFormulaInputField(condition) {
       let fieldNames = this.getInputFieldNames(condition.formula_show)
       console.log('----------fieldNames----------', fieldNames)
       if (fieldNames.length) {
-        condition.input = condition.input.filter(field => fieldNames.some(name => name === field.field_name))
-      } else {
+        condition.input = condition.input.filter(field=>fieldNames.some(name=>name===field.field_name))
+      }else{
         condition.input = []
       }
     },
@@ -494,18 +498,18 @@ export default {
      * 非枚举型输出字段，生成conditions数据
      * 将数据传递给父组件获知
      */
-    getFormular (str, nowPut) {
+    getFormular(str,nowPut) {
       // 转换格式以及名称后，给父组件传递公式 str event事件 nowPut 立刻保存(评分卡维度用到)
-      if (str) {
+      if(str){
         clearTimeout(this.blurTimer)
-        this.blurTimer = setTimeout(() => {
+        this.blurTimer = setTimeout(()=>{
           this.getFormularDo()
-        }, 500)
-      } else {
+        },500)
+      }else{
         this.getFormularDo(nowPut)
       }
     },
-    getFormularDo (nowPut) {
+    getFormularDo(nowPut){
       this.computedFormula.conditions[0].formula = this.replaceAllFields($(this.$refs['inputor0']).val(), 0)
       this.computedFormula.conditions[0].formula_show = ($(this.$refs['inputor0']).val())
 
@@ -515,7 +519,7 @@ export default {
 
       this.validateFormulaInputField(this.computedFormula.conditions[0])
       if (this.computedFormula.conditions[0].formula_show.length > 1000) {
-        this.$message.warning('公式长度不能大于1000个字符')
+        this.$message.warning('公式长度不能大于1000个字符');
       } else {
         this.$emit('getFormular', this.computedFormula, nowPut)
       }
@@ -524,20 +528,20 @@ export default {
      * 枚举型输出字段，生成conditions数据
      * 将数据传递给父组件获知
      */
-    getArrayFormular (str) {
-      if (!this.fieldSetOptions) {
+    getArrayFormular(str) {
+      if(!this.fieldSetOptions){
         return
       }
-      if (str) {
+      if(str){
         clearTimeout(this.blurTimer)
-        this.blurTimer = setTimeout(() => {
+        this.blurTimer = setTimeout(()=>{
           this.getArrayFormularDo()
-        }, 500)
-      } else {
+        },500)
+      }else{
         this.getArrayFormularDo()
       }
     },
-    getArrayFormularDo () {
+    getArrayFormularDo() {
       this.computedFormula.conditions.forEach(
         (item, inputIndex) => {
           let index = -1
@@ -558,7 +562,7 @@ export default {
       this.copiedConditions = Object.assign([], this.initFormula.conditions)
       this.$emit('getFormular', this.computedFormula)
     },
-    deleteField (text) {
+    deleteField(text) {
       let inputorId = 'inputor0'
       if (!this.fieldType) {
         inputorId = this.activeElementId
@@ -599,7 +603,7 @@ export default {
      * 重写at.js的钩子函数 beforeInsert
      * 触发时机为选中字段，插入textarea之前
      */
-    beforeInsert (value, isDimension) {
+    beforeInsert(value, isDimension) {
       let tempValue = value
       tempValue = tempValue.replace('@', '')
       let checkedFields = this.inputFields.filter(
@@ -614,7 +618,7 @@ export default {
       // conditions存入选择字段相关信息
       let condiIndex = 0
       if (!this.fieldType) {
-        condiIndex = this.activedEnumIndex == -1 ? 0 : this.activedEnumIndex
+        condiIndex = this.activedEnumIndex==-1?0:this.activedEnumIndex
       }
 
       let formulaShow = $(this.$refs['inputor' + condiIndex]).val()
@@ -634,7 +638,7 @@ export default {
         isDimension: checkedFields[0].isDimension || 0,
         fieldSwitch: false,
         outRangeValue: '',
-        fieldSource: checkedFields[0].fieldSource
+        fieldSource: checkedFields[0].fieldSource,
       })
       // this.computedFormula.conditions[condiIndex].input.push({
       //   field_name: checkedFields[0].fieldCn,
@@ -654,12 +658,12 @@ export default {
     /**
      * 1. 初始化atwho；2. 初始化textarea的值
      */
-    initAtWhoDom () {
+    initAtWhoDom() {
       let config = {
         at: '@',
         data: this.inputFields,
         callbacks: {
-          beforeSave: function (data) {
+          beforeSave: function(data) {
             let newData = []
             _.forEach(data, (item) => {
               newData.push({
@@ -673,7 +677,7 @@ export default {
             this.beforeInsert(value, $li[0].className.indexOf('isDimension') > -1 ? 1 : 0)
             return value
           },
-          matcher: function (flag, subtext, should_startWithSpace, acceptSpaceBar) {
+          matcher: function(flag, subtext, should_startWithSpace, acceptSpaceBar) {
             var _a, _y, match, regexp, space
             flag = flag.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
             if (should_startWithSpace) {
@@ -697,7 +701,7 @@ export default {
               return null
             }
           },
-          filter: function (query, data, searchKey) {
+          filter: function(query, data, searchKey) {
             var _results, i, item, len, itemObj
             _results = []
             for (i = 0, len = data.length; i < len; i++) {
@@ -708,7 +712,7 @@ export default {
             }
             return _results
           },
-          sorter: function (query, items, searchKey) {
+          sorter: function(query, items, searchKey) {
             var _results, i, item, len
             if (!query) {
               return items
@@ -721,7 +725,7 @@ export default {
                 _results.push(item)
               }
             }
-            return _results.sort(function (a, b) {
+            return _results.sort(function(a, b) {
               return a.atwho_order - b.atwho_order
             })
           }
@@ -743,10 +747,10 @@ export default {
         this.fieldSetOptions.forEach(
           (item, index) => {
             $(_this.$refs['inputor' + index]).atwho(config)
-            let value
-            try {
+            let value;
+            try{
               value = _this.computedFormula.conditions[index].formula_show ? _this.computedFormula.conditions[index].formula_show : ''
-            } catch (err) {
+            }catch(err){
               value = ''
             }
             $(this.$refs['inputor' + index]).val(value)
@@ -758,7 +762,7 @@ export default {
     /**
      * 从区间子组件中接收信息，获取选中字段区间信息
      */
-    getSectionData (data) {
+    getSectionData(data) {
       // 非枚举型输出字段
       if (this.fieldType) {
         let sectionIndex = -1
@@ -818,10 +822,10 @@ export default {
       }
       this.sectionModalVsible = false
     },
-    nextTickInitAtWho () {
+    nextTickInitAtWho() {
       this.textDisabled = true
       this.$nextTick(
-        function () {
+        function() {
           this.initAtWhoDom()
         }
       )
@@ -830,7 +834,7 @@ export default {
      * 初始化拷贝输出字段类型
      * 比较model和formula是否需要初始化使用
      */
-    initCopiedOutput () {
+    initCopiedOutput() {
       this.copiedOutput = {
         fieldEn: this.outputField.fieldEn,
         valueType: this.outputField.valueType,
@@ -841,7 +845,7 @@ export default {
      * 判断公式是否为空
      * 只要有一个为空，就返回true
      */
-    isFormulaEmpty (conditions) {
+    isFormulaEmpty(conditions) {
       return conditions.some(
         item => {
           if (item.formula_show) {
@@ -853,7 +857,7 @@ export default {
     /**
      * 父组件的formula发生改变，且与公式组件的formula不同
      */
-    formulaHasChanged (copied, origin) {
+    formulaHasChanged(copied, origin) {
       if (copied.length !== origin.length) {
         return false
       }
@@ -865,7 +869,7 @@ export default {
         }
       )
     },
-    resetFormulaData (ifDispatchData) {
+    resetFormulaData(ifDispatchData) {
       this.initCopiedOutput()
       if (!this.computedFormula.conditions) {
         this.computedFormula.conditions = []
@@ -914,19 +918,19 @@ export default {
       this.nextTickInitAtWho()
     }
   },
-  mounted () {
+  mounted() {
     let that = this
     let isAllowCopy = this.isAllowCopy
-    $('.inputor').bind('copy', function (event) {
+    $('.inputor').bind('copy', function(event) {
       if (!isAllowCopy) {
-        that.$message.warning('为保证公式正确配置，该区域不允许复制操作！')
+        that.$message.warning('为保证公式正确配置，该区域不允许复制操作！');
         return false
       } else {
         var word = window.getSelection().toString()
         if (word.length > 0) {
-          // 过滤掉字段信息
+          //过滤掉字段信息
           word = word.replace(/\s@[^@]*@/, ' ')
-          event.originalEvent.clipboardData.setData('text', word)
+          event.originalEvent.clipboardData.setData("text", word);
         }
       }
     })
@@ -951,7 +955,7 @@ export default {
     )
   },
   watch: {
-    inputFields () {
+    inputFields() {
       if (this.inputFields.length) {
         _.forEach(this.inputFields, (item) => {
           this.fieldsData.push({
@@ -964,7 +968,7 @@ export default {
     },
     outputField: {
       deep: true,
-      handler () {
+      handler() {
         // 输出字段非编辑状态，字段code未发生改变
         if (!this.editPattern && this.copiedOutput.fieldEn && this.copiedOutput.fieldEn === this.outputField.fieldEn) {
           return
@@ -983,7 +987,7 @@ export default {
      */
     initFormula: {
       deep: true,
-      handler () {
+      handler() {
         let clonedFormulaEmpty = this.isFormulaEmpty(this.copiedConditions)
         let computedFormulaEmpty = this.isFormulaEmpty(this.initFormula.conditions)
         if (!clonedFormulaEmpty && computedFormulaEmpty || this.formulaHasChanged(this.copiedConditions, this.initFormula.conditions)) {
@@ -993,7 +997,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     let matrixOperatorData = _.cloneDeep(Mock.operatorData).splice(0, 4).concat(_.cloneDeep(Mock.operatorData).splice(11, 13))
     let commonOperatorData = _.cloneDeep(Mock.operatorData).splice(0, 16)
     let operatorData = this.isMatrix ? matrixOperatorData : commonOperatorData
@@ -1049,7 +1053,7 @@ export default {
     FieldSection,
     SnapshotOutputFieldDialog
   },
-  destroyed () {
+  destroyed() {
     if (this.fieldType) {
       $(this.$refs['inputor0']).atwho('destroy')
     } else {

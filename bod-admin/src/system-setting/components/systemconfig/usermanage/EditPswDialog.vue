@@ -23,117 +23,117 @@
   </el-dialog>
 </template>
 <script type="text/babel">
-import selectOptionMixin from '../../../../mixins/select-option.mixin'
-import UserApi from '@system/api/systemconfig/usermanage.api'
-import UserManageMock from '@system/mock/usersmanage.mock'
+  import selectOptionMixin from '../../../../mixins/select-option.mixin';
+  import UserApi from '@system/api/systemconfig/usermanage.api';
+  import UserManageMock from '@system/mock/usersmanage.mock';
 
-import loginApi from '@system/../login/scripts/api'
+  import loginApi from '@system/../login/scripts/api';
 
-export default {
-  props: {
-    title: {
-      type: String,
-      default: '修改密码'
+  export default {
+    props: {
+      title: {
+        type: String,
+        default: '修改密码'
+      },
+      visible: Boolean
     },
-    visible: Boolean
-  },
-  data () {
-    return {
-      resetPassForm: {
+    data() {
+      return {
+        resetPassForm:{
         	oldpsw: '',
-        pass: '',
-        checkPass: ''
+            pass: '',
+            checkPass: ''
+        }
       }
-    }
-  },
-  created () {
-    	this.pswRules = this.pswRules(this.resetPassForm)
-  },
-  beforeDestroy () {
-  },
-  methods: {
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-          this.cancel()
-        })
-        .catch(_ => {})
     },
-    cancel () {
-      this.$emit('cancel')
+    created () {
+    	this.pswRules = this.pswRules(this.resetPassForm);
     },
-    runSave () {
+    beforeDestroy () {
+    },
+    methods: {
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+          done();
+           this.cancel();
+      })
+      .catch(_ => {});
+      },
+      cancel() {
+        this.$emit('cancel');
+      },
+      runSave() {
       	this.$refs['resetPassForm'].validate((valid) => {
-        if (valid) {
+          if (valid) {
 	        let params = {
 	            'username': localStorage.getItem('admin_name'),
 	            'password': this.resetPassForm.pass
 	        }
-	        this.$emit('savePsw', params)
-        }
-      })
-    },
-    pswRules (resetPassForm) {
-    	var checkPsw = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('密码不能为空'))
-        }
-        setTimeout(() => {
-            	let params = {
-            'username': localStorage.getItem('admin_name'),
-            'password': value
+	        this.$emit('savePsw', params);
           }
+        });
+      },
+      pswRules(resetPassForm){
+    	var checkPsw = (rule, value, callback) => {
+            if (!value) {
+              return callback(new Error('密码不能为空'));
+            }
+            setTimeout(() => {
+            	let params = {
+                    'username': localStorage.getItem('admin_name'),
+                    'password': value
+                }
             	loginApi.login.post(params)
-            .then((data) => {
-                	let retCode = parseInt(data.code)
-              if (retCode === 200) {
+                .then((data) => {
+                	let retCode = parseInt(data.code);
+                    if (retCode === 200) {
                     	callback()
-              } else {
+                    }else{
                     	callback('密码错误')
-              }
-            })
-            .catch(function () {
-              callback(new Error('服务异常'))
-            })
-        }, 1000)
-      }
+                    }
+                })
+                .catch(function () {
+                    callback(new Error('服务异常'))
+                })
+            }, 1000);
+        };
 
-      var validateSamePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'))
-        } else if (value !== resetPassForm.pass) {
-          callback(new Error('两次输入密码不一致!'))
-        } else {
-          callback()
-        }
-      }
-      var validateIfInitPass = (rule, value, callback) => {
-        if (value.match(/^1{6}$/)) {
-          callback(new Error('不能使用初始化的缺省密码'))
-          return
-        }
-        callback()
-      }
+        var validateSamePass = (rule, value, callback) => {
+            if (value === '') {
+              callback(new Error('请再次输入密码'));
+            } else if (value !== resetPassForm.pass) {
+              callback(new Error('两次输入密码不一致!'));
+            } else {
+              callback();
+            }
+        };
+        var validateIfInitPass = (rule, value, callback) => {
+            if (value.match(/^1{6}$/)) {
+              callback(new Error('不能使用初始化的缺省密码'))
+              return
+            }
+            callback()
+        };
     	return {
-        oldpsw: [
-             	{required: true, message: '请输入旧密码', trigger: 'blur'},
-          {validator: checkPsw, trigger: 'blur'}
-        ],
-        pass: [
-          {required: true, message: '请输入密码', trigger: 'blur'},
-          {validator: validateIfInitPass, trigger: 'blur'}
-        ],
-        checkPass: [
-          {required: true, message: '请输入确认密码', trigger: 'blur'},
-          {validator: validateIfInitPass, trigger: 'blur'},
-          {validator: validateSamePass, trigger: 'blur'}
-        ]
+            oldpsw: [
+             	{required: true, message: "请输入旧密码", trigger: 'blur'},
+                {validator: checkPsw, trigger: 'blur'}
+            ],
+            pass: [
+               {required: true, message: "请输入密码", trigger: 'blur'},
+               {validator: validateIfInitPass, trigger: 'blur'}
+             ],
+             checkPass: [
+               {required: true, message: "请输入确认密码", trigger: 'blur'},
+               {validator: validateIfInitPass, trigger: 'blur'},
+               {validator: validateSamePass, trigger: 'blur'}
+             ]
 
-      }
+        }
+    }
     }
   }
-}
 </script>
 <style lang="scss">
   #field-input-dialog {

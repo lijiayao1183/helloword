@@ -63,61 +63,61 @@
 </template>
 
 <script>
-import validateRules from '../../scripts/validate-rules'
-export default {
-  name: 'EditUserinfo',
-  props: {
-    userData: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    isReadOnlyUserinfo: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      userRules: {
-        cellphone: validateRules.isCellphoneNum,
-        email: [
-          {required: true, message: '请输入邮箱', trigger: 'blur' },
-          {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
-        ]
-      }
-    }
-  },
-  computed: {
-    userDataCopy () {
-      return { ...this.userData }
-    }
-  },
-  methods: {
-    updateUserinfo (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$emit('updateUserinfo', this.userDataCopy)
-        } else {
-          return false
+  import validateRules from '../../scripts/validate-rules'
+  export default {
+    name: "EditUserinfo",
+    props:{
+      userData:{
+        type: Object,
+        default(){
+          return {}
         }
-      })
+      },
+      isReadOnlyUserinfo:{
+        type: Boolean,
+        default: false
+      }
     },
-    cancelUserinfo (formName, val) {
-      this.editUserinfo(val)
-      this.userDataCopy.cellphone = this.userData.cellphone
-      this.userDataCopy.email = this.userData.email
-      // this.$refs[formName].validate()
-      this.$refs[formName].resetFields()
-      this.userDataCopy.cellphone = this.userData.cellphone
-      this.userDataCopy.email = this.userData.email
+    data(){
+      return {
+        userRules: {
+          cellphone:validateRules.isCellphoneNum,
+          email:[
+            {required: true, message: '请输入邮箱', trigger: 'blur' },
+            {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+          ]
+        }
+      }
     },
-    editUserinfo (val) {
-      this.$emit('changeUserinfoReadOnly', val)
+    computed: {
+      userDataCopy() {
+        return { ...this.userData }
+      }
+    },
+    methods: {
+      updateUserinfo(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$emit('updateUserinfo', this.userDataCopy)
+          } else {
+            return false;
+          }
+        });
+      },
+      cancelUserinfo(formName, val) {
+        this.editUserinfo(val)
+        this.userDataCopy.cellphone = this.userData.cellphone
+        this.userDataCopy.email = this.userData.email
+        //this.$refs[formName].validate()
+        this.$refs[formName].resetFields();
+        this.userDataCopy.cellphone = this.userData.cellphone
+        this.userDataCopy.email = this.userData.email
+      },
+      editUserinfo(val) {
+        this.$emit('changeUserinfoReadOnly', val)
+      }
     }
   }
-}
 </script>
 
 <style lang="scss">

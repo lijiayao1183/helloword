@@ -4,8 +4,8 @@
       <span>通道列表</span>
       <el-radio-group v-if="false" v-model="showType" style="margin-top: -7px;position: absolute; right: 1px;">
 	    <el-radio-button label='list'><i class="el-icon-date"></i></el-radio-button>
-	    <el-radio-button label='block'><i class="el-icon-menu"></i></el-radio-button>
-	  </el-radio-group>
+	    <el-radio-button label='block'><i class="el-icon-menu"></i></el-radio-button> 
+	  </el-radio-group> 
     </div>
     <div class="left-list-topSearch">
       <el-input placeholder="搜索" v-model="searchKey">
@@ -27,55 +27,55 @@
   </div>
 </template>
 <script>
-import DateUtils from '../../../../scripts/date-utils'
-import { Timeline, TimelineItem } from 'iview'
-import 'iview/dist/styles/iview.css'
-import NoDataPage from '../../../../components/NoDataPage.vue'
+  import DateUtils from '../../../../scripts/date-utils'
+  import { Timeline, TimelineItem } from 'iview'
+  import 'iview/dist/styles/iview.css'
+  import NoDataPage from '../../../../components/NoDataPage.vue'
 
-export default {
-  props: {
-    treeProps: {
-      type: Object,
-      default () {
-        return {
+  export default {
+    props: {
+      treeProps: {
+        type: Object,
+        default() {
+          return {
 	          id: 'id',
 	          label: 'name',
 	          children: 'children'
 	      }
+        }
+      },
+      treeData: {
+        type: Array,
+        default() {
+          return []
+        }
       }
     },
-    treeData: {
-      type: Array,
-      default () {
-        return []
+    data () {
+      return {
+        showType:'block',
+        currentNodeId:0,
+        searchKey:''
       }
-    }
-  },
-  data () {
-    return {
-      showType: 'block',
-      currentNodeId: 0,
-      searchKey: ''
-    }
-  },
-  components: {
-    'no-data-page': NoDataPage
-  },
-  watch: {
-    searchKey (val) {
-      this.$refs.tree.filter(val)
-    }
-  },
-  methods: {
-    filterNode (value, data) {
-      if (!value) return true
-      return data[this.treeProps.label].indexOf(_.trim(value)) !== -1
     },
-    handleCheckChange (data, checked, indeterminate) {
-      this.$emit('checkNodesChange', {data: data, checked: checked})
+    components: {
+      'no-data-page': NoDataPage
+    },
+    watch: {
+      searchKey (val) {
+        this.$refs.tree.filter(val)
+      }
+    },
+    methods: {
+      filterNode (value, data) {
+        if (!value) return true
+        return data[this.treeProps.label].indexOf(_.trim(value)) !== -1
+      }, 
+      handleCheckChange(data, checked, indeterminate) {
+        this.$emit('checkNodesChange', {data:data, checked:checked})
+      }
     }
   }
-}
 </script>
 <style lang="scss" scoped>
   .alarm-log {
@@ -104,7 +104,7 @@ export default {
         margin-bottom: 10px;
       }
     }
-
+    
     .ivu-timeline-item-content p {
       word-break: break-word;
       word-wrap: break-word;
