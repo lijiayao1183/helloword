@@ -26,7 +26,7 @@
     "net": "^1.0.2",
     "node-sass": "^4.5.3",
     "node-uuid": "^1.4.8",
-    "pug": "^2.0.0-rc.2",
+    "pug": "^3.0.1",
     "sass-loader": "^6.0.6",
     "sockjs": "^0.3.19",
     "sockjs-client": "^1.4.0",
